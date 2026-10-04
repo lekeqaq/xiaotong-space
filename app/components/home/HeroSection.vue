@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { WritingSummary } from '~/types/content'
+import StarField from './StarField.vue'
 defineProps<{
   article?: WritingSummary
   projectCount: number
@@ -33,6 +34,7 @@ onUnmounted(() => clearInterval(timer))
       /></span>
     </div>
     <div class="desk-canvas">
+      <StarField />
       <div class="desk-orbit" aria-hidden="true"><span /><i /></div>
       <div class="desk-satellite-track ambient-motion" aria-hidden="true"><i /></div>
       <div class="desk-intro">
