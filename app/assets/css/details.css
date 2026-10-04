@@ -1,0 +1,291 @@
+/* Detail pages read like an open notebook: the story and its visual share a spread. */
+.wordmark-name {
+  font-size: 1.05rem;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.case-opening {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(40px, 6vw, 90px);
+  align-items: center;
+  margin: 38px 0 58px;
+}
+.case-copy.detail-header {
+  margin: 0;
+}
+.case-copy .eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+}
+.case-copy h1 {
+  font-size: clamp(2.8rem, 4.5vw, 4.6rem);
+  line-height: 1.12;
+  margin: 28px 0 16px;
+  overflow-wrap: anywhere;
+}
+.case-subtitle {
+  display: block;
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+  margin-bottom: 26px;
+}
+.case-copy > p {
+  font-size: 0.98rem;
+  line-height: 1.95;
+  max-width: 390px;
+}
+.case-copy .detail-meta {
+  gap: 18px;
+  margin-top: 26px;
+}
+.case-copy .tech-tags {
+  width: 100%;
+}
+.opening-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  padding-block: 12px;
+  margin-top: 40px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.76rem;
+}
+.opening-read .iconify {
+  color: var(--color-accent);
+  font-size: 20px;
+}
+.case-scene {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow:
+    9px 12px 0 -1px var(--color-bg),
+    9px 12px 0 0 var(--color-border);
+}
+.case-scene-label,
+.case-scene figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--color-text-muted);
+  font-size: 0.58rem;
+}
+.case-scene-label {
+  padding: 2px 3px 13px;
+  letter-spacing: 0.13em;
+}
+.case-scene figcaption {
+  padding: 15px 3px 2px;
+}
+.case-scene .project-scene {
+  height: 500px;
+}
+.detail-divider {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  border-top: 1px solid var(--color-border);
+  padding: 22px 0 30px;
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+  scroll-margin-top: calc(var(--header-height) + 24px);
+}
+.article-opening {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.8fr);
+  align-items: center;
+  gap: clamp(45px, 7vw, 110px);
+  margin: 38px 0 58px;
+  min-height: 490px;
+}
+.article-title-page.detail-header {
+  margin: 0;
+}
+.article-title-page .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.14em;
+  font-size: 0.65rem;
+}
+.opening-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.article-title-page h1 {
+  font-size: clamp(2.2rem, 3.6vw, 3.55rem);
+  line-height: 1.3;
+  letter-spacing: -0.045em;
+  margin: 29px 0 25px;
+  text-wrap: balance;
+}
+.article-title-page > p {
+  font-size: 0.96rem;
+  line-height: 1.9;
+  max-width: 520px;
+  margin-bottom: 30px;
+}
+.article-title-page .article-meta {
+  gap: 12px 18px;
+  font-size: 0.7rem;
+}
+.article-title-page .tech-tags {
+  width: 100%;
+  margin-top: 5px;
+}
+.article-photo-page {
+  position: relative;
+  padding: 25px 18px 30px 0;
+  min-width: 0;
+}
+.article-photo-page::before {
+  content: '';
+  position: absolute;
+  inset: 38px 9px 48px 12px;
+  background: var(--color-lilac);
+  border: 1px solid var(--color-border);
+  transform: rotate(-5deg);
+}
+.article-photo-mount {
+  position: relative;
+  padding: 13px 13px 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 14px 35px rgb(0 0 0 / 8%);
+  transform: rotate(3deg);
+}
+.article-opening-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 0.9;
+  max-height: 410px;
+  object-fit: cover;
+  filter: saturate(0.72);
+}
+.photo-tape {
+  position: absolute;
+  z-index: 1;
+  top: -12px;
+  left: calc(50% - 40px);
+  width: 80px;
+  height: 25px;
+  transform: rotate(-8deg);
+  background: color-mix(in srgb, var(--color-paper) 80%, transparent);
+  border-inline: 1px dashed var(--color-border);
+}
+.article-photo-mount figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 3px;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+}
+.photo-margin-note {
+  position: absolute;
+  right: -14px;
+  top: 50px;
+  writing-mode: vertical-rl;
+  font-size: 0.49rem;
+  letter-spacing: 0.2em;
+  color: var(--color-text-muted);
+}
+.photo-handnote {
+  display: block;
+  text-align: right;
+  padding: 25px 20px 0 0;
+  color: var(--color-accent);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 0.78rem;
+  transform: rotate(-4deg);
+}
+.article-reading-line > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+@media (max-width: 1000px) {
+  .case-opening {
+    gap: 32px;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+  .case-scene {
+    padding: 10px;
+  }
+  .case-scene .project-scene {
+    height: 480px;
+  }
+  .case-scene .scene-topline > span:last-child {
+    display: none;
+  }
+  .article-opening {
+    gap: 45px;
+    min-height: 420px;
+  }
+}
+@media (max-width: 760px) {
+  .case-opening,
+  .article-opening {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    margin: 32px 0 38px;
+    min-height: 0;
+  }
+  .case-copy h1 {
+    font-size: clamp(2.5rem, 9vw, 3.5rem);
+  }
+  .case-copy > p {
+    max-width: none;
+  }
+  .opening-read {
+    margin-top: 20px;
+  }
+  .case-scene {
+    margin-right: 8px;
+  }
+  .case-scene .project-scene {
+    height: 470px;
+  }
+  .article-title-page h1 {
+    font-size: clamp(2rem, 7vw, 3rem);
+    margin-top: 22px;
+  }
+  .article-photo-page {
+    width: min(85%, 350px);
+    justify-self: center;
+    padding-top: 12px;
+  }
+  .article-opening-photo {
+    aspect-ratio: 1.25;
+    max-height: 250px;
+  }
+  .article-photo-page::before {
+    inset-block: 20px 48px;
+  }
+  .detail-divider {
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
+    padding-bottom: 16px;
+  }
+  .wordmark-name {
+    font-size: 0.92rem;
+    letter-spacing: -0.035em;
+  }
+}

@@ -1,0 +1,431 @@
+/* Theme snapshots expand from the physical toggle; unsupported browsers fade. */
+html.theme-revealing::view-transition-old(root),
+html.theme-revealing::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html.theme-revealing::view-transition-old(root) {
+  z-index: 1;
+}
+html.theme-revealing::view-transition-new(root) {
+  z-index: 2;
+}
+html.theme-revealing::view-transition-group(root) {
+  animation-duration: 1500ms;
+}
+.theme-fading,
+.theme-fading body,
+.theme-fading .site-app,
+.theme-fading .site-app * {
+  transition:
+    background-color 1500ms ease-in-out,
+    color 1500ms ease-in-out,
+    border-color 1500ms ease-in-out,
+    box-shadow 1500ms ease-in-out;
+}
+.theme-toggle .iconify {
+  animation: theme-icon-enter 400ms var(--ease);
+}
+.motion-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 27px;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--color-text-muted);
+  padding: 4px 7px;
+  font-size: 0.48rem;
+  letter-spacing: 0.06em;
+}
+.motion-toggle > .iconify {
+  font-size: 10px;
+}
+.motion-toggle:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+.motion-paused .ambient-motion,
+.motion-paused .ambient-motion *,
+.motion-paused .ambient-motion::before,
+.motion-paused .ambient-motion::after,
+.motion-paused .ambient-motion *::before,
+.motion-paused .ambient-motion *::after {
+  animation-play-state: paused !important;
+}
+/* Individual transform properties preserve the deliberately rotated paper objects. */
+.desk-intro h1 {
+  animation: title-arrive 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.desk-intro h1 em {
+  display: inline-block;
+  animation: title-arrive 1000ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.desk-hello {
+  animation: ink-arrive 650ms 80ms both;
+}
+.desk-intro p {
+  animation: ink-arrive 800ms 220ms both;
+}
+.desk-explore {
+  animation: ink-arrive 800ms 340ms both;
+}
+.desk-object,
+.desk-photo-object,
+.desk-thought {
+  animation:
+    object-arrive 1000ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    paper-drift 8s 1s ease-in-out infinite;
+}
+.desk-note {
+  --arrive-x: -80px;
+  --arrive-y: -45px;
+  --arrive-angle: -12deg;
+  --drift-y: -6px;
+  animation-delay: 80ms, 1080ms;
+}
+.desk-photo-object {
+  --arrive-x: 90px;
+  --arrive-y: -60px;
+  --arrive-angle: 12deg;
+  --drift-y: 7px;
+  animation-delay: 170ms, 1170ms;
+}
+.desk-building {
+  --arrive-x: -70px;
+  --arrive-y: 65px;
+  --arrive-angle: -9deg;
+  --drift-y: 5px;
+  animation-delay: 220ms, 1220ms;
+}
+.desk-thought {
+  --arrive-x: 70px;
+  --arrive-y: 80px;
+  --arrive-angle: 10deg;
+  --drift-y: -7px;
+  animation-delay: 300ms, 1300ms;
+}
+.desk-object:hover,
+.desk-photo-object:hover,
+.desk-thought:hover,
+.desk-object:focus-visible,
+.desk-photo-object:focus-within,
+.desk-thought:focus-within {
+  animation-play-state: running, paused;
+}
+.desk-orbit {
+  animation: orbit-arrive 1.4s 120ms both;
+}
+.desk-satellite-track {
+  position: absolute;
+  width: 650px;
+  height: 420px;
+  left: 50%;
+  top: 83px;
+  transform: translateX(-50%) rotate(-22deg);
+  pointer-events: none;
+  z-index: -1;
+}
+.desk-satellite-track i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  offset-path: ellipse(50% 50% at 50% 50%);
+  offset-distance: 0%;
+  animation: orbit-travel 26s linear infinite;
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+.title-spark {
+  animation: spark-turn 14s ease-in-out infinite;
+}
+.desk-scribble svg path {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: draw-line 1.2s 650ms forwards;
+}
+.space-dock {
+  animation: dock-arrive 900ms 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.space-dock > a:is(:hover, :focus-visible) > .iconify {
+  rotate: -6deg;
+  scale: 1.06;
+}
+.space-dock > a > .iconify {
+  transition:
+    rotate 250ms,
+    scale 250ms;
+}
+.mini-flow > i {
+  position: relative;
+}
+.mini-flow > i::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  top: -2.5px;
+  background: var(--color-mint-ink);
+  animation: flow-travel 3s ease-in-out infinite;
+}
+.mini-flow > i:nth-of-type(2)::after {
+  animation-delay: 1.1s;
+}
+.mini-flow .flow-core > .iconify {
+  animation: core-glow 3s ease-in-out infinite;
+}
+.building-progress span:nth-child(-n + 5) {
+  animation: progress-glint 3.5s ease-in-out infinite;
+}
+.building-progress span:nth-child(2) {
+  animation-delay: 120ms;
+}
+.building-progress span:nth-child(3) {
+  animation-delay: 240ms;
+}
+.building-progress span:nth-child(4) {
+  animation-delay: 360ms;
+}
+.building-progress span:nth-child(5) {
+  animation-delay: 480ms;
+}
+.thought-text {
+  animation: ink-arrive 350ms var(--ease) both;
+}
+.desk-postcard img {
+  animation: postcard-turn 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+[data-reveal].reveal-ready {
+  opacity: 0;
+  translate: 0 35px;
+  transition:
+    opacity 750ms var(--ease),
+    translate 750ms var(--ease);
+}
+[data-reveal].reveal-ready.is-revealed,
+[data-reveal].reveal-ready:focus-within {
+  opacity: 1;
+  translate: 0;
+}
+@keyframes title-arrive {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+    filter: blur(7px);
+  }
+  to {
+    opacity: 1;
+    translate: 0;
+    filter: blur(0);
+  }
+}
+@keyframes ink-arrive {
+  from {
+    opacity: 0;
+    translate: 0 9px;
+  }
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}
+@keyframes object-arrive {
+  from {
+    opacity: 0;
+    translate: var(--arrive-x) var(--arrive-y);
+    rotate: var(--arrive-angle);
+    scale: 0.92;
+  }
+  to {
+    opacity: 1;
+    translate: 0;
+    rotate: 0deg;
+    scale: 1;
+  }
+}
+@keyframes paper-drift {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 var(--drift-y);
+  }
+}
+@keyframes orbit-arrive {
+  from {
+    opacity: 0;
+    scale: 0.82;
+  }
+  to {
+    opacity: 0.7;
+    scale: 1;
+  }
+}
+@keyframes orbit-travel {
+  to {
+    offset-distance: 100%;
+  }
+}
+@keyframes spark-turn {
+  0%,
+  75%,
+  100% {
+    rotate: 0deg;
+    scale: 1;
+  }
+  85% {
+    rotate: 100deg;
+    scale: 0.75;
+  }
+  94% {
+    rotate: 180deg;
+    scale: 1;
+  }
+}
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes dock-arrive {
+  from {
+    opacity: 0;
+    translate: 0 15px;
+    scale: 0.94;
+  }
+  to {
+    opacity: 1;
+    translate: 0;
+    scale: 1;
+  }
+}
+@keyframes flow-travel {
+  0%,
+  15% {
+    left: 0;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  75%,
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+@keyframes core-glow {
+  0%,
+  100% {
+    opacity: 0.65;
+    scale: 0.92;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.1;
+  }
+}
+@keyframes progress-glint {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes postcard-turn {
+  from {
+    opacity: 0.3;
+    transform: perspective(600px) rotateY(-14deg);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(600px) rotateY(0);
+  }
+}
+@keyframes theme-icon-enter {
+  from {
+    opacity: 0;
+    rotate: -75deg;
+    scale: 0.6;
+  }
+  to {
+    opacity: 1;
+    rotate: 0deg;
+    scale: 1;
+  }
+}
+@media (max-width: 1023px) {
+  .desk-satellite-track {
+    width: 90%;
+    height: 310px;
+    top: 13px;
+  }
+  .desk-object,
+  .desk-photo-object,
+  .desk-thought {
+    --arrive-x: 0px;
+    --arrive-y: 22px;
+    --arrive-angle: 0deg;
+  }
+}
+@media (max-width: 540px) {
+  .desk-satellite-track {
+    height: 260px;
+    top: 0;
+  }
+  .motion-toggle {
+    height: 24px;
+    margin-left: 8px;
+    padding-inline: 6px;
+  }
+  .motion-toggle > span:not(.iconify) {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-toggle {
+    display: none;
+  }
+  [data-reveal].reveal-ready {
+    opacity: 1;
+    translate: 0;
+  }
+  .desk-object,
+  .desk-photo-object,
+  .desk-thought,
+  .desk-intro h1,
+  .desk-intro h1 em,
+  .desk-hello,
+  .desk-intro p,
+  .desk-explore,
+  .space-dock,
+  .thought-text,
+  .desk-postcard img,
+  .desk-orbit,
+  .desk-satellite-track i,
+  .title-spark {
+    animation: none;
+  }
+  .desk-scribble svg path {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .mini-flow > i::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.motion-paused .desk-object,
+.motion-paused .desk-photo-object,
+.motion-paused .desk-thought {
+  animation-play-state: running, paused !important;
+}

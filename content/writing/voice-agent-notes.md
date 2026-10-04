@@ -1,0 +1,57 @@
+---
+title: "Voice 初体验：一个 Vue 开发者的视角"
+description: "从开麦到停顿，从状态反馈到打断，理解语音交互里那些容易被忽略的细节。"
+date: "2026-09-21"
+cover: "/images/writing/architecture.jpg"
+tags: ["Vue", "Frontend"]
+category: "Frontend"
+draft: false
+featured: true
+readingTime: 4
+---
+
+## 从按钮交互到连续对话
+
+网页上的按钮有明确的点击边界，语音交互却更连续。用户可能停顿、改口，也可能在系统说话时插话。前端需要表达的不只是加载状态，而是整段对话的节奏。
+
+## 先定义状态
+
+最小状态集合可以是空闲、倾听、思考、说话和出错。任何时刻只有一个主要状态，用户应该能够从界面理解当前发生了什么。
+
+```ts
+type VoiceState = 'idle' | 'listening' | 'thinking' | 'speaking' | 'error'
+
+const state = ref<VoiceState>('idle')
+const canStart = computed(() => state.value === 'idle')
+```
+
+## 麦克风权限是一个交互
+
+不要在页面打开时就请求权限。让用户点击开始，说明为什么需要麦克风，再调用浏览器媒体 API。权限被拒绝时，保留文本入口与重试说明。
+
+权限提示、设备缺失和网络失败是不同的问题，不应该统一显示成“出了点问题”。
+
+## 打断需要贯穿整个链路
+
+只暂停播放器不够。旧请求还可能继续返回语音片段，重新开始播放。每轮对话需要一个标识，在响应抵达时检查它是否仍然有效。
+
+```ts
+let turnId = 0
+
+function beginTurn() {
+  turnId += 1
+  return turnId
+}
+
+function isCurrentTurn(id: number) {
+  return id === turnId
+}
+```
+
+## 让等待有意义
+
+“正在识别”和“正在组织回答”提供了不同的信息。状态可以细分，但视觉应保持克制。一个简洁的图标、状态文字与停止按钮，比持续跳动的大型音浪更有帮助。
+
+## 用真实场景验证
+
+耳机、外放、安静房间和街道噪声都会改变体验。先把权限、开始、暂停、打断与失败恢复串起来，再追求更精致的视觉反馈。
