@@ -41,7 +41,7 @@ pnpm test
 - 文章目录链接与代码复制可用，复制后显示反馈。
 - 浅色 / 深色 / 系统主题均可选择；最终首页控制台无 error / warn。
 
-最终截图保存在 `artifacts/home-desktop.png`、`artifacts/home-mobile.png`；首屏预览保存在 `artifacts/home-preview.png`。
+本轮曾在本地 `artifacts/` 中保存桌面、手机和首屏截图；这些临时产物已在 2026-10-06 清理，不随仓库发布。
 
 ## Lighthouse
 
@@ -56,7 +56,7 @@ pnpm test
 
 移动端 FCP 2.0 s、LCP 2.4 s、TBT 20 ms、CLS 0。满足 PRD 的 Performance ≥ 90、Accessibility ≥ 90、SEO ≥ 95 与无明显 CLS 的要求。
 
-可复核报告：`artifacts/lighthouse-mobile.report.html`、`artifacts/lighthouse-desktop.report.html`，以及同名 JSON。线上结果会受到服务器、网络与部署配置影响。
+本轮 Lighthouse HTML 与 JSON 报告曾保存在本地 `artifacts/`，已在 2026-10-06 清理；上述分数仅作为当时的验收记录。线上结果会受到服务器、网络与部署配置影响。
 
 ## 配置与交付边界
 
