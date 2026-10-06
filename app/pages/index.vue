@@ -29,11 +29,7 @@ const { data } = await useAsyncData('home-content', async () => {
       )
       .order('order', 'ASC')
       .all(),
-    queryCollection('writing')
-      .select('path', 'title', 'description', 'date', 'cover', 'tags', 'category', 'readingTime')
-      .where('draft', '=', false)
-      .order('date', 'DESC')
-      .all(),
+    $fetch('/api/content/articles'),
   ])
   return { projects, writing }
 })

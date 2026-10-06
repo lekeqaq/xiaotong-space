@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const thoughts = [
-  '比起标准答案，\n更想做点有意思的东西。',
-  '先做一个小小的版本，\n再让它慢慢长大。',
-  '保持好奇，\n允许自己绕一点远路。',
-]
+import { initialHome } from '#shared/admin'
+import type { HomeInput } from '#shared/admin'
+const props = defineProps<{ thoughts?: HomeInput['thoughts'] }>()
+const { data: home } = await useFetch('/api/content/home', { key: 'home-settings' })
+const thoughts = computed(() => props.thoughts || home.value?.thoughts || initialHome.thoughts)
 const index = ref(0)
 </script>
 
@@ -11,10 +11,9 @@ const index = ref(0)
   <aside class="desk-thought ambient-motion">
     <span class="thought-pin" aria-hidden="true" />
     <div class="thought-label">NOTE TO SELF <span>✳</span></div>
-    <p :key="index" class="thought-text" aria-live="polite">{{ thoughts[index] }}</p>
+    <p :key="index" class="thought-text" aria-live="polite">{{ thoughts[index % thoughts.length]?.text }}</p>
     <div class="thought-bottom">
-      <span>— 小童</span
-      ><button
+      <button
         type="button"
         aria-label="换一个想法"
         title="换一个想法"

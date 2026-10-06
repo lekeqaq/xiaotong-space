@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { HomeInput } from '#shared/admin'
 import type { ProjectSummary, WritingSummary } from '~/types/content'
 import StarField from './StarField.vue'
 import SpaceDock from './SpaceDock.vue'
 defineProps<{
+  homeSettings?: HomeInput
   article?: WritingSummary
   project?: ProjectSummary
 }>()
@@ -56,7 +58,7 @@ onUnmounted(() => clearInterval(timer))
           >{{ article.date.replaceAll('-', '.') }} <span>{{ article.readingTime }} MIN READ</span></span
         >
       </NuxtLink>
-      <div class="desk-photo-object ambient-motion"><DeskPostcard /></div>
+      <div class="desk-photo-object ambient-motion"><DeskPostcard :photos="homeSettings?.photos" /></div>
       <NuxtLink v-if="project?.workbench" :to="project.path" class="desk-building desk-object ambient-motion">
         <span class="desk-object-label"
           ><span class="live-dot" /> ON MY WORKBENCH <UIcon name="i-lucide-arrow-up-right"
@@ -75,7 +77,7 @@ onUnmounted(() => clearInterval(timer))
           >{{ project.workbench.caption }}<UIcon name="i-lucide-arrow-right"
         /></span>
       </NuxtLink>
-      <DeskThought />
+      <DeskThought :thoughts="homeSettings?.thoughts" />
       <span class="desk-scribble" aria-hidden="true"
         >make room<br />for curiosity
         <svg viewBox="0 0 80 45"><path d="M5 4C10 34 45 40 70 23M57 21l16 0-3 15" /></svg

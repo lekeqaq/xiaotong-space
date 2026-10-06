@@ -1,12 +1,11 @@
 <script setup lang="ts">
-const photos = [
-  { src: 'coast', caption: '去有风的地方。', alt: '海岸、远山与开阔的海面' },
-  { src: 'mountain', caption: '偶尔，让思绪离线。', alt: '云层之下的雪山' },
-  { src: 'camera', caption: '收集日常的小瞬间。', alt: '记录生活的相机' },
-  { src: 'notebook', caption: '好想法，先记下来。', alt: '摊开的笔记本' },
-]
+import { initialHome } from '#shared/admin'
+import type { HomeInput } from '#shared/admin'
+const props = defineProps<{ photos?: HomeInput['photos'] }>()
+const { data: home } = await useFetch('/api/content/home', { key: 'home-settings' })
+const photos = computed(() => props.photos || home.value?.photos || initialHome.photos)
 const index = ref(0)
-const photo = computed(() => photos[index.value]!)
+const photo = computed(() => photos.value[index.value % photos.value.length]!)
 </script>
 
 <template>
@@ -17,9 +16,9 @@ const photo = computed(() => photos[index.value]!)
     @click="index = (index + 1) % photos.length"
   >
     <span class="postcard-tape" aria-hidden="true" />
-    <NuxtImg
+    <SiteImage
       :key="photo.src"
-      :src="`/images/personal/${photo.src}.jpg`"
+      :src="photo.src"
       :alt="photo.alt"
       width="360"
       height="240"
@@ -27,7 +26,10 @@ const photo = computed(() => photos[index.value]!)
       format="webp"
     />
     <span class="postcard-caption" aria-live="polite"
-      >{{ photo.caption }}<span>{{ String(index + 1).padStart(2, '0') }} / 04</span></span
+      >{{ photo.caption
+      }}<span
+        >{{ String(index + 1).padStart(2, '0') }} / {{ String(photos.length).padStart(2, '0') }}</span
+      ></span
     >
     <span class="postcard-hint"><UIcon name="i-lucide-repeat-2" /> 点击，换个风景</span>
   </button>

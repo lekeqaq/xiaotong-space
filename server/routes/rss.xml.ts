@@ -1,12 +1,9 @@
 import { siteIdentity } from '../../shared/site'
-import { queryCollection } from '@nuxt/content/server'
+import { publishedArticles } from '../utils/admin-db'
 
 export default defineEventHandler(async (event) => {
   const origin = useRuntimeConfig(event).public.siteUrl || getRequestURL(event).origin
-  const articles = await queryCollection(event, 'writing')
-    .where('draft', '=', false)
-    .order('date', 'DESC')
-    .all()
+  const articles = publishedArticles()
   const escape = (text: string) =>
     text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;')
   setHeader(event, 'content-type', 'application/rss+xml; charset=utf-8')

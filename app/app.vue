@@ -2,6 +2,8 @@
 import { siteIdentity } from '#shared/site'
 import BackToTop from '~/components/common/BackToTop.vue'
 const config = useRuntimeConfig()
+const route = useRoute()
+const isAdmin = computed(() => route.path === '/admin' || route.path.startsWith('/admin/'))
 const motionPaused = useState('ambient-motion-paused', () => false)
 useHead({ meta: [{ name: 'theme-color', content: '#7c3aed' }] })
 useSeoMeta({ ogSiteName: siteIdentity.title, twitterCard: 'summary_large_image' })
@@ -26,10 +28,12 @@ useHead({
 <template>
   <div class="site-app" :class="{ 'motion-paused': motionPaused }">
     <a class="skip-link" href="#main-content">跳转至主要内容</a>
-    <AppHeader />
-    <main id="main-content"><NuxtPage /></main>
-    <AppFooter />
-    <BackToTop />
+    <AppHeader v-if="!isAdmin" />
+    <main id="main-content">
+      <NuxtLayout><NuxtPage /></NuxtLayout>
+    </main>
+    <AppFooter v-if="!isAdmin" />
+    <BackToTop v-if="!isAdmin" />
   </div>
 </template>
 
@@ -40,3 +44,5 @@ useHead({
 <style src="./assets/css/motion.css"></style>
 
 <style src="./assets/css/details.css"></style>
+
+<style src="./assets/css/admin.css"></style>

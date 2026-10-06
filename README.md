@@ -15,6 +15,7 @@
 | 首页 | `/`         | 交互工作台、生活照片、最新笔记、作品陈列与成长时间线      |
 | 作品 | `/projects` | 「逃个周末」与「声伴 / AI Digital Human」的展示和项目手记 |
 | 写作 | `/writing`  | Markdown 笔记、关键词搜索、分类筛选与分页加载             |
+| 后台 | `/admin`    | 文章、首页内容、图片管理与备份（需登录）                  |
 | 关于 | `/about`    | 个人介绍、技术关注与工作之外的兴趣                        |
 
 - **内容阅读**：文章目录、代码高亮与复制、Callout、阅读时间和上一篇 / 下一篇导航。
@@ -22,7 +23,7 @@
 - **浏览体验**：响应式布局、手机导航、返回顶部、键盘焦点和跳转至主要内容。
 - **SEO 与订阅**：canonical、Open Graph、结构化数据、`/sitemap.xml`、`/robots.txt` 与 `/rss.xml`。
 
-作品预览是主题交互示意，不连接旅行规划、语音识别或模型服务。站点内容通过 Git 和 Markdown 管理，目前未接入登录或可视化 CMS。
+作品预览是主题交互示意，不连接旅行规划、语音识别或模型服务。文章与首页照片、便签由集成式 Nuxt 内容后台管理，项目介绍继续使用 Git 和 Markdown。后台入口为 `/admin`，使用单管理员登录、草稿与发布版本、图片库、发布历史和备份。首次配置与部署见 [后台使用指南](docs/ADMIN.md)。
 
 ## 快速开始
 
@@ -33,6 +34,7 @@ git clone https://github.com/lekeqaq/xiaotong-space.git
 cd xiaotong-space
 pnpm install --frozen-lockfile
 cp .env.example .env
+pnpm admin:password # 配置后台管理员密码；已有配置可跳过
 pnpm dev
 ```
 
@@ -60,7 +62,7 @@ pnpm dev
 | `pnpm test`      | 对生产构建执行 SSR、SEO、内容、404 和重定向测试 |
 | `pnpm test:e2e`  | 对生产构建执行桌面与手机浏览器交互测试          |
 | `pnpm preview`   | 预览生产构建                                    |
-| `pnpm generate`  | 生成静态站点                                    |
+| `pnpm generate`  | 仅生成静态部分，不支持内容后台                  |
 
 提交前执行：
 
@@ -69,6 +71,7 @@ pnpm lint
 pnpm typecheck
 pnpm build
 pnpm test
+pnpm test:admin
 pnpm test:e2e
 ```
 
@@ -110,28 +113,11 @@ xiaotong-space/
 
 ### 写一篇笔记
 
-在 `content/writing/` 新建 Markdown 文件，例如 `my-first-note.md`：
+访问 `/admin`，编辑标题、摘要、Markdown 正文、分类、标签、封面和发布日期。草稿自动保存，实时预览与正式文章共用渲染；点击发布后立即更新文章、首页最新笔记、RSS 和 sitemap，无需重新构建。
 
-```markdown
----
-title: '我的第一篇实践笔记'
-description: '记录一个实际问题的解决过程。'
-date: '2026-10-06'
-cover: '/images/personal/notebook.jpg'
-tags: ['Vue', '实践']
-category: 'Engineering'
-draft: true
-readingTime: 3
----
+现有 `content/writing/*.md` 在首次初始化时导入内容数据库，保留原有地址与正文。此后文章以后台数据库为准，修改这些 Markdown 文件不会覆盖后台内容。详情见 [后台使用指南](docs/ADMIN.md)。
 
-## 从一个问题开始
-
-在这里写下思路、实现和复盘。
-```
-
-文件名决定文章地址，例如 `/writing/my-first-note`。`draft: true` 的文章不进入列表、详情、RSS 或 sitemap；准备发布时改为 `false`。阅读时间由 `readingTime` 手动填写，正文从二级标题开始，图片放入 `public/images/` 并用 `/images/...` 引用。
-
-保存文件后可在开发服务中查看；线上内容需要重新构建和发布。完整字段说明与编辑流程见 [Writing 内容维护指南](docs/WRITING_WORKFLOW.md)。
+首页照片和便签同样从后台编辑，支持排序、预览、保存草稿和发布。
 
 ### 维护作品和站点信息
 
@@ -152,18 +138,16 @@ readingTime: 3
 ```sh
 pnpm install --frozen-lockfile
 pnpm build
-HOST=0.0.0.0 PORT=3000 node .output/server/index.mjs
+HOST=0.0.0.0 PORT=3000 node --env-file-if-exists=.env .output/server/index.mjs
 ```
 
 部署产物为 `.output/`。Nuxt Content 使用 SQLite，图片处理依赖原生模块；应在与服务器一致的操作系统和架构上构建，避免直接复制 macOS 构建到 Linux。
 
-### 静态托管
+### 持久化内容
 
-```sh
-pnpm generate
-```
+完整网站与后台需要 Nuxt Node 服务，纯静态托管不再支持。设置 `NUXT_ADMIN_DATA_DIR` 为持久化磁盘目录，更新代码时保留数据库与上传图片。部署前配置管理员密码哈希、实际 HTTPS 域名，并在目标系统和架构构建。
 
-将 `.output/public/` 部署到支持静态文件的托管平台。静态产物的 SEO 与订阅地址在构建时生成，修改域名后需要重新生成。纯静态托管还需按平台配置旧路径重定向；Nitro 的 301 规则已由 Node 部署测试覆盖。
+使用后台下载完整备份，恢复流程见 [后台使用指南](docs/ADMIN.md#备份与恢复)。
 
 将代码推送至 GitHub 用于托管源码；网站上线仍需单独配置部署平台。
 
@@ -183,6 +167,7 @@ chore: update dependencies
 
 ## 项目文档
 
+- [后台使用指南](docs/ADMIN.md)：管理员配置、文章与首页编辑、发布、部署和备份恢复。
 - [Writing 内容维护指南](docs/WRITING_WORKFLOW.md)：新增、编辑与发布文章。
 - [素材记录](docs/ASSETS.md)：当前使用的图片及来源。
 - [产品需求](docs/PRD.md) / [技术规范](docs/TECH_SPEC.md)：初始设计与开发约束；部分早期功能已经调整，当前行为以代码和本 README 为准。

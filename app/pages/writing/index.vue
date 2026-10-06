@@ -1,8 +1,6 @@
 <script setup lang="ts">
 useSiteSeo('Writing', '关于前端、工程化和 AI 的实践笔记。记录我学到的、踩过的坑，以及一些有意思的想法。')
-const { data: articles } = await useAsyncData('writing', () =>
-  queryCollection('writing').where('draft', '=', false).order('date', 'DESC').all(),
-)
+const { data: articles } = await useFetch('/api/content/articles', { key: 'writing' })
 const search = ref('')
 const category = ref('All')
 const visible = ref(6)

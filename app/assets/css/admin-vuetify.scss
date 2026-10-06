@@ -1,0 +1,38 @@
+@use 'sass:meta';
+@use 'vuetify/settings' with (
+  $reset: false,
+  $utilities: false,
+  $color-pack: false
+);
+@use 'vuetify/styles/generic/layers';
+
+// Include theme and motion support within admin; omit global html/body rules and resets.
+.admin-vuetify {
+  @include meta.load-css('vuetify/styles/generic/theme');
+  @include meta.load-css('vuetify/styles/generic/animations');
+  @include meta.load-css('vuetify/styles/generic/transitions');
+  @include meta.load-css('vuetify/styles/generic/rtl');
+}
+
+// Public base rules intentionally use unlayered color inheritance. Bridge the library's
+// layered theme helpers locally so links/buttons retain Vuetify's accessible foregrounds.
+.admin-vuetify {
+  --v-theme-overlay-multiplier: 1;
+  --v-scrollbar-offset: 0px;
+
+  @each $color in primary, success, error, info, warning, surface, background {
+    .bg-#{$color} {
+      background-color: rgb(var(--v-theme-#{$color}));
+      color: rgb(var(--v-theme-on-#{$color}));
+    }
+    .text-#{$color} {
+      color: rgb(var(--v-theme-#{$color}));
+    }
+  }
+  .elevation-0 {
+    box-shadow: none;
+  }
+  .rounded-lg {
+    border-radius: 10px;
+  }
+}

@@ -3,8 +3,9 @@ import { siteIdentity } from './shared/site'
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-03',
   devtools: { enabled: false },
-  modules: ['@nuxt/ui', '@nuxt/content', '@nuxt/image', '@nuxt/eslint'],
+  modules: ['./modules/admin-vuetify', '@nuxt/ui', '@nuxt/content', '@nuxt/image', '@nuxt/eslint'],
   features: { inlineStyles: true },
+  build: { transpile: ['vuetify'] },
   components: [{ path: '~/components', pathPrefix: false }],
   typescript: { strict: true },
   ui: {
@@ -15,6 +16,16 @@ export default defineNuxtConfig({
   colorMode: { preference: 'system', fallback: 'light', classSuffix: '' },
   image: { format: ['webp'], quality: 80 },
   routeRules: {
+    '/': { prerender: false, headers: { 'cache-control': 'no-store' } },
+    '/writing': { prerender: false, headers: { 'cache-control': 'no-store' } },
+    '/writing/**': { prerender: false, headers: { 'cache-control': 'no-store' } },
+    '/rss.xml': { prerender: false, headers: { 'cache-control': 'no-store' } },
+    '/sitemap.xml': { prerender: false, headers: { 'cache-control': 'no-store' } },
+    '/admin/**': {
+      prerender: false,
+      headers: { 'cache-control': 'no-store', 'x-robots-tag': 'noindex, nofollow' },
+    },
+    '/api/**': { prerender: false },
     '/subscribe': { redirect: { to: '/writing', statusCode: 301 } },
     '/lab': { redirect: { to: '/writing', statusCode: 301 } },
     '/lab/**': { redirect: { to: '/writing', statusCode: 301 } },
@@ -22,6 +33,8 @@ export default defineNuxtConfig({
     '/_ipx/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
     '/images/**': { headers: { 'cache-control': 'public, max-age=604800' } },
   },
+  // Runtime Markdown previews need the MDC highlighter endpoint (Content otherwise disables it).
+  mdc: { highlight: { noApiRoute: false } },
   content: {
     build: {
       markdown: {
@@ -40,12 +53,18 @@ export default defineNuxtConfig({
     },
     pageTransition: { name: 'page', mode: 'out-in' },
   },
-  runtimeConfig: { public: { siteUrl: '', githubUrl: '', contactEmail: '' } },
+  runtimeConfig: {
+    adminUsername: 'admin',
+    adminPasswordHash: '',
+    adminDataDir: '.data/admin',
+    public: { siteUrl: '', githubUrl: '', contactEmail: '' },
+  },
   nitro: {
     compressPublicAssets: true,
     prerender: {
       crawlLinks: true,
-      routes: ['/', '/projects', '/writing', '/about', '/sitemap.xml', '/rss.xml', '/robots.txt'],
+      routes: ['/projects', '/about', '/robots.txt'],
+      ignore: ['/', '/writing', '/writing/**', '/admin', '/admin/**', '/api/**', '/rss.xml', '/sitemap.xml'],
     },
   },
 })

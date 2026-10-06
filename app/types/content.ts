@@ -1,6 +1,6 @@
-import type { ProjectsCollectionItem, WritingCollectionItem } from '@nuxt/content'
+import type { ProjectsCollectionItem } from '@nuxt/content'
 export type Project = ProjectsCollectionItem
-export type Writing = WritingCollectionItem
+export type Writing = import('#shared/admin').RenderedArticle
 
 export type ProjectSummary = Pick<
   Project,

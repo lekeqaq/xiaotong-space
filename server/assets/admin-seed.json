@@ -1,0 +1,65 @@
+{
+  "articles": [
+    {
+      "title": "个人 AI 助手的知识库设计思路",
+      "description": "从本站的 Markdown 内容管理出发，整理知识库的来源边界、分块、引用与评估方案。",
+      "date": "2026-10-03",
+      "updated": "2026-10-06",
+      "cover": "/images/personal/mountain.jpg",
+      "tags": [
+        "AI",
+        "RAG",
+        "Nuxt"
+      ],
+      "category": "AI",
+      "draft": false,
+      "featured": true,
+      "readingTime": 5,
+      "slug": "building-personal-ai",
+      "markdown": "## 先整理知识，再开始问答\n\n一个个人 AI 助手的价值，不在于它能聊多少话题，而在于能否准确回答与我有关的问题。项目背景、技术决策和实践笔记，才是它真正需要理解的内容。\n\n这里记录知识库的设计思路。本站已经用 Nuxt Content 管理项目与文章；检索、向量索引和模型问答仍处于规划阶段，接入方案需要继续验证。\n\n## 先把已有内容的边界理清楚\n\n本站目前公开两个项目手记和三篇技术笔记。项目记录说明采用的方案与职责，技术笔记包含实现示例和后续设想。这两类内容需要保留各自的语境：写在笔记里的建议，并不自动代表项目已经实现了这项能力。\n\n比如「声伴」手记明确记录了 LiveTalking、本地语言模型和讯飞语音服务的集成，也把流式输出、打断处理和弱网恢复列为待验证方向。如果助手只截取“打断处理”几个字，就可能把计划误读成成果。回答这类问题时，应同时取回能力说明与状态说明。\n\n## Markdown 是内容的起点\n\n文章与项目使用 Markdown 维护，在 frontmatter 中定义标题、日期、标签和描述。Nuxt Content 的集合 schema 在构建时校验这些字段，也为页面查询提供类型。\n\n```ts\nconst { data: articles } = await useAsyncData('writing', () =>\n  queryCollection('writing').where('draft', '=', false).order('date', 'DESC').all(),\n)\n```\n\n让结构清楚，比一开始引入复杂后台更重要。每篇文章既是可读页面，也是之后检索系统的知识来源。\n\n## 发布规则也应成为检索规则\n\n当前站点在首页、文章列表、详情、RSS 和 sitemap 查询中都使用 `draft = false`，早期实验草稿则保存在公开集合之外的 `docs/archive/`。这给知识库提供了一个明确的来源边界：未来建索引时，也应只读取已发布内容。\n\n我选择继续用 Markdown 与 Git 维护内容，是因为文章、项目字段和代码可以一起审阅。代价是发布内容需要重新构建，暂时没有浏览器里的编辑与即时发布能力。对于当前规模，这个取舍让内容来源和更新过程更容易追踪。\n\n页面展示与索引还需要使用同一份内容版本。文章修改或撤回后，应替换或删除对应片段；仅仅追加新向量，会让旧说法继续出现在回答里。文章的 `path` 与 `updated` 可以用于定位来源和判断更新，但具体同步机制仍需要实现。\n\n## 分块需要保留上下文\n\n固定字符数切块很容易把解释与代码分开。更适合技术文章的方式是先按标题拆分，再为较长章节设置上限。每个片段记录原文路径、章节标题和更新时间。\n\n这些元数据不只用于检索，也用于把答案链接回原文。访客应该能够检查模型的回答，而不是只能相信它。\n\n::content-callout{title=\"一个小原则\"}\n如果一段答案找不到明确来源，就先不要把它当成可靠的个人知识。\n::\n\n## 检索与生成分开评估\n\n回答错误可能来自检索不到相关内容，也可能来自模型误读了已有片段。分别记录检索结果与最终答案，才能确定需要优化哪一层。\n\n可以先用本站内容准备这样一个小型评估集。下面是待验证的预期行为，还没有实际运行结果：\n\n| 问题                         | 应取回的来源                         | 预期行为                                  |\n| ---------------------------- | ------------------------------------ | ----------------------------------------- |\n| 逃个周末包含哪些部分？       | 项目手记“四个部分，一条产品链路”     | 回答小程序、API、后台和官网，并链接该章节 |\n| 声伴的语音合成在本地运行吗？ | 项目手记“本地模型与语音服务各司其职” | 区分本地语言模型与讯飞 TTS 服务           |\n| 声伴已经支持打断了吗？       | 项目手记“实时体验取决于整条链路”     | 说明这是待验证方向                        |\n| 项目的实际响应延迟是多少？   | 现有资料没有测量值                   | 说明缺少测量记录，不生成数字              |\n\n先检查是否检索到正确章节，再检查答案是否准确、状态是否清楚、引用是否能打开。这样可以区分“没有找对资料”和“读到了资料但理解错了”，让下一轮调整有具体依据。\n\n## 给不确定性留出位置\n\n对于缺少资料的问题，回答“目前的笔记没有提到”比猜一个看似合理的答案更好。个人助手不是万能的人设，而是已有内容的另一种阅读方式。\n\n> 先让知识可靠，再让对话自然。\n\n## 下一步\n\n继续补充真实的项目记录，先用上面的评估问题验证按标题分块与关键词检索，再比较是否需要向量检索。模型接入之后，仍需验证回答中的引用、状态区分和缺少来源时的反馈。\n\n现有站点测试覆盖文章渲染、RSS、sitemap 等内容出口；知识库接入后，还需要单独增加检索与回答评估。两者检查的对象不同，网页能正确展示文章，并不等于助手能准确使用文章。"
+    },
+    {
+      "title": "语音交互状态设计：一个 Vue 开发者的视角",
+      "description": "从开麦到停顿，从状态反馈到打断，理解语音交互里那些容易被忽略的细节。",
+      "date": "2026-09-21",
+      "updated": "2026-10-06",
+      "cover": "/images/writing/architecture.jpg",
+      "tags": [
+        "Vue",
+        "Frontend"
+      ],
+      "category": "Frontend",
+      "draft": false,
+      "featured": true,
+      "readingTime": 4,
+      "slug": "voice-agent-notes",
+      "markdown": "## 从按钮交互到连续对话\n\n网页上的按钮有明确的点击边界，语音交互却更连续。用户可能停顿、改口，也可能在系统说话时插话。前端需要表达的不只是加载状态，而是整段对话的节奏。\n\n这篇笔记整理前端状态与异常处理的设计思路，代码是局部示例。完整的语音会话控制与打断行为还需要在真实服务链路中验证。\n\n## 先定义状态\n\n最小状态集合可以是空闲、倾听、思考、说话和出错。任何时刻只有一个主要状态，用户应该能够从界面理解当前发生了什么。\n\n```ts\ntype VoiceState = 'idle' | 'listening' | 'thinking' | 'speaking' | 'error'\n\nconst state = ref<VoiceState>('idle')\nconst canStart = computed(() => state.value === 'idle')\n```\n\n## 麦克风权限是一个交互\n\n不要在页面打开时就请求权限。让用户点击开始，说明为什么需要麦克风，再调用浏览器媒体 API。权限被拒绝时，保留文本入口与重试说明。\n\n权限提示、设备缺失和网络失败是不同的问题，不应该统一显示成“出了点问题”。\n\n## 打断需要贯穿整个链路\n\n只暂停播放器不够。旧请求还可能继续返回语音片段，重新开始播放。每轮对话需要一个标识，在响应抵达时检查它是否仍然有效。\n\n```ts\nlet turnId = 0\n\nfunction beginTurn() {\n  turnId += 1\n  return turnId\n}\n\nfunction isCurrentTurn(id: number) {\n  return id === turnId\n}\n```\n\n## 让等待有意义\n\n“正在识别”和“正在组织回答”提供了不同的信息。状态可以细分，但视觉应保持克制。一个简洁的图标、状态文字与停止按钮，比持续跳动的大型音浪更有帮助。\n\n## 用真实场景验证\n\n耳机、外放、安静房间和街道噪声都会改变体验。先把权限、开始、暂停、打断与失败恢复串起来，再追求更精致的视觉反馈。\n\n验证时可以从几个明确的失败场景开始：权限被拒绝后能否使用文字入口；停止一轮对话后，迟到的音频是否还会播放；网络断开后能否退出“思考中”；离开页面后，麦克风轨道与事件监听是否释放。\n\n上面的 `turnId` 只帮助前端丢弃过期响应。完整的打断还需要取消模型请求、停止语音生成、清空播放队列，并让服务端识别当前有效会话。下一步应在同一条链路里验证这些动作，再确认可以支持怎样的打断体验。"
+    },
+    {
+      "title": "WebRTC 到底是怎么工作的？",
+      "description": "从连接建立到媒体传输，整理一次实时通信链路中的核心概念。",
+      "date": "2026-09-11",
+      "cover": "/images/writing/headphones.jpg",
+      "tags": [
+        "WebRTC",
+        "Network"
+      ],
+      "category": "Engineering",
+      "draft": false,
+      "featured": true,
+      "readingTime": 5,
+      "slug": "webrtc-notes",
+      "markdown": "## 从一次通话开始\n\nWebRTC 提供浏览器间实时传输音视频和数据的能力。实际建立连接时，仍然需要交换双方的信息，并找到网络中可用的传输路径。\n\n这篇笔记整理前端接入时的基本心智模型，避免把“实时通信”理解为一个只需调用一次的 API。\n\n## 信令负责交换信息\n\n信令不是 WebRTC 自带的固定协议。应用需要通过自己的通道交换 offer、answer 和网络候选信息。WebSocket 是常见选择，但不是唯一方案。\n\n信令传输连接描述，媒体传输则由 WebRTC 的连接完成，两者承担不同职责。\n\n## 连接描述与候选地址\n\nSDP 描述媒体能力与会话参数，ICE 候选用于寻找双方可连接的网络路径。STUN 帮助了解公网映射信息，无法直接连接时可通过 TURN 中继。\n\n```ts\nconst connection = new RTCPeerConnection({\n  iceServers: [], // 部署时填写实际的 STUN / TURN 配置\n})\n\nconnection.addEventListener('connectionstatechange', () => {\n  console.log(connection.connectionState)\n})\n```\n\n代码只是连接对象的起点。实际应用还需要媒体授权、信令协商、候选交换、异常恢复与资源清理。\n\n## 观察状态，而不是猜测\n\n连接失败可能来自信令消息、候选处理、网络策略或设备权限。把连接状态变化、ICE 状态和错误记录下来，比单纯延长重试时间更容易定位问题。\n\n## 离开页面时清理\n\n媒体轨道需要停止，连接对象需要关闭，信令监听也应解除。否则可能出现页面已经离开但麦克风仍在工作的问题。\n\n```ts\nfunction cleanup(stream: MediaStream, peer: RTCPeerConnection) {\n  stream.getTracks().forEach(track => track.stop())\n  peer.close()\n}\n```\n\n## 下一次实践的重点\n\n用两个页面建立最小通信链路，分别观察同一网络、不同网络和受限网络下的行为。把每个环节拆开验证，实时通信会更容易理解。\n\n参考：[MDN WebRTC API](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API)。"
+    }
+  ],
+  "images": [
+    "/images/personal/camera.jpg",
+    "/images/personal/coast.jpg",
+    "/images/personal/mountain.jpg",
+    "/images/personal/notebook.jpg",
+    "/images/writing/architecture.jpg",
+    "/images/writing/headphones.jpg",
+    "/images/projects/portrait.jpg",
+    "/images/projects/weekend-coast.jpg"
+  ]
+}

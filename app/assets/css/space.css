@@ -466,7 +466,7 @@
 }
 .thought-bottom {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   font-size: 0.65rem;
 }

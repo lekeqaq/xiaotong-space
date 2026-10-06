@@ -1,3 +1,5 @@
+@layer theme, base, components, utilities, vuetify-core, vuetify-components, vuetify-overrides, vuetify-utilities, vuetify-final;
+
 @import 'tailwindcss';
 @import '@nuxt/ui';
 
@@ -544,6 +546,9 @@ h2 {
 }
 .code-block pre code .line {
   display: block;
+}
+.code-block .shiki span {
+  color: var(--shiki-default, var(--shiki-light, inherit));
 }
 .dark pre code .line span {
   color: var(--shiki-dark, inherit) !important;

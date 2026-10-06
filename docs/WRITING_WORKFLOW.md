@@ -1,3 +1,5 @@
+> 当前文章通过 `/admin` 编辑与发布，详见 [后台使用指南](ADMIN.md)。本文保留旧的 Markdown 维护方式作为首次导入种子的说明；它不会更新已经初始化的后台数据库。
+
 # Writing 内容维护
 
 Writing 已通过 Nuxt Content 从 Markdown 读取文章。新增笔记只增加内容文件，列表、分类、搜索、详情、目录、RSS 与 sitemap 会随构建更新，不需要改 Vue 或 TypeScript。
