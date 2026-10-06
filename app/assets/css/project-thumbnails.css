@@ -14,29 +14,26 @@
     box-shadow 250ms,
     background 250ms;
 }
-.study-topline,
 .study-bottomline {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  line-height: 1.5;
   justify-content: space-between;
   gap: 12px;
   color: var(--color-text-muted);
-  font-size: 0.55rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.1em;
-}
-.study-topline {
-  padding-bottom: 17px;
-  border-bottom: 1px solid var(--color-border);
 }
 .study-bottomline {
   min-height: 49px;
   border-top: 1px solid var(--color-border);
-  font-size: 0.58rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.03em;
 }
 .study-bottomline > span:last-child {
-  font-size: 0.5rem;
-  white-space: nowrap;
+  font-size: var(--font-size-caption);
+  white-space: normal;
 }
 .travel-study {
   position: relative;
@@ -44,22 +41,16 @@
   grid-template-columns: 1fr 1fr;
   gap: 22px;
   align-items: center;
-  height: 300px;
+  min-height: 300px;
   padding-block: 29px;
 }
 .study-travel-note {
   position: relative;
   z-index: 1;
 }
-.study-compass {
-  display: block;
-  color: var(--color-mint-ink);
-  font-size: 26px;
-  margin-bottom: 15px;
-}
 .study-small-label {
   display: block;
-  font-size: 0.66rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
   letter-spacing: 0.04em;
 }
@@ -86,7 +77,7 @@
   flex: 1;
   position: relative;
   color: var(--color-text-muted);
-  font-size: 0.57rem;
+  font-size: var(--font-size-caption);
   white-space: nowrap;
 }
 .study-route > span:not(:last-child)::before {
@@ -109,7 +100,7 @@
 }
 .study-travel-note > small {
   display: block;
-  font-size: 0.5rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
   letter-spacing: 0.1em;
   margin-top: 18px;
@@ -133,7 +124,8 @@
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-size: 0.58rem;
+  flex-wrap: wrap;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
   padding: 13px 3px;
 }
@@ -165,7 +157,7 @@
   border-radius: 5px;
   color: var(--color-text-muted);
   background: transparent;
-  font-size: 0.72rem;
+  font-size: var(--font-size-caption);
   transition: background 200ms;
 }
 .study-controls button:hover {
@@ -177,7 +169,7 @@
   color: var(--color-text);
 }
 .thumbnail-interactive .travel-study {
-  height: 340px;
+  min-height: 340px;
 }
 .thumbnail-interactive .study-landscape-window {
   height: 220px;
@@ -205,23 +197,19 @@
 @container (max-width: 410px) {
   .travel-study {
     gap: 16px;
-    height: 270px;
+    min-height: 270px;
   }
   .study-landscape-window {
     height: 160px;
   }
-  .study-topline {
-    font-size: 0.47rem;
-    letter-spacing: 0.04em;
-  }
   .study-small-label {
-    font-size: 0.58rem;
+    font-size: var(--font-size-caption);
   }
   .study-bottomline {
-    font-size: 0.51rem;
+    font-size: var(--font-size-caption);
   }
   .study-bottomline > span:last-child {
-    font-size: 0.44rem;
+    font-size: var(--font-size-caption);
   }
   .study-handwriting {
     font-size: 1rem;
@@ -243,7 +231,7 @@
     padding-top: 16px;
   }
   .thumbnail-interactive .travel-study {
-    height: 300px;
+    min-height: 300px;
   }
   .thumbnail-interactive .study-landscape-window {
     height: 180px;

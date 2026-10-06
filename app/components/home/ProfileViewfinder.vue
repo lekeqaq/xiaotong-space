@@ -10,34 +10,36 @@ const scene = computed(() => scenes[active.value]!)
 <template>
   <figure class="profile-finder">
     <div class="finder-overline"><span>OUTSIDE THE SCREEN</span><UIcon name="i-lucide-aperture" /></div>
-    <button
-      class="finder-window"
-      type="button"
-      aria-label="切换下一处风景"
-      @click="active = (active + 1) % scenes.length"
-    >
-      <NuxtImg
-        v-for="(item, index) in scenes"
-        :key="item.file"
-        :src="`/images/personal/${item.file}.jpg`"
-        :alt="active === index ? item.alt : ''"
-        :aria-hidden="active !== index"
-        :class="{ 'finder-visible': active === index }"
-        width="620"
-        height="780"
-        sizes="sm:80vw md:300px"
-        format="webp"
-      />
-      <span class="finder-grid" aria-hidden="true"><i /><i /><i /><i /></span>
-      <span class="finder-cross" aria-hidden="true">+</span>
-      <span class="finder-counter" aria-hidden="true">0{{ active + 1 }} / 03</span>
-      <span class="finder-action"><UIcon name="i-lucide-arrow-right" /></span>
-    </button>
-    <figcaption aria-live="polite">
-      <Transition name="finder-caption" mode="out-in"
-        ><span :key="active">{{ scene.caption }}</span></Transition
+    <div class="finder-print">
+      <button
+        class="finder-window"
+        type="button"
+        aria-label="切换下一处风景"
+        @click="active = (active + 1) % scenes.length"
       >
-    </figcaption>
+        <NuxtImg
+          v-for="(item, index) in scenes"
+          :key="item.file"
+          :src="`/images/personal/${item.file}.jpg`"
+          :alt="active === index ? item.alt : ''"
+          :aria-hidden="active !== index"
+          :class="{ 'finder-visible': active === index }"
+          width="620"
+          height="780"
+          sizes="sm:80vw md:300px"
+          format="webp"
+        />
+        <span class="finder-grid" aria-hidden="true"><i /><i /><i /><i /></span>
+        <span class="finder-cross" aria-hidden="true">+</span>
+        <span class="finder-counter" aria-hidden="true">0{{ active + 1 }} / 03</span>
+        <span class="finder-action"><UIcon name="i-lucide-arrow-right" /></span>
+      </button>
+      <figcaption aria-live="polite">
+        <Transition name="finder-caption" mode="out-in"
+          ><span :key="active">{{ scene.caption }}</span></Transition
+        >
+      </figcaption>
+    </div>
     <div class="finder-selector" role="group" aria-label="选择风景">
       <button
         v-for="(item, index) in scenes"
@@ -72,14 +74,42 @@ const scene = computed(() => scenes[active.value]!)
   color: var(--color-accent);
   font-size: 18px;
 }
+.finder-print {
+  position: relative;
+  padding: 9px 9px 0;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  isolation: isolate;
+}
+.finder-print::before {
+  content: '';
+  position: absolute;
+  inset: 5px -5px -5px 5px;
+  z-index: -2;
+  border: 1px solid var(--color-border);
+  border-radius: inherit;
+  background: var(--color-bg);
+  transform: rotate(3deg);
+  transform-origin: 50% 90%;
+  pointer-events: none;
+}
+.finder-print::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--color-surface);
+  pointer-events: none;
+}
 .finder-window {
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 0.88;
+  aspect-ratio: 0.94;
   overflow: hidden;
   border: 1px solid var(--color-border);
-  border-radius: 48% 48% 8px 8px;
+  border-radius: 2px;
   background: var(--color-mint);
   padding: 0;
   isolation: isolate;
@@ -116,7 +146,7 @@ const scene = computed(() => scenes[active.value]!)
 .finder-grid {
   position: absolute;
   z-index: 3;
-  inset: 22% 13% 22%;
+  inset: 12% 10% 20%;
   opacity: 0.5;
   transition:
     inset 500ms,
@@ -184,15 +214,15 @@ const scene = computed(() => scenes[active.value]!)
   place-items: center;
   transition: transform 400ms;
 }
-.finder-window:hover .finder-grid {
-  inset: 25% 17%;
+.finder-window:is(:hover, :focus-visible) .finder-grid {
+  inset: 15% 13% 23%;
   opacity: 0.9;
 }
-.finder-window:hover .finder-action {
+.finder-window:is(:hover, :focus-visible) .finder-action {
   transform: rotate(-35deg);
 }
 .profile-finder figcaption {
-  height: 48px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,9 +231,11 @@ const scene = computed(() => scenes[active.value]!)
 .finder-selector {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-block: 1px solid var(--color-border);
+  margin-top: 24px;
+  border-bottom: 1px solid var(--color-border);
 }
 .finder-selector button {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,7 +254,23 @@ const scene = computed(() => scenes[active.value]!)
 }
 .finder-selector button[aria-pressed='true'] {
   color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent-soft) 35%, transparent);
+}
+.finder-selector button::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  height: 2px;
+  left: 16%;
+  right: 16%;
+  background: var(--color-accent);
+  scale: 0 1;
+  transition: scale 250ms var(--ease);
+}
+.finder-selector button[aria-pressed='true']::after {
+  scale: 1;
+}
+.finder-selector button:hover {
+  color: var(--color-accent);
 }
 .finder-margin-note {
   display: block;

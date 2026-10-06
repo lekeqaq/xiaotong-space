@@ -58,6 +58,7 @@ pnpm dev
 | `pnpm format`    | 使用 Prettier 格式化项目                        |
 | `pnpm build`     | 构建 Node 服务与预渲染页面                      |
 | `pnpm test`      | 对生产构建执行 SSR、SEO、内容、404 和重定向测试 |
+| `pnpm test:e2e`  | 对生产构建执行桌面与手机浏览器交互测试          |
 | `pnpm preview`   | 预览生产构建                                    |
 | `pnpm generate`  | 生成静态站点                                    |
 
@@ -68,9 +69,16 @@ pnpm lint
 pnpm typecheck
 pnpm build
 pnpm test
+pnpm test:e2e
 ```
 
-测试会启动独立服务，使用本地 `3100` 端口，结束后自动关闭。**必须先执行 `pnpm build`**，测试才能使用最新的 `.output/server/index.mjs`。
+服务端测试使用本地 `3100` 端口；浏览器测试使用 `3200` 端口，结束后自动关闭服务。**必须先执行 `pnpm build`**，两套测试才能使用最新的 `.output/server/index.mjs`。
+
+首次运行浏览器测试前执行 `pnpm exec playwright install chromium`。浏览器测试覆盖 1280px 桌面与 390px 手机布局、搜索与分类组合、键盘导航、主题持久化、数字人阶段切换及预览文字可读性。截图与失败追踪保存在忽略提交的 `artifacts/playwright/`。
+
+已安装 Google Chrome 时，也可以运行 `PLAYWRIGHT_CHANNEL=chrome pnpm test:e2e`，使用独立的临时浏览器配置进行验收。
+
+GitHub Actions 会在 push 和 pull request 时运行 lint、类型检查、构建以及两套测试，并保留浏览器验收产物 7 天。
 
 ## 项目结构
 
@@ -128,6 +136,7 @@ readingTime: 3
 ### 维护作品和站点信息
 
 - 项目手记放在 `content/projects/`，字段规则见 `content.config.ts`；当前支持 `travel`、`human` 两种项目预览。
+- 项目摘要与展示文案统一维护在 Markdown frontmatter：`description` 用于详情与作品列表，`cardSummary` 用于首页卡片与预览，`previewCaption` 用于详情图注，`showcase` 定义展示标题、标签和收尾文案。可选的 `workbench` 指定首页工作台内容，按项目排序取首个配置项。
 - 站点名称与 RSS 标题维护在 `shared/site.ts`。
 - 导航与成长时间线维护在 `app/utils/site.ts`。
 - 图片来源与示意素材说明见 [素材记录](docs/ASSETS.md)。
@@ -177,4 +186,4 @@ chore: update dependencies
 - [Writing 内容维护指南](docs/WRITING_WORKFLOW.md)：新增、编辑与发布文章。
 - [素材记录](docs/ASSETS.md)：当前使用的图片及来源。
 - [产品需求](docs/PRD.md) / [技术规范](docs/TECH_SPEC.md)：初始设计与开发约束；部分早期功能已经调整，当前行为以代码和本 README 为准。
-- [V1](docs/QA.md)、[V1.1](docs/QA-v1.1.md)、[V1.2](docs/QA-v1.2.md)、[V1.3](docs/QA-v1.3.md)：各阶段的历史验收记录。
+- [V1](docs/QA.md)、[V1.1](docs/QA-v1.1.md)、[V1.2](docs/QA-v1.2.md)、[V1.3](docs/QA-v1.3.md)、[V1.4](docs/QA-v1.4.md)：各阶段的验收记录。

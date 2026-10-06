@@ -1,0 +1,152 @@
+import { test, expect } from '@playwright/test'
+
+const routes = [
+  '/',
+  '/projects',
+  '/writing',
+  '/about',
+  '/projects/weekend',
+  '/projects/digital-human',
+  '/writing/building-personal-ai',
+  '/writing/voice-agent-notes',
+  '/writing/webrtc-notes',
+]
+
+for (const route of routes) {
+  test(`${route} stays readable within the viewport`, async ({ page }, testInfo) => {
+    const errors: string[] = []
+    page.on('pageerror', (error) => errors.push(error.message))
+    await page.goto(route)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    await expect(page.getByRole('main')).toBeVisible()
+    await expect(page.getByRole('button', { name: '切换到深色主题' })).toBeVisible()
+    const dimensions = await page.evaluate(() => ({
+      content: document.documentElement.scrollWidth,
+      viewport: document.documentElement.clientWidth,
+    }))
+    expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport + 1)
+    expect(errors).toEqual([])
+    // Keep a few representative renders for visual review after CSS changes.
+    if (['/', '/projects', '/about', '/writing/building-personal-ai'].includes(route)) {
+      await page.screenshot({ path: testInfo.outputPath('page.png'), fullPage: true })
+    }
+  })
+}
+
+test('search, category filters and reset work together', async ({ page }) => {
+  await page.goto('/writing')
+  const entries = page.locator('.writing-entry')
+  const search = page.getByRole('searchbox', { name: '搜索文章' })
+  await expect(entries).toHaveCount(3)
+  await search.fill('  rAg  ')
+  await expect(entries).toHaveCount(1)
+  await expect(entries).toContainText('个人 AI 助手的知识库设计思路')
+  await page.getByRole('button', { name: /^Frontend/ }).click()
+  await expect(entries).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: '这一页，暂时还是空白。' })).toBeVisible()
+  await page.getByRole('button', { name: '重置筛选' }).click()
+  await expect(entries).toHaveCount(3)
+  await expect(search).toHaveValue('')
+  await page.getByRole('button', { name: /^Engineering/ }).click()
+  await expect(entries).toHaveCount(1)
+  await expect(entries).toContainText('WebRTC')
+})
+
+test('Escape clears search and preserves keyboard focus', async ({ page }) => {
+  await page.goto('/writing')
+  const search = page.getByRole('searchbox', { name: '搜索文章' })
+  await search.fill('没有这篇笔记')
+  await expect(page.locator('.writing-entry')).toHaveCount(0)
+  await search.press('Escape')
+  await expect(search).toHaveValue('')
+  await expect(search).toBeFocused()
+  await expect(page.locator('.writing-entry')).toHaveCount(3)
+})
+
+test('navigation opens Writing and closes the mobile menu', async ({ page, isMobile }) => {
+  await page.goto('/about')
+  if (isMobile) {
+    const menu = page.getByRole('button', { name: '打开导航菜单' })
+    await menu.press('Enter')
+    const navigation = page.getByRole('navigation', { name: '移动端导航' })
+    await expect(navigation).toBeVisible()
+    await navigation.getByRole('link', { name: 'Writing', exact: true }).click()
+    await expect(page).toHaveURL('/writing')
+    await expect(navigation).toBeHidden()
+    await menu.press('Enter')
+    await expect(navigation.getByRole('link', { name: 'Writing', exact: true })).toHaveAttribute(
+      'aria-current',
+      'page',
+    )
+    await menu.press('Enter')
+    await expect(navigation).toBeHidden()
+  } else {
+    const navigation = page.getByRole('navigation', { name: '主要导航' })
+    await navigation.getByRole('link', { name: 'Writing', exact: true }).click()
+    await expect(page).toHaveURL('/writing')
+    await expect(navigation.getByRole('link', { name: 'Writing', exact: true })).toHaveAttribute(
+      'aria-current',
+      'page',
+    )
+  }
+})
+
+test('theme preference survives navigation and reload', async ({ page }, testInfo) => {
+  await page.goto('/about')
+  const root = page.locator('html')
+  await page.getByRole('button', { name: '切换到深色主题' }).click()
+  await expect(root).toHaveClass(/dark/)
+  await page.goto('/writing')
+  await expect(root).toHaveClass(/dark/)
+  await page.goto('/projects')
+  await expect(root).toHaveClass(/dark/)
+  await page.screenshot({ path: testInfo.outputPath('dark-projects.png'), fullPage: true })
+  await page.reload()
+  await expect(root).toHaveClass(/dark/)
+  await page.getByRole('button', { name: '切换到浅色主题' }).click()
+  await expect(root).not.toHaveClass(/dark/)
+})
+
+test('digital human phases support keyboard input and announce the response', async ({ page }) => {
+  await page.goto('/projects/digital-human')
+  const listening = page.getByRole('button', { name: /倾听/ })
+  const thinking = page.getByRole('button', { name: /思考/ })
+  const speaking = page.getByRole('button', { name: /回应/ })
+  await expect(listening).toHaveAttribute('aria-pressed', 'true')
+  await listening.focus()
+  await listening.press('Tab')
+  await expect(thinking).toBeFocused()
+  await thinking.press('Enter')
+  await expect(thinking).toHaveAttribute('aria-pressed', 'true')
+  await expect(listening).toHaveAttribute('aria-pressed', 'false')
+  await expect(page.locator('.companion-bottomline')).toContainText('Qwen / DeepSeek')
+  await thinking.press('Tab')
+  await expect(speaking).toBeFocused()
+  await speaking.press('Space')
+  await expect(speaking).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.locator('.companion-message.current')).toContainText('我在。慢慢说，今天怎么了？')
+  await expect(page.locator('[aria-live="polite"]')).toContainText('回应：声伴')
+  await expect(page.locator('.companion-bottomline')).toContainText('讯飞 TTS · LiveTalking')
+})
+
+test('project labels use readable type and keep controls inside the preview', async ({ page }) => {
+  await page.goto('/projects')
+  const sizes = await page
+    .locator(
+      '.companion-bottomline, .companion-message small, .companion-portrait figcaption, .study-bottomline, .showcase-caption',
+    )
+    .evaluateAll((elements) =>
+      elements.map((element) => Number.parseFloat(getComputedStyle(element).fontSize)),
+    )
+  expect(sizes.length).toBeGreaterThan(0)
+  expect(Math.min(...sizes)).toBeGreaterThanOrEqual(12)
+  const coast = page.getByRole('button', { name: '海边放空' })
+  await coast.click()
+  await expect(coast).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByText('等一场海边日落。', { exact: true })).toBeVisible()
+  await expect(page.getByRole('img', { name: '海边放空' })).toBeVisible()
+  const overflows = await page
+    .locator('.project-thumbnail')
+    .evaluateAll((elements) => elements.map((element) => element.scrollWidth > element.clientWidth + 1))
+  expect(overflows).not.toContain(true)
+})

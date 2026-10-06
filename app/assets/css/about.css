@@ -11,7 +11,7 @@
 }
 .profile-eyebrow {
   color: var(--color-text-muted);
-  font-size: 0.61rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.13em;
 }
 .profile-intro h1 {
@@ -65,7 +65,7 @@
 }
 .profile-section-heading > span {
   display: block;
-  font-size: 0.53rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.12em;
   color: var(--color-text-muted);
   margin-bottom: 11px;
@@ -88,7 +88,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 4px;
-  font-size: 0.67rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
 }
 .profile-interests {

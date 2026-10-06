@@ -20,7 +20,7 @@
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
-  font-size: 0.65rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.12em;
 }
 .case-copy h1 {
@@ -73,7 +73,7 @@
   justify-content: space-between;
   gap: 12px;
   color: var(--color-text-muted);
-  font-size: 0.58rem;
+  font-size: var(--font-size-caption);
 }
 .case-scene-label {
   padding: 2px 3px 13px;
@@ -92,7 +92,7 @@
   gap: 20px;
   border-top: 1px solid var(--color-border);
   padding: 22px 0 30px;
-  font-size: 0.63rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.12em;
   color: var(--color-text-muted);
   scroll-margin-top: calc(var(--header-height) + 24px);
@@ -113,7 +113,7 @@
   align-items: center;
   gap: 10px;
   letter-spacing: 0.14em;
-  font-size: 0.65rem;
+  font-size: var(--font-size-caption);
 }
 .opening-dot {
   width: 6px;
@@ -136,7 +136,7 @@
 }
 .article-title-page .article-meta {
   gap: 12px 18px;
-  font-size: 0.7rem;
+  font-size: var(--font-size-caption);
 }
 .article-title-page .tech-tags {
   width: 100%;
@@ -187,7 +187,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 15px 3px;
-  font-size: 0.6rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.12em;
   color: var(--color-text-muted);
 }
@@ -196,7 +196,7 @@
   right: -14px;
   top: 50px;
   writing-mode: vertical-rl;
-  font-size: 0.49rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.2em;
   color: var(--color-text-muted);
 }
@@ -271,7 +271,7 @@
     inset-block: 20px 48px;
   }
   .detail-divider {
-    font-size: 0.55rem;
+    font-size: var(--font-size-caption);
     letter-spacing: 0.06em;
     padding-bottom: 16px;
   }

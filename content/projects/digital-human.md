@@ -1,7 +1,18 @@
 ---
 title: '声伴'
 subtitle: 'Shengban · A Voice Companion'
-description: '基于 LiveTalking，连接本地千问／DeepSeek 与讯飞语音服务，让数字人可以实时进行对话。'
+description: '基于 LiveTalking，接入本地部署的千问／DeepSeek 和讯飞 ASR、TTS，让语言模型的回答成为可以听见的实时对话。'
+cardSummary: '实时数字人对话 · LiveTalking'
+previewCaption: '语音输入 · 模型回答 · 数字人表达'
+showcase:
+  label: 'BEYOND THE INTERFACE'
+  heading: '让对话，有一点温度。'
+  focus: ['开源方案集成', '本地模型', '实时语音对话']
+  footnote: '技术往前一步，距离再近一点。'
+workbench:
+  heading: '让对话，有声音。'
+  summary: 'LiveTalking · 本地模型 × 讯飞语音'
+  caption: '把模型、语音与数字人连起来。'
 year: 2025
 cover: '/images/projects/portrait.jpg'
 tech: ['LiveTalking', 'Qwen', 'DeepSeek', '讯飞 ASR', '讯飞 TTS']

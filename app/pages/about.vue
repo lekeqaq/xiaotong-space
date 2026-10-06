@@ -32,8 +32,9 @@ const interests = [
       </div>
       <div class="profile-section-content">
         <p>
-          主要用 Vue、TypeScript 和 Nuxt 做 Web 开发。最近也在通过具体项目学习 AI
-          应用：做一个周末旅行规划产品，把本地模型接进实时数字人对话。
+          我主要用 Vue、TypeScript 和 Nuxt 做 Web 开发，也在通过项目实践拓展对 AI
+          应用的理解。目前正在开发「逃个周末」，用 AI 辅助周末旅行规划；另一个项目「声伴」则基于
+          LiveTalking，整合本地语言模型与语音服务，实现数字人的实时对话。
         </p>
         <div class="profile-toolbox" aria-label="常用技术">
           <span>Vue</span><span>TypeScript</span><span>Nuxt</span><span>AI 应用</span>

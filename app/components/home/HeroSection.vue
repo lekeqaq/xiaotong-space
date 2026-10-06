@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { WritingSummary } from '~/types/content'
+import type { ProjectSummary, WritingSummary } from '~/types/content'
 import StarField from './StarField.vue'
+import SpaceDock from './SpaceDock.vue'
 defineProps<{
   article?: WritingSummary
-  projectCount: number
-  articleCount: number
+  project?: ProjectSummary
 }>()
 const clock = ref('--:--')
 let timer: ReturnType<typeof setInterval> | undefined
@@ -57,7 +57,7 @@ onUnmounted(() => clearInterval(timer))
         >
       </NuxtLink>
       <div class="desk-photo-object ambient-motion"><DeskPostcard /></div>
-      <NuxtLink to="/projects/digital-human" class="desk-building desk-object ambient-motion">
+      <NuxtLink v-if="project?.workbench" :to="project.path" class="desk-building desk-object ambient-motion">
         <span class="desk-object-label"
           ><span class="live-dot" /> ON MY WORKBENCH <UIcon name="i-lucide-arrow-up-right"
         /></span>
@@ -66,13 +66,13 @@ onUnmounted(() => clearInterval(timer))
             ><UIcon name="i-lucide-brain-circuit" /></span
           ><i /><span><UIcon name="i-lucide-user-round" /></span>
         </div>
-        <h2>让对话，有声音。</h2>
-        <p>LiveTalking · 本地模型 × 讯飞语音</p>
+        <h2>{{ project.workbench.heading }}</h2>
+        <p>{{ project.workbench.summary }}</p>
         <div class="building-progress ambient-motion">
           <span /><span /><span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
         </div>
         <span class="building-caption"
-          >把模型、语音与数字人连起来。<UIcon name="i-lucide-arrow-right"
+          >{{ project.workbench.caption }}<UIcon name="i-lucide-arrow-right"
         /></span>
       </NuxtLink>
       <DeskThought />
@@ -85,22 +85,7 @@ onUnmounted(() => clearInterval(timer))
         ><UIcon name="i-lucide-code-xml" /><span>BUILT WITH<br />CURIOSITY</span></span
       >
     </div>
-    <nav class="space-dock" aria-label="探索我的空间">
-      <NuxtLink to="/projects"
-        ><UIcon name="i-lucide-compass" /><span
-          >作品<small>{{ String(projectCount).padStart(2, '0') }}</small></span
-        ><UIcon name="i-lucide-arrow-up-right" class="dock-arrow"
-      /></NuxtLink>
-      <NuxtLink to="/writing"
-        ><UIcon name="i-lucide-notebook-pen" /><span
-          >笔记<small>{{ String(articleCount).padStart(2, '0') }}</small></span
-        ><UIcon name="i-lucide-arrow-up-right" class="dock-arrow"
-      /></NuxtLink>
-      <NuxtLink to="/about"
-        ><UIcon name="i-lucide-user-round" /><span>关于我</span
-        ><UIcon name="i-lucide-arrow-up-right" class="dock-arrow"
-      /></NuxtLink>
-    </nav>
+    <SpaceDock />
     <div class="desk-bottom">
       <span>没有终稿，持续生长。</span><span>SCROLL TO WANDER <UIcon name="i-lucide-arrow-down" /></span>
     </div>

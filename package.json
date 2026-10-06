@@ -12,12 +12,14 @@
     "typecheck": "nuxt typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "node --test tests/site.test.mjs"
+    "test": "node --test tests/site.test.mjs",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.138",
     "@iconify-json/simple-icons": "^1.2.98",
     "@nuxt/eslint": "^1.17.0",
+    "@playwright/test": "^1.63.0",
     "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "lighthouse": "^13.5.0",

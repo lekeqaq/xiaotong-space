@@ -537,64 +537,6 @@
   letter-spacing: 0.07em;
   line-height: 1.6;
 }
-.space-dock {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  width: min(100%, 540px);
-  margin: 4px auto 27px;
-  padding: 10px;
-  gap: 6px;
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  background: var(--color-surface);
-  box-shadow: 0 5px 20px rgb(0 0 0 / 3%);
-}
-.space-dock > a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-width: 0;
-  min-height: 48px;
-  padding: 12px 10px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  transition:
-    background-color 220ms,
-    border-color 220ms,
-    color 220ms;
-}
-.space-dock > a:is(:hover, :focus-visible, [aria-current='page']) {
-  background: var(--color-accent-soft);
-  border-color: color-mix(in srgb, var(--color-accent) 22%, transparent);
-}
-.space-dock > a:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-.space-dock > a > .iconify {
-  font-size: 21px;
-  flex-shrink: 0;
-  color: var(--color-accent);
-}
-.space-dock > a:nth-child(2) > .iconify {
-  color: var(--color-mint-ink);
-}
-.space-dock > a:nth-child(3) > .iconify {
-  color: var(--color-paper-ink);
-}
-.space-dock > a > span {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 0.75rem;
-  white-space: nowrap;
-}
-.space-dock small {
-  color: var(--color-text-muted);
-  font-size: 0.5rem;
-  font-variant-numeric: tabular-nums;
-}
 .desk-bottom {
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 20px;
@@ -1131,9 +1073,6 @@
   .desk-scribble {
     display: none;
   }
-  .space-dock {
-    margin-top: 12px;
-  }
 
   .space-columns {
     grid-template-columns: 1fr;
@@ -1373,29 +1312,6 @@
     width: 28px;
     height: 28px;
   }
-  .space-dock {
-    width: 100%;
-    gap: 4px;
-    padding: 8px;
-    border-radius: 16px;
-    margin-top: 16px;
-  }
-  .space-dock > a {
-    min-height: 66px;
-    padding: 10px 4px;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .space-dock > a > .iconify {
-    font-size: 19px;
-  }
-  .space-dock > a > span {
-    font-size: 0.6rem;
-    gap: 4px;
-  }
-  .space-dock small {
-    font-size: 0.43rem;
-  }
   .desk-bottom {
     font-size: 0.44rem;
   }
@@ -1546,37 +1462,5 @@
 @media (max-width: 767px) {
   .practice-note {
     padding: 26px;
-  }
-}
-
-.space-dock > a {
-  position: relative;
-  padding-inline: 16px;
-}
-.space-dock > a > .dock-arrow {
-  font-size: 12px;
-  color: var(--color-text-muted);
-  margin-left: auto;
-}
-.space-dock > a > span {
-  flex: 1;
-  gap: 12px;
-}
-.space-dock > a > span > small {
-  margin-left: auto;
-}
-@media (max-width: 767px) {
-  .space-dock > a {
-    flex-direction: row;
-    padding-inline: 10px;
-    min-height: 52px;
-    gap: 7px;
-  }
-  .space-dock > a > span {
-    flex: initial;
-    gap: 5px;
-  }
-  .space-dock > a > .dock-arrow {
-    display: none;
   }
 }

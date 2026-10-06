@@ -15,6 +15,10 @@ const { data } = await useAsyncData('home-content', async () => {
         'title',
         'subtitle',
         'description',
+        'cardSummary',
+        'previewCaption',
+        'showcase',
+        'workbench',
         'year',
         'cover',
         'tech',
@@ -36,11 +40,7 @@ const { data } = await useAsyncData('home-content', async () => {
 </script>
 <template>
   <div ref="home" class="home-page">
-    <HeroSection
-      :article="data?.writing[0]"
-      :project-count="data?.projects.length || 0"
-      :article-count="data?.writing.length || 0"
-    />
+    <HeroSection :article="data?.writing[0]" :project="data?.projects.find((project) => project.workbench)" />
     <div id="space-feed" class="space-feed container">
       <section class="work-shelf" data-reveal aria-labelledby="shelf-title">
         <div class="space-section-heading">
@@ -60,18 +60,12 @@ const { data } = await useAsyncData('home-content', async () => {
             class="shelf-item"
             :class="`shelf-${project.kind}`"
           >
-            <ProjectThumbnail :kind="project.kind" />
+            <ProjectThumbnail :kind="project.kind" :summary="project.cardSummary" />
             <div class="shelf-description">
               <span class="shelf-number">0{{ project.order }}</span>
               <div>
                 <h3>{{ project.title }}</h3>
-                <p>
-                  {{
-                    project.kind === 'travel'
-                      ? 'AI 周末旅行规划 · 微信小程序'
-                      : '实时数字人对话 · LiveTalking'
-                  }}
-                </p>
+                <p>{{ project.cardSummary }}</p>
               </div>
               <UIcon name="i-lucide-arrow-up-right" />
             </div>

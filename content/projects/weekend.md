@@ -1,7 +1,14 @@
 ---
 title: '逃个周末'
 subtitle: 'An AI-powered Weekend Escape'
-description: '从一句「这周末去哪」出发，做一套连接目的地推荐、两日行程与旅行管理的产品。'
+description: '从一个「这周末去哪」的问题出发，连接微信小程序、业务 API、运营后台和官网，把推荐与行程管理做成一条完整的使用路径。'
+cardSummary: 'AI 周末旅行规划 · 微信小程序'
+previewCaption: '周末旅行，轻松出发。'
+showcase:
+  label: 'WEEKENDS, REIMAGINED'
+  heading: '把时间留给风景。'
+  focus: ['微信小程序', 'AI 行程规划', '全栈实践']
+  footnote: '周末不赶路，只去有意思的地方。'
 year: 2026
 cover: '/images/personal/coast.jpg'
 tech: ['uni-app', 'Vue 3', 'TypeScript', 'FastAPI', 'LLM', 'Nuxt 4']

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import HumanPreview from './HumanPreview.vue'
-withDefaults(defineProps<{ kind: 'travel' | 'human'; interactive?: boolean }>(), { interactive: false })
+import ProjectPreviewHeader from './ProjectPreviewHeader.vue'
+withDefaults(defineProps<{ kind: 'travel' | 'human'; summary: string; interactive?: boolean }>(), {
+  interactive: false,
+})
 const destination = ref<'mountain' | 'coast'>('mountain')
 const places = {
   mountain: {
@@ -20,18 +23,17 @@ const place = computed(() => places[destination.value])
 </script>
 
 <template>
-  <HumanPreview v-if="kind === 'human'" :interactive="interactive" />
+  <HumanPreview v-if="kind === 'human'" :summary="summary" :interactive="interactive" />
   <div
     v-else
     class="project-thumbnail thumbnail-travel"
     :class="{ 'thumbnail-interactive': interactive }"
     :aria-hidden="interactive ? undefined : true"
   >
-    <div class="study-topline"><span>WEEKEND FIELD NOTES</span><span>01 / TRAVEL</span></div>
+    <ProjectPreviewHeader title="WEEKEND / 逃个周末" number="01" category="TRAVEL" icon="i-lucide-compass" />
     <div class="travel-study">
       <Transition name="study-note" mode="out-in"
         ><div :key="destination" class="study-travel-note">
-          <UIcon name="i-lucide-compass" class="study-compass" />
           <span class="study-small-label">给周末，留一点空白</span>
           <strong>{{ place.title }}</strong>
           <span class="study-handwriting">A little escape.</span>
@@ -76,7 +78,8 @@ const place = computed(() => places[destination.value])
       </button>
     </div>
     <div class="study-bottomline">
-      <span>AI 周末规划 · 微信小程序</span><span>{{ interactive ? '交互示意' : 'PROJECT NOTES ↗' }}</span>
+      <span>{{ summary }}</span
+      ><span>{{ interactive ? '交互示意' : 'PROJECT NOTES ↗' }}</span>
     </div>
   </div>
 </template>

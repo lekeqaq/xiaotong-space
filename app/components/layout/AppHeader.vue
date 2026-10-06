@@ -28,6 +28,7 @@ function isActive(to: string) {
           :key="item.to"
           :to="item.to"
           :class="{ active: isActive(item.to) }"
+          :aria-current="isActive(item.to) ? 'page' : undefined"
           >{{ item.label }}</NuxtLink
         >
       </nav>
@@ -49,6 +50,7 @@ function isActive(to: string) {
               :key="item.to"
               :to="item.to"
               :class="{ active: isActive(item.to) }"
+              :aria-current="isActive(item.to) ? 'page' : undefined"
               >{{ item.label }}<UIcon name="i-lucide-arrow-up-right"
             /></NuxtLink>
           </nav>

@@ -117,7 +117,7 @@
 .project-intro-aside > span {
   display: block;
   color: var(--color-text-muted);
-  font-size: 0.64rem;
+  font-size: var(--font-size-caption);
   margin-top: 15px;
 }
 .project-directory {
@@ -132,12 +132,12 @@
   align-items: center;
   gap: 10px;
   white-space: nowrap;
-  font-size: 0.58rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.1em;
   color: var(--color-text-muted);
 }
 .project-directory small {
-  font-size: 0.57rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text);
 }
 .project-directory nav {
@@ -151,10 +151,10 @@
   display: inline-flex;
   gap: 9px;
   align-items: center;
-  font-size: 0.72rem;
+  font-size: var(--font-size-caption);
 }
 .project-directory nav a > span {
-  font-size: 0.54rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
 }
 .project-directory nav a > .iconify {
@@ -201,7 +201,7 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 32px;
-  font-size: 0.53rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.08em;
   color: var(--color-text-muted);
 }
@@ -223,7 +223,7 @@
 }
 .showcase-subtitle {
   display: block;
-  font-size: 0.7rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
   margin-top: 9px;
 }
@@ -246,7 +246,7 @@
   margin: 21px 0 30px;
 }
 .showcase-focus > span {
-  font-size: 0.6rem;
+  font-size: var(--font-size-caption);
   padding: 5px 8px;
   border: 1px solid var(--color-border);
   border-radius: 4px;
@@ -282,12 +282,12 @@
   padding-top: 15px;
 }
 .showcase-stack > span {
-  font-size: 0.5rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.1em;
   color: var(--color-text-muted);
 }
 .showcase-stack p {
-  font-size: 0.62rem;
+  font-size: var(--font-size-caption);
   margin-top: 5px;
   color: var(--color-text-muted);
 }
@@ -300,21 +300,8 @@
   justify-content: space-between;
   gap: 16px;
   padding-top: 14px;
-  font-size: 0.6rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
-}
-.showcase-caption > span:last-child {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.48rem;
-  white-space: nowrap;
-}
-.showcase-caption i {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--color-success);
 }
 .project-scene {
   position: relative;
@@ -333,7 +320,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 15px;
-  font-size: 0.48rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.1em;
 }
 .scene-topline > span:first-child {
@@ -353,7 +340,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 0.56rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.025em;
 }
 .travel-scene {
@@ -393,7 +380,7 @@
   left: 38px;
 }
 .travel-scene-title > span {
-  font-size: 0.5rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.14em;
 }
 .travel-scene-title > p {
@@ -448,7 +435,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.48rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.09em;
 }
 .escape-ticket > div:first-child > .iconify {
@@ -466,11 +453,11 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 10px;
-  font-size: 0.6rem;
+  font-size: var(--font-size-caption);
   color: #6c725f;
 }
 .escape-ticket > p > span {
-  font-size: 0.5rem;
+  font-size: var(--font-size-caption);
 }
 .ticket-perforation {
   position: relative;
@@ -502,7 +489,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.71rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.07em;
 }
 .ticket-code > i {
@@ -537,7 +524,7 @@
   border: none;
   background: transparent;
   color: #fffdf5;
-  font-size: 0.65rem;
+  font-size: var(--font-size-caption);
   transition:
     background 220ms,
     color 220ms;
@@ -740,7 +727,7 @@
   border: 0;
   border-radius: 4px;
   padding: 10px 8px;
-  font-size: 0.67rem;
+  font-size: var(--font-size-caption);
   color: #bfcbd0;
   background: transparent;
   transition:
@@ -748,7 +735,7 @@
     color 200ms;
 }
 .voice-switch button > span {
-  font-size: 0.48rem;
+  font-size: var(--font-size-caption);
   opacity: 0.7;
 }
 .voice-switch button[aria-pressed='true'] {
@@ -806,7 +793,7 @@
   background: var(--color-surface);
   border: 1px solid color-mix(in srgb, var(--color-accent) 18%, transparent);
   border-radius: 7px;
-  font-size: 0.63rem;
+  font-size: var(--font-size-caption);
   box-shadow: 0 4px 12px rgb(0 0 0 / 3%);
   animation: source-float 7s ease-in-out infinite;
 }
@@ -892,7 +879,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 .source-browser-header > span {
-  font-size: 0.45rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
   letter-spacing: 0.1em;
 }
@@ -906,7 +893,7 @@
 .source-browser-header button {
   padding: 4px 9px;
   color: var(--color-text-muted);
-  font-size: 0.6rem;
+  font-size: var(--font-size-caption);
   background: transparent;
   border: 0;
   border-radius: 3px;
@@ -926,7 +913,7 @@
   gap: 9px;
   padding: 11px 0;
   border-bottom: 1px solid var(--color-border);
-  font-size: 0.66rem;
+  font-size: var(--font-size-caption);
   animation: ink-arrive 450ms var(--source-delay) both;
 }
 .source-list > a:last-child {
@@ -1013,7 +1000,7 @@
 }
 .project-disclosure {
   margin-top: 22px;
-  font-size: 0.6rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
   text-align: center;
 }
@@ -1089,10 +1076,10 @@
     gap: 22px;
   }
   .project-directory > span {
-    font-size: 0.5rem;
+    font-size: var(--font-size-caption);
   }
   .project-directory nav a {
-    font-size: 0.65rem;
+    font-size: var(--font-size-caption);
   }
   .project-scene {
     height: 490px;
@@ -1127,7 +1114,7 @@
   .scene-topline {
     left: 20px;
     right: 20px;
-    font-size: 0.42rem;
+    font-size: var(--font-size-caption);
   }
   .node-project {
     left: 5%;
@@ -1262,7 +1249,7 @@
     font-size: 0.76rem;
   }
   .projects-intro .space-kicker {
-    font-size: 0.44rem;
+    font-size: var(--font-size-caption);
   }
   .project-title-star {
     font-size: 1.7rem;
@@ -1315,11 +1302,11 @@
     gap: 12px 20px;
   }
   .project-directory nav a {
-    font-size: 0.59rem;
+    font-size: var(--font-size-caption);
     gap: 6px;
   }
   .project-directory nav a > span {
-    font-size: 0.49rem;
+    font-size: var(--font-size-caption);
   }
   .project-directory nav a > .iconify {
     font-size: 11px;
@@ -1328,7 +1315,7 @@
     padding-top: 32px;
   }
   .showcase-overline {
-    font-size: 0.46rem;
+    font-size: var(--font-size-caption);
     gap: 9px;
     margin-bottom: 19px;
   }
@@ -1339,7 +1326,7 @@
     font-size: 1.7rem;
   }
   .showcase-subtitle {
-    font-size: 0.66rem;
+    font-size: var(--font-size-caption);
   }
   .showcase-copy h3 {
     font-size: 0.93rem;
@@ -1354,7 +1341,7 @@
     margin-bottom: 22px;
   }
   .showcase-focus > span {
-    font-size: 0.56rem;
+    font-size: var(--font-size-caption);
   }
   .showcase-link {
     position: static;
@@ -1370,10 +1357,10 @@
     margin-top: 23px;
   }
   .showcase-stack > span {
-    font-size: 0.47rem;
+    font-size: var(--font-size-caption);
   }
   .showcase-stack > p {
-    font-size: 0.58rem;
+    font-size: var(--font-size-caption);
   }
   .project-scene {
     height: 422px;
@@ -1382,7 +1369,7 @@
     top: 18px;
     left: 17px;
     right: 17px;
-    font-size: 0.37rem;
+    font-size: var(--font-size-caption);
     gap: 8px;
   }
   .scene-topline .iconify {
@@ -1393,7 +1380,7 @@
     left: 24px;
   }
   .travel-scene-title > span {
-    font-size: 0.4rem;
+    font-size: var(--font-size-caption);
   }
   .travel-scene-title > p {
     font-size: 2.3rem;
@@ -1406,21 +1393,21 @@
     padding: 15px 17px 12px;
   }
   .escape-ticket > div:first-child {
-    font-size: 0.41rem;
+    font-size: var(--font-size-caption);
   }
   .escape-ticket > strong {
     font-size: 0.97rem;
     margin-top: 13px;
   }
   .escape-ticket > p {
-    font-size: 0.55rem;
+    font-size: var(--font-size-caption);
     margin-top: 7px;
   }
   .ticket-perforation {
     margin: 12px -17px 10px;
   }
   .ticket-code > span {
-    font-size: 0.59rem;
+    font-size: var(--font-size-caption);
   }
   .ticket-code > i {
     height: 15px;
@@ -1433,20 +1420,16 @@
   }
   .travel-switch button {
     padding: 8px 11px;
-    font-size: 0.61rem;
+    font-size: var(--font-size-caption);
   }
   .scene-interaction-hint {
-    font-size: 0.49rem;
+    font-size: var(--font-size-caption);
     bottom: 13px;
   }
   .showcase-caption {
     gap: 10px;
-    font-size: 0.49rem;
+    font-size: var(--font-size-caption);
     padding-top: 11px;
-  }
-  .showcase-caption > span:last-child {
-    font-size: 0.4rem;
-    gap: 4px;
   }
   .voice-scene-type {
     left: 23px;
@@ -1468,7 +1451,7 @@
     padding-inline: 10px;
   }
   .voice-state p {
-    font-size: 0.69rem;
+    font-size: var(--font-size-caption);
   }
   .scene-waveform {
     height: 24px;
@@ -1484,7 +1467,7 @@
     padding: 4px;
   }
   .voice-switch button {
-    font-size: 0.64rem;
+    font-size: var(--font-size-caption);
     padding: 9px 6px;
   }
   .knowledge-map {
@@ -1496,7 +1479,7 @@
     top: 0;
   }
   .knowledge-node {
-    font-size: 0.5rem;
+    font-size: var(--font-size-caption);
     padding: 8px 9px;
     gap: 5px;
   }
@@ -1520,7 +1503,7 @@
     left: 18%;
     width: 26px;
     height: 26px;
-    font-size: 0.6rem;
+    font-size: var(--font-size-caption);
   }
   .node-core {
     top: 78px;
@@ -1541,10 +1524,10 @@
     padding: 10px 11px 8px;
   }
   .source-browser-header > span {
-    font-size: 0.36rem;
+    font-size: var(--font-size-caption);
   }
   .source-browser-header button {
-    font-size: 0.55rem;
+    font-size: var(--font-size-caption);
     padding: 4px 8px;
   }
   .source-list {
@@ -1553,7 +1536,7 @@
   }
   .source-list > a {
     padding: 9px 0;
-    font-size: 0.57rem;
+    font-size: var(--font-size-caption);
     gap: 7px;
   }
   .source-list > a > .iconify:first-child {
@@ -1569,10 +1552,10 @@
     font-size: 1.2rem;
   }
   .project-next p {
-    font-size: 0.69rem;
+    font-size: var(--font-size-caption);
   }
   .project-next > a {
-    font-size: 0.73rem;
+    font-size: var(--font-size-caption);
   }
   .project-next > a > span {
     width: 35px;
@@ -1585,7 +1568,7 @@
     right: -23px;
   }
   .project-disclosure {
-    font-size: 0.53rem;
+    font-size: var(--font-size-caption);
     line-height: 1.9;
   }
 }

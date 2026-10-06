@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import HumanSignal from './HumanSignal.vue'
-withDefaults(defineProps<{ interactive?: boolean }>(), { interactive: false })
+import ProjectPreviewHeader from './ProjectPreviewHeader.vue'
+withDefaults(defineProps<{ summary: string; interactive?: boolean }>(), { interactive: false })
 const active = ref(0)
 const phases = [
   {
@@ -34,12 +35,15 @@ const phase = computed(() => phases[active.value]!)
     :class="{ 'thumbnail-interactive': interactive, 'companion-static': !interactive }"
     :aria-hidden="interactive ? undefined : true"
   >
-    <div class="companion-topline">
-      <span><i aria-hidden="true" /> SHENGBAN / 声伴</span><span>02 — VOICE COMPANION</span>
-    </div>
+    <ProjectPreviewHeader
+      title="SHENGBAN / 声伴"
+      number="02"
+      category="VOICE COMPANION"
+      icon="i-lucide-audio-lines"
+    />
     <div class="companion-scene">
       <div class="companion-copy">
-        <span class="companion-overline">A VOICE, A LITTLE CLOSER.</span>
+        <span class="companion-overline" aria-hidden="true">A VOICE, A LITTLE CLOSER.</span>
         <strong>开口，<br />就有回应。</strong>
         <div class="companion-notes">
           <span
@@ -100,7 +104,7 @@ const phase = computed(() => phases[active.value]!)
       </button>
     </div>
     <div class="companion-bottomline">
-      <span>{{ interactive ? phase.service : 'LiveTalking · 本地模型 × 语音' }}</span
+      <span>{{ interactive ? phase.service : summary }}</span
       ><span>{{ interactive ? '交互示意' : 'PROJECT NOTES ↗' }}</span>
     </div>
     <span v-if="interactive" class="sr-only" aria-live="polite" aria-atomic="true"
@@ -113,32 +117,16 @@ const phase = computed(() => phases[active.value]!)
 .human-preview {
   padding: 22px 26px 0;
 }
-.companion-topline,
 .companion-bottomline {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+  line-height: 1.5;
   color: var(--color-text-muted);
-  font-size: 0.5rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0.07em;
-}
-.companion-topline {
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--color-border);
-}
-.companion-topline > span:first-child {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--color-text);
-}
-.companion-topline i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50% 50% 50% 0;
-  background: var(--color-accent);
-  rotate: -45deg;
 }
 .companion-scene {
   display: grid;
@@ -150,7 +138,7 @@ const phase = computed(() => phases[active.value]!)
 }
 .companion-overline {
   display: block;
-  font-size: 0.45rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
   letter-spacing: 0.08em;
 }
@@ -165,7 +153,7 @@ const phase = computed(() => phases[active.value]!)
 .companion-notes {
   display: grid;
   margin-top: 12px;
-  font-size: 0.62rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
 }
 .companion-notes > span,
@@ -199,14 +187,13 @@ const phase = computed(() => phases[active.value]!)
   align-items: center;
   gap: 10px;
   color: var(--color-text-muted);
-  font-size: 0.5rem;
+  font-size: var(--font-size-caption);
 }
 .companion-message small {
-  font-size: 0.43rem;
-  opacity: 0.7;
+  font-size: var(--font-size-caption);
 }
 .companion-message p {
-  font-size: 0.74rem;
+  font-size: 0.875rem;
   line-height: 1.8;
   margin-top: 7px;
 }
@@ -252,8 +239,10 @@ const phase = computed(() => phases[active.value]!)
 .companion-portrait figcaption {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
   margin-top: 10px;
-  font-size: 0.45rem;
+  font-size: var(--font-size-caption);
   color: var(--color-text-muted);
 }
 .companion-controls {
@@ -286,13 +275,13 @@ const phase = computed(() => phases[active.value]!)
   border-radius: 4px;
   background: transparent;
   color: var(--color-text-muted);
-  font-size: 0.7rem;
+  font-size: var(--font-size-caption);
   transition:
     color 250ms,
     background 250ms;
 }
 .companion-step {
-  font-size: 0.48rem;
+  font-size: var(--font-size-caption);
   opacity: 0.55;
 }
 .companion-controls button i {
@@ -326,15 +315,14 @@ const phase = computed(() => phases[active.value]!)
   border-top: 1px solid var(--color-border);
   min-height: 47px;
   margin-top: 13px;
-  font-size: 0.48rem;
+  font-size: var(--font-size-caption);
   letter-spacing: 0;
 }
 .companion-controls + .companion-bottomline {
   margin-top: 0;
 }
 .companion-static .companion-scene {
-  height: 224px;
-  min-height: 0;
+  min-height: 224px;
   padding-block: 22px 0;
 }
 .companion-static .companion-photo {
@@ -353,13 +341,6 @@ const phase = computed(() => phases[active.value]!)
   filter: saturate(0.4) brightness(0.88);
 }
 @container (max-width: 410px) {
-  .companion-topline {
-    font-size: 0.43rem;
-    letter-spacing: 0.025em;
-  }
-  .companion-topline > span:last-child {
-    font-size: 0.38rem;
-  }
   .companion-scene {
     gap: 18px;
     grid-template-columns: 1.15fr 0.85fr;
@@ -367,21 +348,20 @@ const phase = computed(() => phases[active.value]!)
     padding-top: 24px;
   }
   .companion-overline {
-    font-size: 0.37rem;
-    letter-spacing: 0.025em;
+    display: none;
   }
   .companion-copy > strong {
     font-size: 1.4rem;
   }
   .companion-notes {
-    font-size: 0.55rem;
+    font-size: var(--font-size-caption);
   }
   .companion-dialogue {
     margin-top: 16px;
     min-height: 85px;
   }
   .companion-message p {
-    font-size: 0.66rem;
+    font-size: 0.875rem;
   }
   .companion-photo {
     height: 200px;
@@ -402,10 +382,10 @@ const phase = computed(() => phases[active.value]!)
   .companion-controls button {
     gap: 8px;
     padding-inline: 7px;
-    font-size: 0.66rem;
+    font-size: var(--font-size-caption);
   }
   .companion-static .companion-scene {
-    height: 194px;
+    min-height: 194px;
   }
   .companion-static .companion-photo {
     height: 148px;

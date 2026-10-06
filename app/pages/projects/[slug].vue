@@ -45,11 +45,9 @@ useSiteSeo(
         <div class="case-scene-label">
           <span>PROJECT PREVIEW</span><span>NO. {{ String(project.order).padStart(2, '0') }}</span>
         </div>
-        <ProjectThumbnail :kind="project.kind" interactive />
+        <ProjectThumbnail :kind="project.kind" :summary="project.cardSummary" interactive />
         <figcaption>
-          <span>{{
-            project.kind === 'travel' ? '周末旅行，轻松出发。' : '语音输入 · 模型回答 · 数字人表达'
-          }}</span
+          <span>{{ project.previewCaption }}</span
           ><span>主题交互示意</span>
         </figcaption>
       </figure>

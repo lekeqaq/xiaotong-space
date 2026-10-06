@@ -25,6 +25,21 @@ export default defineContentConfig({
         title: z.string(),
         subtitle: z.string().optional(),
         description: z.string(),
+        cardSummary: z.string(),
+        previewCaption: z.string(),
+        showcase: z.object({
+          label: z.string(),
+          heading: z.string(),
+          focus: z.array(z.string()),
+          footnote: z.string(),
+        }),
+        workbench: z
+          .object({
+            heading: z.string(),
+            summary: z.string(),
+            caption: z.string(),
+          })
+          .optional(),
         year: z.number(),
         cover: z.string(),
         screenshots: z.array(z.string()).optional(),

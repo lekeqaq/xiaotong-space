@@ -79,7 +79,7 @@ test('RSS includes three articles and publication dates', async () => {
   const xml = await response.text()
   assert.equal((xml.match(/<item>/g) || []).length, 3)
   assert.equal((xml.match(/<pubDate>/g) || []).length, 3)
-  assert.match(xml, /构建我的个人 AI Assistant/)
+  assert.match(xml, /个人 AI 助手的知识库设计思路/)
 })
 
 test('robots links to sitemap and OG image is available', async () => {
