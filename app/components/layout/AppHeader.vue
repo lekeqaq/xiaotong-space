@@ -41,9 +41,6 @@ function isActive(to: string) {
           rel="noopener noreferrer"
           ><UIcon name="i-simple-icons-github" /> GitHub</a
         >
-        <NuxtLink v-else to="/about#contact" class="github-button"
-          ><UIcon name="i-lucide-arrow-up-right" /> Say hello</NuxtLink
-        >
         <details ref="menu" class="mobile-menu">
           <summary role="button" aria-label="打开导航菜单"><UIcon name="i-lucide-menu" /></summary>
           <nav aria-label="移动端导航">

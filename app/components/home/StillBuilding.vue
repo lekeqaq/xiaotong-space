@@ -23,7 +23,7 @@
       />
       <circle cx="300" cy="60" r="5" fill="#c8ea8a" />
       <path d="m782 60 9 5-9 4" fill="none" stroke="#c8ea8a" /></svg
-    ><NuxtLink to="/lab" class="next-stop"
+    ><NuxtLink to="/writing" class="next-stop"
       >Next stop<UIcon name="i-lucide-arrow-up-right" /><span>A little more<br />possibility.</span></NuxtLink
     >
   </section>

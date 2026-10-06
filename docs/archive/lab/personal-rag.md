@@ -1,11 +1,11 @@
 ---
-experiment: "001"
-title: "Personal RAG"
-description: "基于公开的文章、项目和笔记，构建个人知识库。"
-status: "building"
-tech: ["RAG", "Embeddings", "LLM"]
+experiment: '001'
+title: 'Personal RAG'
+description: '基于公开的文章、项目和笔记，构建个人知识库。'
+status: 'building'
+tech: ['RAG', 'Embeddings', 'LLM']
 order: 1
-icon: "i-lucide-database"
+icon: 'i-lucide-database'
 ---
 
 ## 正在解决的问题

@@ -64,13 +64,7 @@
 }
 .case-scene {
   min-width: 0;
-  padding: 14px;
-  border: 1px solid var(--color-border);
-  border-radius: 14px;
-  background: var(--color-surface);
-  box-shadow:
-    9px 12px 0 -1px var(--color-bg),
-    9px 12px 0 0 var(--color-border);
+  margin: 0;
 }
 .case-scene-label,
 .case-scene figcaption {
@@ -226,9 +220,6 @@
     gap: 32px;
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   }
-  .case-scene {
-    padding: 10px;
-  }
   .case-scene .project-scene {
     height: 480px;
   }
@@ -258,7 +249,7 @@
     margin-top: 20px;
   }
   .case-scene {
-    margin-right: 8px;
+    margin-right: 0;
   }
   .case-scene .project-scene {
     height: 470px;

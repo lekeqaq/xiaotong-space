@@ -1,0 +1,316 @@
+/* One visual language for the shelf, collection and project stories. */
+.project-thumbnail {
+  container-type: inline-size;
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  padding: 22px 26px 0;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition:
+    border-color 250ms,
+    box-shadow 250ms,
+    background 250ms;
+}
+.study-topline,
+.study-bottomline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--color-text-muted);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+}
+.study-topline {
+  padding-bottom: 17px;
+  border-bottom: 1px solid var(--color-border);
+}
+.study-bottomline {
+  min-height: 49px;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.58rem;
+  letter-spacing: 0.03em;
+}
+.study-bottomline > span:last-child {
+  font-size: 0.5rem;
+  white-space: nowrap;
+}
+.travel-study {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: center;
+  height: 300px;
+  padding-block: 29px;
+}
+.study-travel-note {
+  position: relative;
+  z-index: 1;
+}
+.study-compass {
+  display: block;
+  color: var(--color-mint-ink);
+  font-size: 26px;
+  margin-bottom: 15px;
+}
+.study-small-label {
+  display: block;
+  font-size: 0.66rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+.study-travel-note > strong {
+  display: block;
+  font-size: clamp(1.2rem, 4.2cqi, 1.8rem);
+  font-weight: 500;
+  text-wrap: balance;
+  line-height: 1.5;
+  letter-spacing: -0.04em;
+  margin-top: 9px;
+}
+.study-handwriting {
+  display: block;
+  margin-top: 7px;
+  color: var(--color-mint-ink);
+  font: italic 1.13rem var(--font-editorial);
+}
+.study-route {
+  display: flex;
+  margin-top: 25px;
+}
+.study-route > span {
+  flex: 1;
+  position: relative;
+  color: var(--color-text-muted);
+  font-size: 0.57rem;
+  white-space: nowrap;
+}
+.study-route > span:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  height: 1px;
+  top: 3px;
+  left: 5px;
+  right: 0;
+  background: var(--color-border);
+}
+.study-route i {
+  position: relative;
+  display: block;
+  width: 6px;
+  height: 6px;
+  margin-bottom: 8px;
+  background: var(--color-mint-ink);
+  border-radius: 50%;
+}
+.study-travel-note > small {
+  display: block;
+  font-size: 0.5rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+  margin-top: 18px;
+}
+.study-postcard {
+  position: relative;
+  padding: 9px 9px 0;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 18px #0000000a;
+  transform: rotate(5deg);
+  transition: transform 450ms var(--ease);
+}
+.study-landscape-window {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  filter: saturate(0.6);
+}
+.study-postcard figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.58rem;
+  color: var(--color-text-muted);
+  padding: 13px 3px;
+}
+.study-tape {
+  position: absolute;
+  z-index: 1;
+  top: -10px;
+  left: 32%;
+  width: 38%;
+  height: 23px;
+  background: color-mix(in srgb, var(--color-paper) 82%, transparent);
+  border-inline: 1px dashed var(--color-border);
+  transform: rotate(-9deg);
+}
+.study-controls {
+  display: flex;
+  gap: 6px;
+  border-top: 1px dashed var(--color-border);
+  padding-block: 12px;
+}
+.study-controls button {
+  display: inline-flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--color-text-muted);
+  background: transparent;
+  font-size: 0.72rem;
+  transition: background 200ms;
+}
+.study-controls button:hover {
+  background: var(--color-surface-muted);
+}
+.study-controls button[aria-pressed='true'] {
+  background: var(--color-bg);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.thumbnail-interactive .travel-study {
+  height: 340px;
+}
+.thumbnail-interactive .study-landscape-window {
+  height: 220px;
+}
+.project-shelf > .shelf-item {
+  display: block;
+  min-width: 0;
+}
+.shelf-item:focus-visible {
+  outline: none;
+}
+.shelf-item:focus-visible .project-thumbnail {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+@media (hover: hover) {
+  .shelf-item:hover .project-thumbnail {
+    border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-border));
+  }
+  .shelf-item:hover .study-postcard,
+  .thumbnail-interactive:hover .study-postcard {
+    transform: rotate(2deg) translateY(-3px);
+  }
+}
+@container (max-width: 410px) {
+  .travel-study {
+    gap: 16px;
+    height: 270px;
+  }
+  .study-landscape-window {
+    height: 160px;
+  }
+  .study-topline {
+    font-size: 0.47rem;
+    letter-spacing: 0.04em;
+  }
+  .study-small-label {
+    font-size: 0.58rem;
+  }
+  .study-bottomline {
+    font-size: 0.51rem;
+  }
+  .study-bottomline > span:last-child {
+    font-size: 0.44rem;
+  }
+  .study-handwriting {
+    font-size: 1rem;
+  }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .project-shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .shelf-description {
+    padding-top: 18px;
+  }
+}
+@media (max-width: 540px) {
+  .project-thumbnail {
+    padding: 18px 18px 0;
+  }
+  .shelf-description {
+    padding-top: 16px;
+  }
+  .thumbnail-interactive .travel-study {
+    height: 300px;
+  }
+  .thumbnail-interactive .study-landscape-window {
+    height: 180px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-thumbnail,
+  .project-thumbnail * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* State changes share a short dissolve; images remain mounted to avoid loading flashes. */
+.study-landscape-window {
+  position: relative;
+  overflow: hidden;
+}
+.study-landscape-window img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.08) translateX(8px);
+  transition:
+    opacity 650ms ease,
+    transform 900ms var(--ease);
+}
+.study-landscape-window img.landscape-visible {
+  opacity: 1;
+  transform: scale(1) translateX(0);
+}
+.study-note-enter-active,
+.study-note-leave-active {
+  transition:
+    opacity 220ms,
+    translate 220ms,
+    filter 220ms;
+}
+.study-note-enter-from {
+  opacity: 0;
+  translate: 0 9px;
+  filter: blur(2px);
+}
+.study-note-leave-to {
+  opacity: 0;
+  translate: 0 -6px;
+  filter: blur(2px);
+}
+.thumbnail-interactive .study-route > span {
+  animation: route-stop-in 600ms both;
+}
+.thumbnail-interactive .study-route > span:nth-child(2) {
+  animation-delay: 100ms;
+}
+.thumbnail-interactive .study-route > span:nth-child(3) {
+  animation-delay: 200ms;
+}
+@keyframes route-stop-in {
+  from {
+    opacity: 0;
+    translate: 0 5px;
+  }
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}

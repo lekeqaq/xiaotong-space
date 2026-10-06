@@ -1,11 +1,11 @@
 ---
-experiment: "003"
-title: "AI Travel Planner"
-description: "用 AI 生成个性化的周末旅行计划。"
-status: "building"
-tech: ["Vue", "LLM", "Planning"]
+experiment: '003'
+title: 'AI Travel Planner'
+description: '用 AI 生成个性化的周末旅行计划。'
+status: 'building'
+tech: ['Vue', 'LLM', 'Planning']
 order: 3
-icon: "i-lucide-map"
+icon: 'i-lucide-map'
 ---
 
 ## 把旅行变得简单一点

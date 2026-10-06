@@ -1,11 +1,11 @@
 ---
-experiment: "002"
-title: "Voice Agent"
-description: "ASR → LLM → TTS，实时语音对话实验。"
-status: "experimenting"
-tech: ["ASR", "LLM", "TTS", "WebRTC"]
+experiment: '002'
+title: 'Voice Agent'
+description: 'ASR → LLM → TTS，实时语音对话实验。'
+status: 'experimenting'
+tech: ['ASR', 'LLM', 'TTS', 'WebRTC']
 order: 2
-icon: "i-lucide-audio-lines"
+icon: 'i-lucide-audio-lines'
 ---
 
 ## 一个更自然的入口

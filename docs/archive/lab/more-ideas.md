@@ -1,11 +1,11 @@
 ---
-experiment: "004"
-title: "More Ideas"
-description: "一些尚未成形，却值得留个位置的想法。"
-status: "planning"
+experiment: '004'
+title: 'More Ideas'
+description: '一些尚未成形，却值得留个位置的想法。'
+status: 'planning'
 tech: []
 order: 4
-icon: "i-lucide-box"
+icon: 'i-lucide-box'
 ---
 
 ## 留一点空白

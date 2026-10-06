@@ -5,44 +5,46 @@ const config = useRuntimeConfig()
 </script>
 
 <template>
-  <footer class="app-footer container">
+  <footer class="app-footer site-footer container">
     <div>
       <NuxtLink to="/" class="wordmark"
         ><span class="wordmark-symbol" aria-hidden="true">✳</span
         ><span class="wordmark-name">{{ siteIdentity.name }}</span></NuxtLink
       >
-      <p>Frontend Developer<br />Based in Shenzhen.</p>
+      <p>Frontend Developer · Shenzhen<br />记录所做，分享所学。</p>
     </div>
     <div class="footer-center">
+      <span class="footer-nav-label">EXPLORE</span>
       <nav aria-label="页脚导航">
-        <NuxtLink v-for="item in navigation" :key="item.to" :to="item.to">{{ item.label }}</NuxtLink>
+        <NuxtLink v-for="(item, index) in navigation" :key="item.to" :to="item.to">
+          <span aria-hidden="true">0{{ index + 1 }}</span
+          >{{ item.label }}
+        </NuxtLink>
       </nav>
-      <div class="social-links">
+    </div>
+    <div class="footer-meta">
+      <p class="footer-credit">
+        Designed & built by Xiaotong.<br />Made with curiosity, and a little coffee.<br />©
+        {{ new Date().getFullYear() }}
+      </p>
+      <div v-if="config.public.githubUrl || config.public.contactEmail" class="footer-contact">
         <a
           v-if="config.public.githubUrl"
           :href="config.public.githubUrl"
           aria-label="GitHub"
           target="_blank"
           rel="noopener noreferrer"
-          ><UIcon name="i-simple-icons-github"
-        /></a>
+          >GitHub ↗</a
+        >
         <a
           v-if="config.public.contactEmail"
           :href="`mailto:${config.public.contactEmail}`"
           aria-label="发送邮件"
-          ><UIcon name="i-lucide-mail"
-        /></a>
-        <NuxtLink to="/subscribe" aria-label="订阅 RSS" :title="`订阅 ${siteIdentity.name}`"
-          ><UIcon name="i-lucide-rss"
-        /></NuxtLink>
-        <NuxtLink to="/about#contact" aria-label="联系小童"
-          ><UIcon name="i-lucide-message-circle"
-        /></NuxtLink>
+          >Email ↗</a
+        >
       </div>
     </div>
-    <p class="footer-credit">
-      Designed & built by Xiaotong.<br />Made with curiosity, and a little coffee.<br />©
-      {{ new Date().getFullYear() }}
-    </p>
   </footer>
 </template>
+
+<style src="../../assets/css/footer.css"></style>

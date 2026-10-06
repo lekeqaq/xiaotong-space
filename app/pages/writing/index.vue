@@ -116,11 +116,7 @@ watch([search, category], () => {
     >
       再翻几页 <UIcon name="i-lucide-plus" />
     </button>
-    <div v-else-if="filtered.length" class="notebook-end">
-      <span>✳</span> 写作和成长一样，慢慢来。<NuxtLink to="/subscribe" aria-label="通过 RSS 订阅笔记"
-        ><UIcon name="i-lucide-rss" /> RSS</NuxtLink
-      >
-    </div>
+    <div v-else-if="filtered.length" class="notebook-end"><span>✳</span> 写作和成长一样，慢慢来。</div>
   </div>
 </template>
 

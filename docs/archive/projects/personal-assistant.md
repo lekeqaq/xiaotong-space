@@ -1,14 +1,14 @@
 ---
-title: "Personal AI Assistant"
-subtitle: "RAG-powered Knowledge Base"
-description: "让项目与写作变成可以提问的个人知识库。"
+title: 'Personal AI Assistant'
+subtitle: 'RAG-powered Knowledge Base'
+description: '让项目与写作变成可以提问的个人知识库。'
 year: 2026
-cover: "/images/personal/code.jpg"
-tech: ["Nuxt", "FastAPI", "RAG", "LLM"]
+cover: '/images/personal/code.jpg'
+tech: ['Nuxt', 'FastAPI', 'RAG', 'LLM']
 featured: false
-status: "building"
+status: 'building'
 order: 3
-kind: "assistant"
+kind: 'assistant'
 ---
 
 ::content-callout{title="设计阶段"}

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { siteIdentity } from '#shared/site'
+import BackToTop from '~/components/common/BackToTop.vue'
 const config = useRuntimeConfig()
 const motionPaused = useState('ambient-motion-paused', () => false)
 useHead({ meta: [{ name: 'theme-color', content: '#7c3aed' }] })
@@ -28,6 +29,7 @@ useHead({
     <AppHeader />
     <main id="main-content"><NuxtPage /></main>
     <AppFooter />
+    <BackToTop />
   </div>
 </template>
 

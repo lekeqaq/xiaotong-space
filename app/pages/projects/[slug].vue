@@ -9,18 +9,6 @@ useSiteSeo(
   computed(() => project.value?.description || ''),
   project.value.cover,
 )
-const { data: sourceContent } = await useAsyncData(`project-sources-${route.path}`, async () => {
-  if (project.value?.kind !== 'assistant') return { projects: [], notes: [] }
-  const [projects, notes] = await Promise.all([
-    queryCollection('projects').order('order', 'ASC').select('title', 'path').all(),
-    queryCollection('writing').where('draft', '=', false).order('date', 'DESC').select('title', 'path').all(),
-  ])
-  return { projects, notes }
-})
-const sources = computed(() => [
-  ...(sourceContent.value?.projects.map((item) => ({ ...item, type: 'project' as const })) || []),
-  ...(sourceContent.value?.notes.map((item) => ({ ...item, type: 'note' as const })) || []),
-])
 </script>
 <template>
   <div v-if="project" class="inner-page container project-detail">
@@ -55,12 +43,15 @@ const sources = computed(() => [
       </header>
       <figure class="case-scene">
         <div class="case-scene-label">
-          <span>THE IDEA IN FRAME</span><span>NO. {{ String(project.order).padStart(2, '0') }}</span>
+          <span>PROJECT PREVIEW</span><span>NO. {{ String(project.order).padStart(2, '0') }}</span>
         </div>
-        <TravelScene v-if="project.kind === 'travel'" />
-        <VoiceScene v-else-if="project.kind === 'human'" />
-        <KnowledgeScene v-else :sources="sources" />
-        <figcaption><span>一个想法，慢慢成为作品。</span><span>交互概念预览</span></figcaption>
+        <ProjectThumbnail :kind="project.kind" interactive />
+        <figcaption>
+          <span>{{
+            project.kind === 'travel' ? '周末旅行，轻松出发。' : '语音输入 · 模型回答 · 数字人表达'
+          }}</span
+          ><span>主题交互示意</span>
+        </figcaption>
       </figure>
     </div>
     <div id="project-story" class="detail-divider">

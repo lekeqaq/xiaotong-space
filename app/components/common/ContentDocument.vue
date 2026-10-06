@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Project, Writing, Experiment } from '~/types/content'
-defineProps<{ document: Project | Writing | Experiment }>()
+import type { Project, Writing } from '~/types/content'
+defineProps<{ document: Project | Writing }>()
 </script>
 <template>
   <div class="document-layout">

@@ -2,32 +2,23 @@
 import type { ProjectSummary } from '~/types/content'
 const props = defineProps<{
   project: ProjectSummary
-  sources: Array<{ title: string; path: string; type: 'project' | 'note' }>
 }>()
 const notes = {
   travel: {
     label: 'WEEKENDS, REIMAGINED',
     heading: '把时间留给风景。',
     description:
-      '两天很短，不想花一天做攻略。从一个「这周末去哪」的问题出发，试着把复杂的规划变成一次轻松的出发。',
-    focus: ['产品设计', 'AI 行程规划', '跨端体验'],
+      '从一个「这周末去哪」的问题出发，连接微信小程序、业务 API、运营后台和官网，把推荐与行程管理做成一条完整的使用路径。',
+    focus: ['微信小程序', 'AI 行程规划', '全栈实践'],
     footnote: '周末不赶路，只去有意思的地方。',
   },
   human: {
     label: 'BEYOND THE INTERFACE',
     heading: '让对话，有一点温度。',
     description:
-      '比起「能回答问题」，更在意它何时倾听、何时回应，又如何自然地被打断。一次关于实时交互的探索。',
-    focus: ['实时通信', '语音交互', '状态设计'],
+      '基于 LiveTalking，接入本地部署的千问／DeepSeek 和讯飞 ASR、TTS，让语言模型的回答成为可以听见的实时对话。',
+    focus: ['开源方案集成', '本地模型', '实时语音对话'],
     footnote: '技术往前一步，距离再近一点。',
-  },
-  assistant: {
-    label: 'A SECOND BRAIN',
-    heading: '让散落的知识，彼此连接。',
-    description:
-      '项目、文章、踩过的坑，都是思考的切片。把这些内容组织起来，探索一个有记忆、也有据可循的个人助手。',
-    focus: ['知识检索', 'RAG', '来源引用'],
-    footnote: '先有可信知识，再有有用的助手。',
   },
 }
 const note = computed(() => notes[props.project.kind])
@@ -62,12 +53,10 @@ const note = computed(() => notes[props.project.kind])
       </div>
     </div>
     <div class="showcase-visual">
-      <TravelScene v-if="project.kind === 'travel'" /><VoiceScene
-        v-else-if="project.kind === 'human'"
-      /><KnowledgeScene v-else :sources="sources" />
+      <ProjectThumbnail :kind="project.kind" interactive />
       <div class="showcase-caption">
         <span>{{ note.footnote }}</span
-        ><span>概念预览 <i /> {{ project.status === 'live' ? 'LIVE' : 'IN PROGRESS' }}</span>
+        ><span>交互示意 <i /> {{ project.status === 'live' ? 'LIVE' : 'IN PROGRESS' }}</span>
       </div>
     </div>
   </article>

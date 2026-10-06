@@ -36,19 +36,12 @@ const routes = [
   '/',
   '/projects',
   '/writing',
-  '/lab',
   '/about',
-  '/subscribe',
   '/projects/weekend',
   '/projects/digital-human',
-  '/projects/personal-assistant',
   '/writing/building-personal-ai',
   '/writing/voice-agent-notes',
   '/writing/webrtc-notes',
-  '/lab/personal-rag',
-  '/lab/voice-agent',
-  '/lab/travel-planner',
-  '/lab/more-ideas',
 ]
 for (const path of routes) {
   test(`${path} renders content and SEO on the server`, async () => {
@@ -96,12 +89,25 @@ test('robots links to sitemap and OG image is available', async () => {
   assert.match(image.headers.get('content-type'), /image\/png/)
 })
 
-for (const path of ['/missing-page', '/writing/missing', '/projects/missing', '/lab/missing']) {
+for (const path of ['/missing-page', '/writing/missing', '/projects/missing']) {
   test(`${path} returns a real 404 with recovery navigation`, async () => {
     const response = await fetch(origin + path, { headers: { accept: 'text/html' } })
     assert.equal(response.status, 404)
     const html = await response.text()
     assert.match(html, /A little off the path/)
     assert.match(html, /noindex/)
+  })
+}
+
+for (const [path, target] of [
+  ['/subscribe', '/writing'],
+  ['/lab', '/writing'],
+  ['/lab/personal-rag', '/writing'],
+  ['/projects/personal-assistant', '/projects'],
+]) {
+  test(`${path} redirects to its current section`, async () => {
+    const response = await fetch(origin + path, { redirect: 'manual' })
+    assert.equal(response.status, 301)
+    assert.equal(response.headers.get('location'), target)
   })
 }

@@ -15,6 +15,10 @@ export default defineNuxtConfig({
   colorMode: { preference: 'system', fallback: 'light', classSuffix: '' },
   image: { format: ['webp'], quality: 80 },
   routeRules: {
+    '/subscribe': { redirect: { to: '/writing', statusCode: 301 } },
+    '/lab': { redirect: { to: '/writing', statusCode: 301 } },
+    '/lab/**': { redirect: { to: '/writing', statusCode: 301 } },
+    '/projects/personal-assistant': { redirect: { to: '/projects', statusCode: 301 } },
     '/_ipx/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
     '/images/**': { headers: { 'cache-control': 'public, max-age=604800' } },
   },
@@ -41,17 +45,7 @@ export default defineNuxtConfig({
     compressPublicAssets: true,
     prerender: {
       crawlLinks: true,
-      routes: [
-        '/',
-        '/projects',
-        '/writing',
-        '/lab',
-        '/about',
-        '/subscribe',
-        '/sitemap.xml',
-        '/rss.xml',
-        '/robots.txt',
-      ],
+      routes: ['/', '/projects', '/writing', '/about', '/sitemap.xml', '/rss.xml', '/robots.txt'],
     },
   },
 })

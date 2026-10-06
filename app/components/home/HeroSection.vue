@@ -5,7 +5,6 @@ defineProps<{
   article?: WritingSummary
   projectCount: number
   articleCount: number
-  experimentCount: number
 }>()
 const clock = ref('--:--')
 let timer: ReturnType<typeof setInterval> | undefined
@@ -58,21 +57,23 @@ onUnmounted(() => clearInterval(timer))
         >
       </NuxtLink>
       <div class="desk-photo-object ambient-motion"><DeskPostcard /></div>
-      <NuxtLink to="/lab/personal-rag" class="desk-building desk-object ambient-motion">
+      <NuxtLink to="/projects/digital-human" class="desk-building desk-object ambient-motion">
         <span class="desk-object-label"
           ><span class="live-dot" /> ON MY WORKBENCH <UIcon name="i-lucide-arrow-up-right"
         /></span>
         <div class="mini-flow ambient-motion" aria-hidden="true">
-          <span><UIcon name="i-lucide-files" /></span><i /><span class="flow-core"
-            ><UIcon name="i-lucide-sparkles" /></span
-          ><i /><span><UIcon name="i-lucide-message-circle" /></span>
+          <span><UIcon name="i-lucide-mic" /></span><i /><span class="flow-core"
+            ><UIcon name="i-lucide-brain-circuit" /></span
+          ><i /><span><UIcon name="i-lucide-user-round" /></span>
         </div>
-        <h2>一个更懂我的 AI。</h2>
-        <p>Personal RAG · 正在探索中</p>
+        <h2>让对话，有声音。</h2>
+        <p>LiveTalking · 本地模型 × 讯飞语音</p>
         <div class="building-progress ambient-motion">
           <span /><span /><span /><span /><span /><span /><span /><span /><span /><span /><span /><span />
         </div>
-        <span class="building-caption">从零开始，把想法连起来。<UIcon name="i-lucide-arrow-right" /></span>
+        <span class="building-caption"
+          >把模型、语音与数字人连起来。<UIcon name="i-lucide-arrow-right"
+        /></span>
       </NuxtLink>
       <DeskThought />
       <span class="desk-scribble" aria-hidden="true"
@@ -86,23 +87,19 @@ onUnmounted(() => clearInterval(timer))
     </div>
     <nav class="space-dock" aria-label="探索我的空间">
       <NuxtLink to="/projects"
-        ><UIcon name="i-lucide-box" /><span
+        ><UIcon name="i-lucide-compass" /><span
           >作品<small>{{ String(projectCount).padStart(2, '0') }}</small></span
-        ></NuxtLink
-      >
+        ><UIcon name="i-lucide-arrow-up-right" class="dock-arrow"
+      /></NuxtLink>
       <NuxtLink to="/writing"
         ><UIcon name="i-lucide-notebook-pen" /><span
           >笔记<small>{{ String(articleCount).padStart(2, '0') }}</small></span
-        ></NuxtLink
-      >
-      <NuxtLink to="/lab"
-        ><UIcon name="i-lucide-flask-conical" /><span
-          >实验<small>{{ String(experimentCount).padStart(2, '0') }}</small></span
-        ></NuxtLink
-      >
+        ><UIcon name="i-lucide-arrow-up-right" class="dock-arrow"
+      /></NuxtLink>
       <NuxtLink to="/about"
-        ><UIcon name="i-lucide-smile" /><span>关于我<UIcon name="i-lucide-arrow-up-right" /></span
-      ></NuxtLink>
+        ><UIcon name="i-lucide-user-round" /><span>关于我</span
+        ><UIcon name="i-lucide-arrow-up-right" class="dock-arrow"
+      /></NuxtLink>
     </nav>
     <div class="desk-bottom">
       <span>没有终稿，持续生长。</span><span>SCROLL TO WANDER <UIcon name="i-lucide-arrow-down" /></span>

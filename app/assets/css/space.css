@@ -539,13 +539,13 @@
 }
 .space-dock {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  width: min(100%, 560px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(100%, 540px);
   margin: 4px auto 27px;
   padding: 10px;
   gap: 6px;
   border: 1px solid var(--color-border);
-  border-radius: 18px;
+  border-radius: 12px;
   background: var(--color-surface);
   box-shadow: 0 5px 20px rgb(0 0 0 / 3%);
 }
@@ -645,7 +645,7 @@
 }
 .project-shelf {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 28px;
 }
 .shelf-art {
@@ -1501,5 +1501,82 @@
 @media (prefers-reduced-motion: reduce) {
   .desk-postcard img {
     animation: none;
+  }
+}
+
+/* A quiet note beside the writing feed, grounded in current projects. */
+.practice-note {
+  position: relative;
+  padding: 34px;
+  background: var(--color-paper);
+  color: var(--color-paper-ink);
+  border: 1px solid color-mix(in srgb, var(--color-paper-ink) 14%, transparent);
+  align-self: start;
+}
+.practice-note h2 {
+  font-size: 1.65rem;
+  line-height: 1.5;
+  font-weight: 500;
+  margin-block: 26px 16px;
+}
+.practice-note > p {
+  font-size: 0.82rem;
+  line-height: 1.9;
+  max-width: 320px;
+}
+.practice-note > .space-text-link {
+  margin-top: 24px;
+}
+.practice-mark {
+  position: absolute;
+  top: 25px;
+  right: 28px;
+  font-size: 2.4rem;
+  opacity: 0.5;
+}
+.practice-signature {
+  display: block;
+  margin-top: 34px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--color-paper-ink) 18%, transparent);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 1rem;
+}
+@media (max-width: 767px) {
+  .practice-note {
+    padding: 26px;
+  }
+}
+
+.space-dock > a {
+  position: relative;
+  padding-inline: 16px;
+}
+.space-dock > a > .dock-arrow {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-left: auto;
+}
+.space-dock > a > span {
+  flex: 1;
+  gap: 12px;
+}
+.space-dock > a > span > small {
+  margin-left: auto;
+}
+@media (max-width: 767px) {
+  .space-dock > a {
+    flex-direction: row;
+    padding-inline: 10px;
+    min-height: 52px;
+    gap: 7px;
+  }
+  .space-dock > a > span {
+    flex: initial;
+    gap: 5px;
+  }
+  .space-dock > a > .dock-arrow {
+    display: none;
   }
 }
