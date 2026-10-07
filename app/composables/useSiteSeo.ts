@@ -3,7 +3,7 @@ import { siteIdentity } from '#shared/site'
 export function useSiteSeo(
   title: string | Ref<string>,
   description: string | Ref<string>,
-  image = '/og/default.png',
+  image: string | Ref<string> = '/og/default.png',
 ) {
   const route = useRoute()
   const config = useRuntimeConfig()
@@ -14,7 +14,7 @@ export function useSiteSeo(
     description,
     ogTitle: title,
     ogDescription: description,
-    ogImage: new URL(image, origin).href,
+    ogImage: computed(() => new URL(toValue(image) || '/og/default.png', origin).href),
     ogUrl: url,
     twitterCard: 'summary_large_image',
   })

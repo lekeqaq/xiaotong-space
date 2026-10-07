@@ -1,12 +1,12 @@
 import { queryCollection } from '@nuxt/content/server'
-import { publishedArticles } from '../utils/admin-db'
+import { publicArticles } from '../utils/public-content'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
   const origin = config.public.siteUrl || getRequestURL(event).origin
   const [projects, articles] = await Promise.all([
     queryCollection(event, 'projects').select('path').all(),
-    Promise.resolve(publishedArticles()),
+    Promise.resolve(publicArticles()),
   ])
   const escape = (text: string) =>
     text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;')

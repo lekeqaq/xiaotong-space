@@ -7,6 +7,7 @@ defineProps<{ document: Project | Writing }>()
 </script>
 <template>
   <div class="document-layout">
+    <slot name="header" />
     <article class="prose-content">
       <slot />
       <MDCRenderer
@@ -17,8 +18,9 @@ defineProps<{ document: Project | Writing }>()
       />
       <ContentRenderer v-else :value="document" />
     </article>
-    <aside v-if="document.body.toc?.links.length" class="document-toc">
-      <details open>
+    <aside v-if="$slots.aside || document.body.toc?.links.length" class="document-toc">
+      <slot name="aside" />
+      <details v-if="document.body.toc?.links.length" open>
         <summary>ON THIS PAGE <UIcon name="i-lucide-list" /></summary>
         <ContentToc :links="document.body.toc.links" />
       </details>

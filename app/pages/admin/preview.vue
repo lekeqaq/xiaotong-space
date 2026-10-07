@@ -72,3 +72,7 @@ onBeforeUnmount(() => {
   color: var(--color-text-muted);
 }
 </style>
+
+<style src="~/assets/css/details.css"></style>
+<style src="~/assets/css/space.css"></style>
+<style src="~/assets/css/home-motion.css"></style>

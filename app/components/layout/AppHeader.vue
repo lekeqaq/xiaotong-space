@@ -33,15 +33,16 @@ function isActive(to: string) {
         >
       </nav>
       <div class="header-actions">
-        <ThemeToggle />
         <a
-          v-if="config.public.githubUrl"
-          :href="config.public.githubUrl"
-          class="github-button"
+          :href="config.public.githubUrl || siteIdentity.githubUrl"
+          class="github-icon-link"
+          aria-label="查看 GitHub 仓库（新窗口打开）"
+          title="GitHub 仓库"
           target="_blank"
           rel="noopener noreferrer"
-          ><UIcon name="i-simple-icons-github" /> GitHub</a
-        >
+          ><UIcon name="i-simple-icons-github" aria-hidden="true"
+        /></a>
+        <ThemeToggle />
         <details ref="menu" class="mobile-menu">
           <summary role="button" aria-label="打开导航菜单"><UIcon name="i-lucide-menu" /></summary>
           <nav aria-label="移动端导航">

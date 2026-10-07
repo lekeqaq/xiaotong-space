@@ -503,3 +503,33 @@
     font-size: 0.54rem;
   }
 }
+
+/* Categories grow within the page, including long labels on narrow phones. */
+.notebook-categories {
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  gap: 0 20px;
+  justify-content: flex-start;
+}
+.notebook-categories button {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 540px) {
+  .notebook-categories {
+    gap: 0 16px;
+  }
+  .notebook-categories button {
+    font-size: 0.875rem;
+    min-height: 44px;
+  }
+  .notebook-categories small {
+    font-size: 0.75rem;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+  }
+}

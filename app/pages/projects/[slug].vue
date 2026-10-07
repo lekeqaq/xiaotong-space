@@ -64,3 +64,5 @@ useSiteSeo(
 </template>
 
 <style src="../../assets/css/projects.css"></style>
+
+<style src="~/assets/css/details.css"></style>

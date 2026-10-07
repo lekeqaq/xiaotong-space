@@ -9,7 +9,7 @@ const allowed = new Set(
 export async function renderArticle(article: Article): Promise<RenderedArticle> {
   const parsed = await parseMarkdown(article.markdown, {
     highlight: {
-      theme: { default: 'github-light', dark: 'github-dark' },
+      theme: { light: 'github-light', default: 'github-light', dark: 'github-dark-default' },
     },
     toc: { depth: 3, searchDepth: 3 },
   })

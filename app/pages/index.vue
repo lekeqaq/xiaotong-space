@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { siteIdentity } from '#shared/site'
+import { initialHome } from '#shared/home'
+import type { HomeContent } from '#shared/content'
 const home = useTemplateRef<HTMLElement>('home')
 useScrollReveal(home)
 useHead({ titleTemplate: null })
@@ -7,15 +9,30 @@ useSiteSeo(
   `${siteIdentity.title} — Frontend & AI`,
   '小童的个人数字空间。探索前端开发、AI 应用与有趣的产品，分享项目实践、技术写作和生活片段。',
 )
-const [{ data: projects }, { data: writing }] = await Promise.all([
+const [projectFeed, writingFeed, homeFeed] = await Promise.all([
   useProjectSummaries(),
-  useFetch('/api/content/articles'),
+  useWritingSummaries(),
+  useFetch<HomeContent>('/api/content/home', { key: 'home-settings', timeout: 8000, retry: 0 }),
 ])
+const { data: projects, error: projectsError, status: projectsStatus, refresh: retryProjects } = projectFeed
+const { data: writing, error: writingError, status: writingStatus, refresh: retryWriting } = writingFeed
+const { data: settings, error: settingsError, status: settingsStatus, refresh: retrySettings } = homeFeed
 </script>
 <template>
   <div ref="home" class="home-page">
-    <HeroSection :article="writing?.[0]" :project="projects?.find((project) => project.workbench)" />
+    <HeroSection
+      :home-settings="settings || initialHome"
+      :article="writingError ? undefined : writing?.[0]"
+      :project="projectsError ? undefined : projects?.find((project) => project.workbench)"
+    />
     <div id="space-feed" class="space-feed container">
+      <ContentState
+        v-if="settingsError"
+        title="生活片段暂时没加载出来"
+        description="先看看默认的风景，也可以重新加载。"
+        :busy="settingsStatus === 'pending'"
+        @retry="retrySettings()"
+      />
       <section class="work-shelf" data-reveal aria-labelledby="shelf-title">
         <div class="space-section-heading">
           <div>
@@ -26,7 +43,15 @@ const [{ data: projects }, { data: writing }] = await Promise.all([
             >所有作品 <UIcon name="i-lucide-arrow-up-right"
           /></NuxtLink>
         </div>
-        <div class="project-shelf">
+        <ContentState
+          v-if="projectsError"
+          title="作品暂时没加载出来"
+          description="请稍后重试，其他内容仍然可以浏览。"
+          :busy="projectsStatus === 'pending'"
+          @retry="retryProjects()"
+        />
+        <p v-else-if="!projects?.length">新的作品正在整理中。</p>
+        <div v-else class="project-shelf">
           <NuxtLink
             v-for="project in projects"
             :key="project.path"
@@ -34,7 +59,7 @@ const [{ data: projects }, { data: writing }] = await Promise.all([
             class="shelf-item"
             :class="`shelf-${project.kind}`"
           >
-            <ProjectThumbnail :kind="project.kind" :summary="project.cardSummary" />
+            <ProjectThumbnail :kind="project.kind" :summary="project.cardSummary" size="shelf" />
             <div class="shelf-description">
               <span class="shelf-number">0{{ project.order }}</span>
               <div>
@@ -57,8 +82,16 @@ const [{ data: projects }, { data: writing }] = await Promise.all([
               ><UIcon name="i-lucide-arrow-up-right"
             /></NuxtLink>
           </div>
+          <ContentState
+            v-if="writingError"
+            title="笔记暂时没加载出来"
+            description="请稍后重试，作品和生活片段仍然可以浏览。"
+            :busy="writingStatus === 'pending'"
+            @retry="retryWriting()"
+          />
+          <p v-else-if="!writing?.length">还没有发布笔记，慢慢写，慢慢积累。</p>
           <NuxtLink
-            v-for="article in writing?.slice(0, 3)"
+            v-for="article in writingError ? [] : writing?.slice(0, 3)"
             :key="article.path"
             :to="article.path"
             class="notebook-entry"
@@ -104,3 +137,6 @@ const [{ data: projects }, { data: writing }] = await Promise.all([
     </div>
   </div>
 </template>
+
+<style src="../assets/css/space.css"></style>
+<style src="../assets/css/home-motion.css"></style>

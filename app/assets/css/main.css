@@ -192,26 +192,34 @@ h3 {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 20px;
-}
-.github-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 0.78rem;
-  padding: 10px 17px;
-  border-radius: 30px;
-  color: var(--color-bg);
-  background: var(--color-text);
-}
-.theme-toggle {
-  display: flex;
-  align-items: center;
   gap: 6px;
-  border: none;
-  background: none;
-  padding: 8px 0;
-  font-size: 1.25rem;
+}
+.github-icon-link,
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  color: var(--color-text-muted);
+  background: transparent;
+  font-size: 16px;
+  transition:
+    color 180ms,
+    background 180ms;
+}
+.github-icon-link .iconify,
+.theme-toggle .iconify {
+  width: 16px;
+  height: 16px;
+}
+.github-icon-link:hover,
+.theme-toggle:hover {
+  color: var(--color-accent);
+  background: var(--color-surface-muted);
 }
 .mobile-menu {
   display: none;
@@ -699,13 +707,6 @@ h2 {
     gap: 20px;
     font-size: 0.8rem;
   }
-  .header-actions {
-    gap: 15px;
-  }
-  .github-button {
-    padding: 8px 12px;
-    font-size: var(--font-size-caption);
-  }
   h2 {
     font-size: 1.65rem;
   }
@@ -729,15 +730,6 @@ h2 {
   }
   .desktop-nav {
     display: none;
-  }
-  .header-actions {
-    gap: 15px;
-  }
-  .github-button {
-    padding: 8px 13px;
-  }
-  .theme-toggle {
-    font-size: 1.1rem;
   }
   .mobile-menu {
     display: block;
@@ -892,15 +884,6 @@ h2 {
     font-size: 0.88rem;
   }
 }
-@media (max-width: 390px) {
-  .header-actions {
-    gap: 10px;
-  }
-  .github-button {
-    font-size: var(--font-size-caption);
-    padding: 8px 10px;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -915,23 +898,6 @@ h2 {
   }
 }
 
-.theme-toggle {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  font-size: 18px;
-  transition:
-    background 180ms,
-    transform 180ms;
-}
-.theme-toggle:hover {
-  background: var(--color-surface-muted);
-  transform: rotate(12deg);
-}
 .theme-moon {
   display: none;
 }
@@ -940,4 +906,108 @@ h2 {
 }
 .dark .theme-moon {
   display: block;
+}
+
+/* Shared identity: warm paper, quiet ink, a little imperfection. */
+:root {
+  --color-paper: #f1edda;
+  --color-paper-ink: #615a3d;
+  --color-mint: #e6eee7;
+  --color-mint-ink: #386853;
+  --color-lilac: #ede9fe;
+  --color-grid: #d8d7d0;
+  --font-editorial: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+}
+.dark {
+  --site-bg-rgb: 32, 35, 33;
+  --color-bg: rgb(var(--site-bg-rgb));
+  --site-surface-rgb: 39, 43, 40;
+  --color-surface: rgb(var(--site-surface-rgb));
+  --site-surface-muted-rgb: 48, 54, 49;
+  --color-surface-muted: rgb(var(--site-surface-muted-rgb));
+  --site-text-rgb: 235, 236, 229;
+  --color-text: rgb(var(--site-text-rgb));
+  --site-text-muted-rgb: 168, 175, 167;
+  --color-text-muted: rgb(var(--site-text-muted-rgb));
+  --site-border-rgb: 59, 66, 59;
+  --color-border: rgb(var(--site-border-rgb));
+  --color-paper: #3a392a;
+  --color-paper-ink: #e0d8ad;
+  --color-mint: #2c3c33;
+  --color-mint-ink: #afd0b8;
+  --color-lilac: #33264f;
+  --color-grid: #414940;
+}
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 1.2rem;
+  font-weight: 640;
+  letter-spacing: -0.06em;
+}
+.wordmark-symbol {
+  color: var(--color-accent);
+  font-size: 1.65rem;
+  line-height: 1;
+  margin-right: 3px;
+}
+.wordmark-space {
+  color: var(--color-text-muted);
+  font-weight: 420;
+  margin-left: -7px;
+}
+.header-inner {
+  gap: 50px;
+}
+.desktop-nav {
+  gap: 28px;
+}
+.desktop-nav a {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+.desktop-nav a.active {
+  color: var(--color-text);
+}
+.desktop-nav a::after {
+  bottom: 4px;
+  width: 16px;
+  height: 2px;
+  left: calc(50% - 8px);
+  border-radius: 0;
+}
+
+.space-kicker {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.13em;
+  color: var(--color-text-muted);
+  margin-bottom: 13px;
+}
+@media (max-width: 1023px) {
+  .header-inner {
+    gap: 25px;
+  }
+  .wordmark {
+    font-size: 1.08rem;
+  }
+}
+@media (max-width: 540px) {
+  .wordmark {
+    font-size: 1.04rem;
+  }
+  .wordmark-symbol {
+    font-size: 1.45rem;
+  }
+  .header-actions {
+    gap: 4px;
+  }
+}
+
+.wordmark-name {
+  font-size: 1.05rem;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  white-space: nowrap;
 }

@@ -1,6 +1,7 @@
 import type { ProjectsCollectionItem } from '@nuxt/content'
 export type Project = ProjectsCollectionItem
-export type Writing = import('#shared/admin').RenderedArticle
+export type Writing = import('#shared/content').RenderedArticle
+export type { WritingSummary } from '#shared/content'
 
 export type ProjectSummary = Pick<
   Project,
@@ -19,8 +20,4 @@ export type ProjectSummary = Pick<
   | 'status'
   | 'order'
   | 'kind'
->
-export type WritingSummary = Pick<
-  Writing,
-  'path' | 'title' | 'description' | 'date' | 'cover' | 'tags' | 'category' | 'readingTime'
 >

@@ -1,9 +1,14 @@
 import { createVuetify } from 'vuetify'
 import type { IconProps } from 'vuetify'
 import { zhHans } from 'vuetify/locale'
-import { UIcon } from '#components'
+import UIcon from '#ui/components/Icon.vue'
+import { h } from 'vue'
+import type { App } from 'vue'
 
-export default defineNuxtPlugin((nuxtApp) => {
+const installed = new WeakSet<App>()
+
+export function installAdminVuetify(app: App) {
+  if (installed.has(app)) return
   const vuetify = createVuetify({
     ssr: true,
     locale: { locale: 'zhHans', messages: { zhHans } },
@@ -111,5 +116,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       },
     },
   })
-  nuxtApp.vueApp.use(vuetify)
-})
+  app.use(vuetify)
+  installed.add(app)
+}

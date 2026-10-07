@@ -26,10 +26,14 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'desktop', testMatch: /site\.spec\.ts/, use: { viewport: { width: 1280, height: 900 } } },
+    {
+      name: 'desktop',
+      testMatch: /site(?:\.optimizations)?\.spec\.ts/,
+      use: { viewport: { width: 1280, height: 900 } },
+    },
     {
       name: 'mobile',
-      testMatch: /site\.spec\.ts/,
+      testMatch: /site(?:\.optimizations)?\.spec\.ts/,
       use: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
     },
     {

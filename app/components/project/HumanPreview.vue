@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import HumanSignal from './HumanSignal.vue'
 import ProjectPreviewHeader from './ProjectPreviewHeader.vue'
-withDefaults(defineProps<{ summary: string; interactive?: boolean }>(), { interactive: false })
+const props = withDefaults(
+  defineProps<{ summary: string; interactive?: boolean; size?: 'shelf' | 'showcase' }>(),
+  { interactive: false, size: 'showcase' },
+)
+const imageSizes = computed(() =>
+  props.size === 'shelf' ? '110px md:150px lg:180px' : '140px md:200px xl:240px',
+)
 const active = ref(0)
 const phases = [
   {
@@ -69,12 +75,12 @@ const phase = computed(() => phases[active.value]!)
       </div>
       <figure class="companion-portrait">
         <div class="companion-photo">
-          <NuxtImg
+          <SiteImage
             src="/images/projects/portrait.jpg"
             :alt="interactive ? '声伴数字人形象示意' : ''"
             width="600"
             height="750"
-            sizes="sm:35vw md:240px"
+            :sizes="imageSizes"
             format="webp"
             loading="lazy"
           />

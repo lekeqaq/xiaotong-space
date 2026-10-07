@@ -17,6 +17,7 @@
     "admin:password": "node scripts/admin-password.mjs",
     "admin:restore": "node --env-file-if-exists=.env scripts/admin-restore.mjs",
     "admin:seed": "node scripts/admin-seed.mjs",
+    "content:sync-note": "node --env-file-if-exists=.env scripts/content-sync-note.mjs",
     "test:admin": "node --test tests/admin.test.mjs",
     "test:editor": "node --experimental-strip-types --test tests/editor-markdown.test.mjs"
   },

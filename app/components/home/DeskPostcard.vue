@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { initialHome } from '#shared/admin'
-import type { HomeInput } from '#shared/admin'
-const props = defineProps<{ photos?: HomeInput['photos'] }>()
-const { data: home } = await useFetch('/api/content/home', { key: 'home-settings' })
-const photos = computed(() => props.photos || home.value?.photos || initialHome.photos)
+import { initialHome } from '#shared/home'
+import type { HomeContent } from '#shared/content'
+const props = defineProps<{ photos?: HomeContent['photos'] }>()
+const photos = computed(() => (props.photos?.length ? props.photos : initialHome.photos))
 const index = ref(0)
 const photo = computed(() => photos.value[index.value % photos.value.length]!)
 </script>
@@ -22,8 +21,9 @@ const photo = computed(() => photos.value[index.value % photos.value.length]!)
       :alt="photo.alt"
       width="360"
       height="240"
-      sizes="240px"
+      sizes="260px sm:360px md:240px"
       format="webp"
+      loading="lazy"
     />
     <span class="postcard-caption" aria-live="polite"
       >{{ photo.caption

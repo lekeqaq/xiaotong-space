@@ -1,81 +1,3 @@
-/* Shared identity: warm paper, quiet ink, a little imperfection. */
-:root {
-  --color-paper: #f1edda;
-  --color-paper-ink: #615a3d;
-  --color-mint: #e6eee7;
-  --color-mint-ink: #386853;
-  --color-lilac: #ede9fe;
-  --color-grid: #d8d7d0;
-  --font-editorial: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
-}
-.dark {
-  --site-bg-rgb: 32, 35, 33;
-  --color-bg: rgb(var(--site-bg-rgb));
-  --site-surface-rgb: 39, 43, 40;
-  --color-surface: rgb(var(--site-surface-rgb));
-  --site-surface-muted-rgb: 48, 54, 49;
-  --color-surface-muted: rgb(var(--site-surface-muted-rgb));
-  --site-text-rgb: 235, 236, 229;
-  --color-text: rgb(var(--site-text-rgb));
-  --site-text-muted-rgb: 168, 175, 167;
-  --color-text-muted: rgb(var(--site-text-muted-rgb));
-  --site-border-rgb: 59, 66, 59;
-  --color-border: rgb(var(--site-border-rgb));
-  --color-paper: #3a392a;
-  --color-paper-ink: #e0d8ad;
-  --color-mint: #2c3c33;
-  --color-mint-ink: #afd0b8;
-  --color-lilac: #33264f;
-  --color-grid: #414940;
-}
-.wordmark {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 1.2rem;
-  font-weight: 640;
-  letter-spacing: -0.06em;
-}
-.wordmark-symbol {
-  color: var(--color-accent);
-  font-size: 1.65rem;
-  line-height: 1;
-  margin-right: 3px;
-}
-.wordmark-space {
-  color: var(--color-text-muted);
-  font-weight: 420;
-  margin-left: -7px;
-}
-.header-inner {
-  gap: 50px;
-}
-.desktop-nav {
-  gap: 28px;
-}
-.desktop-nav a {
-  color: var(--color-text-muted);
-  font-size: 0.8rem;
-}
-.desktop-nav a.active {
-  color: var(--color-text);
-}
-.desktop-nav a::after {
-  bottom: 4px;
-  width: 16px;
-  height: 2px;
-  left: calc(50% - 8px);
-  border-radius: 0;
-}
-.github-button {
-  background: transparent;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  padding: 9px 15px;
-}
-.github-button:hover {
-  background: var(--color-surface-muted);
-}
 .digital-desk {
   width: min(1440px, 100%);
   margin: 0 auto;
@@ -1167,15 +1089,7 @@
     font-size: 1.45rem;
   }
   .header-actions {
-    gap: 10px;
-  }
-  .header-actions .github-button {
-    display: none;
-  }
-  .theme-toggle {
-    width: 35px;
-    height: 35px;
-    font-size: 16px;
+    gap: 4px;
   }
   .digital-desk {
     padding-inline: 20px;
@@ -1468,5 +1382,102 @@
 @media (max-width: 767px) {
   .practice-note {
     padding: 26px;
+  }
+}
+
+/* Keep the paper desk, but read its cards in order on a phone. */
+@media (max-width: 767px) {
+  .desk-canvas {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+    padding-inline: 6px;
+  }
+  .desk-intro {
+    grid-column: 1;
+    order: 0;
+  }
+  .desk-note {
+    order: 1;
+  }
+  .desk-building {
+    order: 2;
+  }
+  .desk-photo-object {
+    order: 3;
+  }
+  .desk-thought {
+    order: 4;
+  }
+  .desk-object,
+  .desk-photo-object,
+  .desk-thought {
+    width: 100%;
+    max-width: 440px;
+    justify-self: center;
+    transform: none;
+  }
+  .desk-note,
+  .desk-building,
+  .desk-thought {
+    padding: 22px;
+  }
+  .desk-hello,
+  .desk-explore,
+  .desk-object-label,
+  .thought-label {
+    font-size: 0.75rem;
+  }
+  .desk-intro p,
+  .desk-note p,
+  .desk-building p,
+  .building-caption {
+    font-size: 0.875rem;
+    line-height: 1.8;
+  }
+  .desk-note h2,
+  .desk-building h2 {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+  .desk-note-meta {
+    font-size: 0.75rem;
+  }
+  .desk-note-meta > span {
+    display: inline;
+  }
+  .desk-postcard {
+    padding: 10px 10px 16px;
+  }
+  .desk-postcard img {
+    height: auto;
+    aspect-ratio: 3 / 2;
+  }
+  .postcard-caption,
+  .postcard-caption > span,
+  .postcard-hint {
+    font-size: 0.75rem;
+  }
+  .postcard-hint {
+    bottom: -23px;
+  }
+  .desk-photo-object {
+    margin-bottom: 18px;
+  }
+  .desk-thought p {
+    font-size: 1rem;
+    min-height: 0;
+    margin-block: 18px;
+  }
+  .thought-bottom button {
+    width: 44px;
+    height: 44px;
+  }
+  .desk-meta time {
+    font-size: 0.75rem;
+  }
+  .space-kicker,
+  .space-text-link,
+  .shelf-description p {
+    font-size: 0.75rem;
   }
 }

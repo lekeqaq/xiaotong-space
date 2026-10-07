@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
+import { installAdminVuetify } from '~/utils/adminVuetify'
+installAdminVuetify(useNuxtApp().vueApp)
 useHead({ htmlAttrs: { class: 'admin-document' } })
 const colorMode = useColorMode()
 // Local preference can resolve before hydration; start with the server's theme class
@@ -26,3 +28,5 @@ watch(
   </VApp>
 </template>
 <style src="~/assets/css/admin-vuetify.scss" lang="scss"></style>
+
+<style src="~/assets/css/admin.css"></style>

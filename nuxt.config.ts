@@ -16,6 +16,40 @@ export default defineNuxtConfig({
   },
   colorMode: { preference: 'system', fallback: 'light', classSuffix: '' },
   image: { format: ['webp'], quality: 80 },
+  hooks: {
+    'build:manifest': (manifest) => {
+      // Nuxt's entry references every layout and middleware. Its SSR prefetch
+      // hints otherwise fetch the admin layout on public pages as well.
+      const isAdmin = (key: string) =>
+        /(?:^|\/)(?:pages|layouts|middleware|components)\/admin(?:\/|\.|$)/i.test(key)
+      const collect = (roots: string[]) => {
+        const found = new Set<string>()
+        const visit = (key: string) => {
+          if (found.has(key)) return
+          found.add(key)
+          const chunk = manifest[key]
+          for (const dependency of [
+            ...(chunk?.imports || []),
+            ...(chunk?.css || []),
+            ...(chunk?.assets || []),
+          ])
+            visit(dependency)
+        }
+        roots.forEach(visit)
+        return found
+      }
+      const entries = Object.entries(manifest)
+      const publicResources = collect(
+        entries
+          .filter(([key, chunk]) => !isAdmin(key) && (chunk.isEntry || chunk.isDynamicEntry))
+          .map(([key]) => key),
+      )
+      const adminResources = collect(entries.filter(([key]) => isAdmin(key)).map(([key]) => key))
+      for (const key of adminResources) {
+        if (!publicResources.has(key) && manifest[key]) manifest[key].prefetch = false
+      }
+    },
+  },
   routeRules: {
     '/': { prerender: false, headers: { 'cache-control': 'no-store' } },
     '/writing': { prerender: false, headers: { 'cache-control': 'no-store' } },
@@ -35,12 +69,17 @@ export default defineNuxtConfig({
     '/images/**': { headers: { 'cache-control': 'public, max-age=604800' } },
   },
   // Runtime Markdown previews need the MDC highlighter endpoint (Content otherwise disables it).
-  mdc: { highlight: { noApiRoute: false } },
+  mdc: {
+    highlight: {
+      noApiRoute: false,
+      theme: { light: 'github-light', default: 'github-light', dark: 'github-dark-default' },
+    },
+  },
   content: {
     build: {
       markdown: {
         highlight: {
-          theme: { default: 'github-light', dark: 'github-dark' },
+          theme: { light: 'github-light', default: 'github-light', dark: 'github-dark-default' },
           langs: ['ts', 'vue', 'python', 'bash', 'json'],
         },
       },
@@ -58,7 +97,7 @@ export default defineNuxtConfig({
     adminUsername: 'admin',
     adminPasswordHash: '',
     adminDataDir: '.data/admin',
-    public: { siteUrl: '', githubUrl: '', contactEmail: '' },
+    public: { siteUrl: '', githubUrl: siteIdentity.githubUrl, contactEmail: '' },
   },
   nitro: {
     // Serve the editor's runtime assets locally, including during development.

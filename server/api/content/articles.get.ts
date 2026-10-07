@@ -1,5 +1,5 @@
-import { publishedArticles } from '../../utils/admin-db'
+import { writingSummaries } from '../../utils/public-content'
 export default defineEventHandler((event) => {
   setHeader(event, 'cache-control', 'no-store')
-  return publishedArticles().map(({ markdown: _markdown, ...article }) => article)
+  return writingSummaries()
 })

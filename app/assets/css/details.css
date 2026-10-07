@@ -1,10 +1,5 @@
-/* Detail pages read like an open notebook: the story and its visual share a spread. */
-.wordmark-name {
-  font-size: 1.05rem;
-  letter-spacing: -0.035em;
-  font-weight: 600;
-  white-space: nowrap;
-}
+/* Project spreads and compact, reading-first article pages. */
+
 .case-opening {
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
@@ -97,22 +92,47 @@
   color: var(--color-text-muted);
   scroll-margin-top: calc(var(--header-height) + 24px);
 }
-.article-opening {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.8fr);
-  align-items: center;
-  gap: clamp(45px, 7vw, 110px);
-  margin: 38px 0 58px;
-  min-height: 490px;
+.article-detail.inner-page {
+  max-width: 1100px;
+  padding-top: 32px;
+}
+.article-detail > .back-link {
+  margin-bottom: 28px;
+}
+.writing-article-view .document-layout {
+  grid-template-columns: minmax(0, 740px) 220px;
+  gap: 0 64px;
+  justify-content: start;
 }
 .article-title-page.detail-header {
-  margin: 0;
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  margin: 0 0 26px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+.writing-article-view .prose-content {
+  grid-column: 1;
+  grid-row: 2;
+}
+.writing-article-view .prose-content > :first-child,
+.writing-article-view .prose-content > div > :first-child {
+  margin-top: 0;
+}
+.writing-article-view .document-toc {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  padding-top: 0;
+  max-height: calc(100dvh - var(--header-height) - 54px);
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 .article-title-page .eyebrow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  letter-spacing: 0.14em;
+  gap: 8px;
+  letter-spacing: 0.12em;
   font-size: var(--font-size-caption);
 }
 .opening-dot {
@@ -120,65 +140,66 @@
   height: 6px;
   border-radius: 50%;
   background: var(--color-accent);
+  flex-shrink: 0;
 }
 .article-title-page h1 {
-  font-size: clamp(2.2rem, 3.6vw, 3.55rem);
-  line-height: 1.3;
-  letter-spacing: -0.045em;
-  margin: 29px 0 25px;
+  font-size: clamp(1.8rem, 2.8vw, 2.55rem);
+  line-height: 1.4;
+  letter-spacing: -0.04em;
+  margin: 14px 0 12px;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 .article-title-page > p {
-  font-size: 0.96rem;
-  line-height: 1.9;
-  max-width: 520px;
-  margin-bottom: 30px;
+  font-size: 0.94rem;
+  line-height: 1.8;
+  margin-bottom: 18px;
 }
 .article-title-page .article-meta {
-  gap: 12px 18px;
+  gap: 8px 16px;
   font-size: var(--font-size-caption);
 }
 .article-title-page .tech-tags {
   width: 100%;
-  margin-top: 5px;
+  margin-top: 4px;
 }
 .article-photo-page {
   position: relative;
-  padding: 25px 18px 30px 0;
+  padding: 12px 8px 0 4px;
+  margin: 0 0 30px;
   min-width: 0;
 }
 .article-photo-page::before {
   content: '';
   position: absolute;
-  inset: 38px 9px 48px 12px;
+  inset: 20px 3px 0 8px;
   background: var(--color-lilac);
   border: 1px solid var(--color-border);
-  transform: rotate(-5deg);
+  transform: rotate(-4deg);
 }
 .article-photo-mount {
   position: relative;
-  padding: 13px 13px 0;
+  padding: 8px 8px 0;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 14px 35px rgb(0 0 0 / 8%);
-  transform: rotate(3deg);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 5%);
+  transform: rotate(2deg);
 }
 .article-opening-photo {
   width: 100%;
   height: auto;
-  aspect-ratio: 0.9;
-  max-height: 410px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   filter: saturate(0.72);
 }
 .photo-tape {
   position: absolute;
   z-index: 1;
-  top: -12px;
-  left: calc(50% - 40px);
-  width: 80px;
-  height: 25px;
-  transform: rotate(-8deg);
+  top: -9px;
+  left: calc(50% - 24px);
+  width: 48px;
+  height: 18px;
+  transform: rotate(-6deg);
   background: color-mix(in srgb, var(--color-paper) 80%, transparent);
   border-inline: 1px dashed var(--color-border);
 }
@@ -186,34 +207,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 3px;
+  padding: 10px 2px;
   font-size: var(--font-size-caption);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: var(--color-text-muted);
 }
-.photo-margin-note {
-  position: absolute;
-  right: -14px;
-  top: 50px;
-  writing-mode: vertical-rl;
-  font-size: var(--font-size-caption);
-  letter-spacing: 0.2em;
-  color: var(--color-text-muted);
-}
-.photo-handnote {
-  display: block;
-  text-align: right;
-  padding: 25px 20px 0 0;
-  color: var(--color-accent);
-  font-family: var(--font-editorial);
-  font-style: italic;
-  font-size: 0.78rem;
-  transform: rotate(-4deg);
-}
-.article-reading-line > span {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+.article-mobile-toc {
+  display: none;
 }
 @media (max-width: 1000px) {
   .case-opening {
@@ -226,14 +226,13 @@
   .case-scene .scene-topline > span:last-child {
     display: none;
   }
-  .article-opening {
-    gap: 45px;
-    min-height: 420px;
+  .writing-article-view .document-layout {
+    grid-template-columns: minmax(0, 1fr) 190px;
+    column-gap: 36px;
   }
 }
 @media (max-width: 760px) {
-  .case-opening,
-  .article-opening {
+  .case-opening {
     grid-template-columns: minmax(0, 1fr);
     gap: 32px;
     margin: 32px 0 38px;
@@ -254,22 +253,6 @@
   .case-scene .project-scene {
     height: 470px;
   }
-  .article-title-page h1 {
-    font-size: clamp(2rem, 7vw, 3rem);
-    margin-top: 22px;
-  }
-  .article-photo-page {
-    width: min(85%, 350px);
-    justify-self: center;
-    padding-top: 12px;
-  }
-  .article-opening-photo {
-    aspect-ratio: 1.25;
-    max-height: 250px;
-  }
-  .article-photo-page::before {
-    inset-block: 20px 48px;
-  }
   .detail-divider {
     font-size: var(--font-size-caption);
     letter-spacing: 0.06em;
@@ -278,5 +261,54 @@
   .wordmark-name {
     font-size: 0.92rem;
     letter-spacing: -0.035em;
+  }
+}
+
+@media (max-width: 767px) {
+  .article-detail.inner-page {
+    padding-top: 22px;
+  }
+  .article-detail > .back-link {
+    margin-bottom: 22px;
+  }
+  .writing-article-view .document-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .article-title-page.detail-header {
+    width: 100%;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+  }
+  .article-title-page h1 {
+    font-size: clamp(1.65rem, 6vw, 2.1rem);
+    margin-block: 12px 10px;
+  }
+  .article-title-page > p {
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+  }
+  .writing-article-view .document-toc {
+    display: none;
+  }
+  .writing-article-view .prose-content {
+    width: 100%;
+  }
+  .article-mobile-toc {
+    display: block;
+    margin-top: 18px;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+  }
+  .article-mobile-toc summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    padding-block: 4px;
+  }
+  .article-mobile-toc summary::-webkit-details-marker {
+    display: none;
   }
 }

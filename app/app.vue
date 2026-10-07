@@ -40,10 +40,4 @@ useHead({
 
 <style src="./assets/css/main.css"></style>
 
-<style src="./assets/css/space.css"></style>
-
 <style src="./assets/css/motion.css"></style>
-
-<style src="./assets/css/details.css"></style>
-
-<style src="./assets/css/admin.css"></style>

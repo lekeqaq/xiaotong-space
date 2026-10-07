@@ -6,6 +6,13 @@ const scenes = [
 ]
 const active = ref(0)
 const scene = computed(() => scenes[active.value]!)
+const visited = ref(new Set([0]))
+watch(active, (index) => {
+  visited.value = new Set([...visited.value, index])
+})
+const loadedScenes = computed(() =>
+  scenes.map((item, index) => ({ ...item, index })).filter((item) => visited.value.has(item.index)),
+)
 </script>
 <template>
   <figure class="profile-finder">
@@ -17,13 +24,13 @@ const scene = computed(() => scenes[active.value]!)
         aria-label="切换下一处风景"
         @click="active = (active + 1) % scenes.length"
       >
-        <NuxtImg
-          v-for="(item, index) in scenes"
+        <SiteImage
+          v-for="item in loadedScenes"
           :key="item.file"
           :src="`/images/personal/${item.file}.jpg`"
-          :alt="active === index ? item.alt : ''"
-          :aria-hidden="active !== index"
-          :class="{ 'finder-visible': active === index }"
+          :alt="active === item.index ? item.alt : ''"
+          :aria-hidden="active !== item.index"
+          :class="{ 'finder-visible': active === item.index }"
           width="620"
           height="780"
           sizes="sm:80vw md:300px"

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { initialHome } from '#shared/admin'
-import type { HomeInput } from '#shared/admin'
-const props = defineProps<{ thoughts?: HomeInput['thoughts'] }>()
-const { data: home } = await useFetch('/api/content/home', { key: 'home-settings' })
-const thoughts = computed(() => props.thoughts || home.value?.thoughts || initialHome.thoughts)
+import { initialHome } from '#shared/home'
+import type { HomeContent } from '#shared/content'
+const props = defineProps<{ thoughts?: HomeContent['thoughts'] }>()
+const thoughts = computed(() => (props.thoughts?.length ? props.thoughts : initialHome.thoughts))
 const index = ref(0)
 </script>
 

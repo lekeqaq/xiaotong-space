@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import HumanPreview from './HumanPreview.vue'
 import ProjectPreviewHeader from './ProjectPreviewHeader.vue'
-withDefaults(defineProps<{ kind: 'travel' | 'human'; summary: string; interactive?: boolean }>(), {
-  interactive: false,
-})
+const props = withDefaults(
+  defineProps<{
+    kind: 'travel' | 'human'
+    summary: string
+    interactive?: boolean
+    size?: 'shelf' | 'showcase'
+  }>(),
+  {
+    interactive: false,
+    size: 'showcase',
+  },
+)
 const destination = ref<'mountain' | 'coast'>('mountain')
 const places = {
   mountain: {
@@ -20,10 +29,18 @@ const places = {
   },
 }
 const place = computed(() => places[destination.value])
+const imageSizes = computed(() =>
+  props.size === 'shelf' ? '140px md:210px lg:240px' : '140px sm:180px md:240px xl:300px',
+)
+const visited = ref(new Set(['mountain']))
+watch(destination, (key) => {
+  visited.value = new Set([...visited.value, key])
+})
+const loadedPlaces = computed(() => Object.entries(places).filter(([key]) => visited.value.has(key)))
 </script>
 
 <template>
-  <HumanPreview v-if="kind === 'human'" :summary="summary" :interactive="interactive" />
+  <HumanPreview v-if="kind === 'human'" :summary="summary" :interactive="interactive" :size="size" />
   <div
     v-else
     class="project-thumbnail thumbnail-travel"
@@ -46,8 +63,8 @@ const place = computed(() => places[destination.value])
       <figure class="study-postcard">
         <span class="study-tape" />
         <div class="study-landscape-window">
-          <NuxtImg
-            v-for="(item, key) in places"
+          <SiteImage
+            v-for="[key, item] in loadedPlaces"
             :key="key"
             :src="`/images/personal/${key}.jpg`"
             :alt="interactive && destination === key ? item.caption : ''"
@@ -55,7 +72,7 @@ const place = computed(() => places[destination.value])
             :class="{ 'landscape-visible': destination === key }"
             width="560"
             height="640"
-            sizes="sm:45vw md:300px"
+            :sizes="imageSizes"
             format="webp"
             loading="lazy"
           />

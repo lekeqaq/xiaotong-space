@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { HomeInput } from '#shared/admin'
+import type { HomeContent } from '#shared/content'
 import type { ProjectSummary, WritingSummary } from '~/types/content'
 import StarField from './StarField.vue'
 import SpaceDock from './SpaceDock.vue'
 defineProps<{
-  homeSettings?: HomeInput
+  homeSettings?: HomeContent
   article?: WritingSummary
   project?: ProjectSummary
 }>()

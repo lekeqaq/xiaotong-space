@@ -1,9 +1,9 @@
 import { siteIdentity } from '../../shared/site'
-import { publishedArticles } from '../utils/admin-db'
+import { publicArticles } from '../utils/public-content'
 
 export default defineEventHandler(async (event) => {
   const origin = useRuntimeConfig(event).public.siteUrl || getRequestURL(event).origin
-  const articles = publishedArticles()
+  const articles = publicArticles()
   const escape = (text: string) =>
     text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;')
   setHeader(event, 'content-type', 'application/rss+xml; charset=utf-8')

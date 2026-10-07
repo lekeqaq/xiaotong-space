@@ -19,7 +19,7 @@ defineProps<{ article: WritingSummary; index: number }>()
         <span v-for="tag in article.tags" :key="tag"># {{ tag }}</span>
       </div>
     </div>
-    <NuxtImg
+    <SiteImage
       class="entry-image"
       :src="article.cover"
       alt=""
