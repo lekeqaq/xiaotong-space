@@ -2,18 +2,20 @@ FROM node:22-bookworm-slim AS build
 
 WORKDIR /app
 
-# SQLite may need compilation when no prebuilt binary matches the server.
-RUN apt-get update \
+# Bootstrap CA certificates over HTTP; APT still verifies Debian archive signatures.
+RUN sed -i 's|http://deb.debian.org|http://mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update \
     && apt-get install -y --no-install-recommends python3 make g++ ca-certificates \
+    && sed -i 's|http://mirrors.aliyun.com|https://mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources \
     && rm -rf /var/lib/apt/lists/* \
-    && npm install --global pnpm@11.18.0
+    && npm install --global pnpm@11.18.0 --registry=https://registry.npmmirror.com
 
 COPY . .
 
 ARG NUXT_PUBLIC_SITE_URL=https://xiaotong.taozhoumo.com
 ENV NUXT_PUBLIC_SITE_URL=${NUXT_PUBLIC_SITE_URL}
 
-RUN pnpm install --frozen-lockfile && pnpm build
+RUN pnpm install --frozen-lockfile --registry=https://registry.npmmirror.com && pnpm build
 
 FROM node:22-bookworm-slim AS runtime
 

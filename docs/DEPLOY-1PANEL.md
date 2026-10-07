@@ -210,6 +210,16 @@ docker build \
 
 镜像构建阶段只接收公开站点地址，生产密码和内容目录不会被复制进去。
 
+### 国内服务器下载加速
+
+配套 Dockerfile 的 Debian 软件包使用阿里云镜像，npm 和 pnpm 使用 `https://registry.npmmirror.com`。Node 基础镜像仍从 Docker 镜像仓库下载；这是三种不同的下载来源。
+
+`node:22-bookworm-slim` 初始没有 CA 证书，Dockerfile 先用 HTTP 软件源安装 `ca-certificates`（APT 仍验证 Debian 仓库签名），安装后再把软件源切换为 HTTPS。不需要关闭证书校验。
+
+截图或日志若显示 Node 镜像已经下载完成，而 `apt-get` 下载耗时很长，应调整 Debian 软件源；仅修改 Docker 镜像加速配置不能加速这一阶段。npm 的 `--registry` 只作用于该次 npm 命令，因此项目的 `pnpm install` 也单独指定了 registry。
+
+修改 Dockerfile 后，需要结束旧构建、同步文件到服务器，再重新执行第 6 节命令；运行中的构建不会自动读取后续修改。保留缓存即可，无需加 `--no-cache`。SQLite 等依赖的安装脚本仍可能从 GitHub 下载原生二进制，registry 换源不会替换这些额外下载。
+
 ## 7. 配置生产域名和管理员密码
 
 ### 7.1 生成密码哈希
