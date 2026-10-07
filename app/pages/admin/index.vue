@@ -2,7 +2,12 @@
 import type { ArticleInput, ArticleRecord } from '#shared/admin'
 import { NuxtLink } from '#components'
 import { shanghaiDate } from '#shared/admin'
-definePageMeta({ middleware: 'admin', layout: 'admin', pageTransition: false, layoutTransition: false })
+definePageMeta({
+  middleware: 'admin',
+  layout: 'admin',
+  pageTransition: { name: 'admin-page', mode: 'out-in' },
+  layoutTransition: false,
+})
 useSeoMeta({ title: '文章管理' })
 const api = useAdminApi()
 const { confirm } = useAdminConfirm()
@@ -14,7 +19,7 @@ const { data: articles, refresh } = await useAsyncData('admin-articles', () =>
 const search = ref('')
 const filter = ref('all')
 const busy = ref(false)
-const error = ref('')
+const { notify } = useAdminToast()
 const filtered = computed(
   () =>
     articles.value?.filter((item) => {
@@ -47,7 +52,6 @@ watch(pageCount, (count) => {
 })
 async function create() {
   busy.value = true
-  error.value = ''
   try {
     const draft: ArticleInput = {
       slug: `note-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
@@ -63,28 +67,35 @@ async function create() {
     const article = await api<ArticleRecord>('articles', { method: 'POST', body: draft })
     await navigateTo(`/admin/articles/${article.id}`)
   } catch (e) {
-    error.value = adminError(e)
+    notify(adminError(e), 'error')
   } finally {
     busy.value = false
   }
 }
-async function action(item: ArticleRecord, action: 'trash' | 'restore') {
+async function action(item: ArticleRecord, action: 'trash' | 'restore' | 'delete') {
+  if (busy.value) return
   if (
-    action === 'trash' &&
+    action !== 'restore' &&
     !(await confirm({
-      title: '移入回收站',
-      message: `将「${item.draft.title}」移入回收站？已发布内容会从网站隐藏，之后可以恢复。`,
-      confirmLabel: '移入回收站',
+      title: action === 'delete' ? '永久删除文章' : '移入回收站',
+      message:
+        action === 'delete'
+          ? `永久删除「${item.draft.title || '未命名文章'}」？文章正文、草稿和全部发布历史将被彻底删除，无法恢复。`
+          : `将「${item.draft.title}」移入回收站？已发布内容会从网站隐藏，之后可以恢复。`,
+      confirmLabel: action === 'delete' ? '永久删除' : '移入回收站',
       danger: true,
     }))
   )
     return
   busy.value = true
   try {
-    await api(`articles/${item.id}/${action}`, { method: 'POST', body: { revision: item.revision } })
+    if (action === 'delete')
+      await api(`articles/${item.id}`, { method: 'DELETE', body: { revision: item.revision } })
+    else await api(`articles/${item.id}/${action}`, { method: 'POST', body: { revision: item.revision } })
     await refresh()
+    notify(action === 'delete' ? '文章已永久删除' : action === 'trash' ? '文章已移入回收站' : '文章已恢复')
   } catch (e) {
-    error.value = adminError(e)
+    notify(adminError(e), 'error')
   } finally {
     busy.value = false
   }
@@ -92,30 +103,13 @@ async function action(item: ArticleRecord, action: 'trash' | 'restore') {
 </script>
 <template>
   <div class="admin-page">
-    <AdminPageHeading title="文章" description="记录想法，管理草稿，让内容慢慢生长。">
+    <AdminPageHeading title="文章">
       <template #actions
         ><VBtn color="primary" :loading="busy" :disabled="busy" @click="create"
           ><UIcon name="i-lucide-plus" />新建文章</VBtn
         ></template
       >
     </AdminPageHeading>
-    <div class="admin-stats-grid">
-      <VCard
-        v-for="stat in [
-          { label: '全部文章', value: counts.all, icon: 'i-lucide-files' },
-          { label: '已发布', value: counts.published, icon: 'i-lucide-circle-check' },
-          { label: '草稿', value: counts.draft, icon: 'i-lucide-file-pen-line' },
-        ]"
-        :key="stat.label"
-        class="admin-stat-card"
-        ><div>
-          <span>{{ stat.label }}</span
-          ><strong>{{ stat.value }}</strong>
-        </div>
-        <span class="admin-stat-icon"><UIcon :name="stat.icon" /></span
-      ></VCard>
-    </div>
-    <VAlert v-if="error" type="error" role="alert" class="admin-feedback">{{ error }}</VAlert>
     <VCard class="admin-list-panel">
       <div class="admin-list-tools">
         <VTabs v-model="filter" color="primary" aria-label="文章状态" density="comfortable"
@@ -183,6 +177,14 @@ async function action(item: ArticleRecord, action: 'trash' | 'restore') {
               :disabled="busy"
               @click="action(item, item.deletedAt ? 'restore' : 'trash')"
               >{{ item.deletedAt ? '恢复文章' : '移入回收站' }}</VBtn
+            ><VBtn
+              v-if="item.deletedAt"
+              variant="text"
+              color="error"
+              size="small"
+              :disabled="busy"
+              @click="action(item, 'delete')"
+              >永久删除</VBtn
             >
           </div>
         </article>
@@ -203,11 +205,15 @@ async function action(item: ArticleRecord, action: 'trash' | 'restore') {
         </div>
       </div>
       <footer class="admin-list-footer">
-        <span>共 {{ filtered.length }} 篇文章</span
+        <span>共 {{ filtered.length }} 篇 · 每页 {{ pageSize }} 篇</span
         ><VPagination
-          v-if="pageCount > 1"
           v-model="page"
           :length="pageCount"
+          aria-label="文章分页"
+          previous-aria-label="上一页"
+          next-aria-label="下一页"
+          page-aria-label="第 {0} 页"
+          current-page-aria-label="当前第 {0} 页"
           :total-visible="4"
           density="comfortable"
           rounded="lg"

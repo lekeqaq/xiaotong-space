@@ -17,7 +17,8 @@
     "admin:password": "node scripts/admin-password.mjs",
     "admin:restore": "node --env-file-if-exists=.env scripts/admin-restore.mjs",
     "admin:seed": "node scripts/admin-seed.mjs",
-    "test:admin": "node --test tests/admin.test.mjs"
+    "test:admin": "node --test tests/admin.test.mjs",
+    "test:editor": "node --experimental-strip-types --test tests/editor-markdown.test.mjs"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.138",
@@ -43,6 +44,7 @@
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "tar": "^7.5.22",
+    "vditor": "^4.0.0",
     "vue": "^3.5.43",
     "vue-router": "^5.3.1",
     "vuetify": "^4.2.4",

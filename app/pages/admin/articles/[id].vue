@@ -2,7 +2,12 @@
 import type { ArticleRecord, HomeRecord, MediaItem, RenderedArticle } from '#shared/admin'
 import { readingTime } from '#shared/admin'
 defineOptions({ name: 'AdminArticleEditor' })
-definePageMeta({ middleware: 'admin', layout: 'admin', pageTransition: false, layoutTransition: false })
+definePageMeta({
+  middleware: 'admin',
+  layout: 'admin',
+  pageTransition: { name: 'admin-page', mode: 'out-in' },
+  layoutTransition: false,
+})
 useSeoMeta({ title: '编辑文章' })
 const route = useRoute()
 const id = String(route.params.id)
@@ -34,16 +39,14 @@ const publicationDate = computed<Date | null>({
   },
 })
 const busy = ref(false)
-const notice = ref('')
+const { notify } = useAdminToast()
 const mediaTarget = ref<'cover' | 'body' | null>(null)
 const showHistory = ref(false)
 const showFullPreview = ref(false)
-const mobileTab = ref('edit')
-const editor = useTemplateRef<HTMLTextAreaElement>('editor')
+const editor = useTemplateRef<{ flush: () => void; insertImage: (src: string) => void }>('editor')
 const preview = ref<RenderedArticle | null>(null)
 const previewError = ref('')
 const previewLoading = ref(false)
-let previewTimer: ReturnType<typeof setTimeout> | undefined
 let previewSequence = 0
 async function refreshPreview() {
   const sequence = ++previewSequence
@@ -60,61 +63,39 @@ async function refreshPreview() {
     if (sequence === previewSequence) previewLoading.value = false
   }
 }
-watch(
-  draft,
-  () => {
-    clearTimeout(previewTimer)
-    previewTimer = setTimeout(() => {
-      void refreshPreview()
-    }, 450)
-  },
-  { deep: true },
-)
-onMounted(() => {
-  void refreshPreview()
-  window.addEventListener('keydown', shortcut)
-})
-onBeforeUnmount(() => {
-  clearTimeout(previewTimer)
-  window.removeEventListener('keydown', shortcut)
-})
+onMounted(() => window.addEventListener('keydown', shortcut))
+onBeforeUnmount(() => window.removeEventListener('keydown', shortcut))
 function shortcut(event: KeyboardEvent) {
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
     event.preventDefault()
     void saveManually()
   }
 }
-function insert(before: string, after = '', placeholder = '') {
-  const input = editor.value
-  const start = input?.selectionStart ?? draft.value.markdown.length
-  const end = input?.selectionEnd ?? start
-  const selected = draft.value.markdown.slice(start, end) || placeholder
-  draft.value.markdown =
-    draft.value.markdown.slice(0, start) + before + selected + after + draft.value.markdown.slice(end)
-  void nextTick(() => {
-    input?.focus()
-    input?.setSelectionRange(start + before.length, start + before.length + selected.length)
-  })
-}
 function selectMedia(item: MediaItem) {
   if (mediaTarget.value === 'cover') draft.value.cover = item.src
-  else insert(`\n![`, `](${item.src})\n`, '图片描述')
+  else editor.value?.insertImage(item.src)
   mediaTarget.value = null
 }
 async function openPreview() {
+  editor.value?.flush()
   showFullPreview.value = true
-  clearTimeout(previewTimer)
   await refreshPreview()
 }
 async function saveManually() {
+  editor.value?.flush()
   try {
     await save()
-    notice.value = '草稿已保存'
+    notify(dirty.value ? '本次草稿已保存，新增修改仍待保存' : '草稿已保存')
   } catch {
-    /* Save errors are displayed by the draft controller. */
+    notify(error.value || '草稿保存失败，请重试。', 'error')
   }
 }
 async function action(name: 'publish' | 'unpublish') {
+  editor.value?.flush()
+  if (dirty.value) {
+    notify('请先点击「保存草稿」，再进行发布操作。', 'warning')
+    return
+  }
   if (
     name === 'unpublish' &&
     !(await confirm({
@@ -126,34 +107,28 @@ async function action(name: 'publish' | 'unpublish') {
   )
     return
   busy.value = true
-  notice.value = ''
   try {
-    await save()
     reset(
       await api<ArticleRecord>(`${endpoint}/${name}`, {
         method: 'POST',
         body: { revision: record.value.revision },
       }),
     )
-    notice.value = name === 'publish' ? '文章已发布，网站内容已更新' : '已撤回发布，草稿与历史保留'
+    notify(name === 'publish' ? '文章已发布，网站内容已更新' : '已撤回发布，草稿与历史保留')
   } catch (e) {
     error.value = adminError(e)
+    notify(error.value, 'error')
   } finally {
     busy.value = false
   }
 }
-async function openHistory() {
-  try {
-    await save()
-    showHistory.value = true
-  } catch {
-    /* Preserve unsaved changes on failure. */
-  }
+function openHistory() {
+  showHistory.value = true
 }
 function restored(value: ArticleRecord | HomeRecord) {
   reset(value as ArticleRecord)
   showHistory.value = false
-  notice.value = '历史版本已恢复到草稿，请预览后发布'
+  notify('历史版本已恢复到草稿，请预览后发布')
 }
 async function reload() {
   if (
@@ -170,6 +145,7 @@ async function reload() {
     reset(await api<ArticleRecord>(endpoint))
   } catch (e) {
     error.value = adminError(e)
+    notify(error.value, 'error')
   }
 }
 </script>
@@ -205,9 +181,8 @@ async function reload() {
     <VAlert v-if="error" type="error" role="alert" class="admin-feedback"
       >{{ error }}<VBtn variant="text" size="small" @click="reload">重新加载</VBtn></VAlert
     >
-    <VAlert v-if="notice" type="success" role="status" class="admin-feedback">{{ notice }}</VAlert>
     <VAlert v-if="record.published" type="info" class="admin-feedback"
-      >修改自动保存到草稿；再次发布后才会更新网站内容。</VAlert
+      >修改后点击「保存草稿」；再次发布后才会更新网站内容。</VAlert
     >
     <fieldset class="admin-editor-fieldset" :disabled="busy">
       <div class="admin-editor-layout">
@@ -240,102 +215,12 @@ async function reload() {
               <h2>正文</h2>
               <span>{{ readingTime(draft.markdown) }} 分钟阅读 · {{ draft.markdown.length }} 字符</span>
             </div>
-            <div class="admin-markdown-toolbar" role="toolbar" aria-label="Markdown 工具">
-              <VBtn
-                variant="text"
-                icon
-                size="small"
-                aria-label="插入标题"
-                title="二级标题"
-                @click="insert('\n## ', '\n', '章节标题')"
-                >H2</VBtn
-              >
-              <VBtn
-                variant="text"
-                icon
-                size="small"
-                aria-label="加粗"
-                title="加粗"
-                @click="insert('**', '**', '文字')"
-                ><UIcon name="i-lucide-bold"
-              /></VBtn>
-              <VBtn
-                variant="text"
-                icon
-                size="small"
-                aria-label="插入链接"
-                title="链接"
-                @click="insert('[', '](https://example.com)', '链接文字')"
-                ><UIcon name="i-lucide-link"
-              /></VBtn>
-              <VBtn
-                variant="text"
-                icon
-                size="small"
-                aria-label="插入图片"
-                title="图片"
-                @click="mediaTarget = 'body'"
-                ><UIcon name="i-lucide-image"
-              /></VBtn>
-              <VBtn
-                variant="text"
-                icon
-                size="small"
-                aria-label="插入列表"
-                title="列表"
-                @click="insert('\n- ', '\n', '列表项')"
-                ><UIcon name="i-lucide-list"
-              /></VBtn>
-              <VBtn
-                variant="text"
-                icon
-                size="small"
-                aria-label="插入代码块"
-                title="代码块"
-                @click="insert('\n```ts\n', '\n```\n', '// 在这里写代码')"
-                ><UIcon name="i-lucide-code"
-              /></VBtn>
-              <VBtn
-                variant="text"
-                icon
-                size="small"
-                aria-label="插入引用"
-                title="引用"
-                @click="insert('\n> ', '\n', '值得记下的一句话')"
-                ><UIcon name="i-lucide-quote"
-              /></VBtn>
-              <span>Markdown · ⌘ / Ctrl + S</span>
-            </div>
-            <VTabs
-              v-model="mobileTab"
-              class="admin-mobile-editor-tabs"
-              color="primary"
-              density="comfortable"
-              aria-label="正文视图"
-              ><VTab value="edit">编辑</VTab><VTab value="preview">预览</VTab></VTabs
-            >
-            <div class="admin-writing-columns" :class="`show-${mobileTab}`">
-              <div class="admin-markdown-editor">
-                <span class="admin-overline">MARKDOWN</span
-                ><textarea
-                  ref="editor"
-                  v-model="draft.markdown"
-                  aria-label="文章正文"
-                  maxlength="200000"
-                  spellcheck="false"
-                  placeholder="## 从一个想法开始&#10;&#10;在这里写下你的思考…"
-                />
-              </div>
-              <div class="admin-inline-preview">
-                <div class="admin-preview-label">
-                  <span class="admin-overline">实时预览</span
-                  ><small role="status">{{ previewLoading ? '正在更新…' : '与网站正文一致' }}</small>
-                </div>
-                <VAlert v-if="previewError" type="error" role="alert">{{ previewError }}</VAlert
-                ><ContentDocument v-if="preview" :document="preview" />
-                <p v-else class="admin-empty">正文预览会出现在这里。</p>
-              </div>
-            </div>
+            <AdminArticleBody
+              ref="editor"
+              v-model="draft.markdown"
+              :disabled="busy"
+              @select-image="mediaTarget = 'body'"
+            />
           </VCard>
         </div>
         <aside class="admin-editor-meta">

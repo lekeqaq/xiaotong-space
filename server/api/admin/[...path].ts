@@ -4,6 +4,7 @@ import { getArticle, getHome, listArticleRecords } from '../../utils/admin-db'
 import {
   articleAction,
   createArticle,
+  deleteArticle,
   history,
   parseInput,
   publishHome,
@@ -50,6 +51,7 @@ export default defineEventHandler(async (event) => {
     const id = article[1]!
     const action = article[2]
     if (!action && method === 'GET') return getArticle(id)
+    if (!action && method === 'DELETE') return deleteArticle(id, await readBody(event))
     if (!action && method === 'PUT') {
       const input = await readBody(event)
       ensureImagesExist(input?.draft)

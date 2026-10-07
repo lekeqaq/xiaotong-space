@@ -10,7 +10,6 @@ useSeoMeta({ title: '后台登录', robots: 'noindex, nofollow' })
 const username = ref('admin')
 const password = ref('')
 const error = ref('')
-const { colorMode, toggleTheme } = useAdminTheme()
 const showPassword = ref(false)
 const busy = ref(false)
 async function login() {
@@ -41,13 +40,7 @@ async function login() {
         <NuxtLink to="/" class="admin-brand"
           ><span class="admin-brand-symbol">✳</span><span>XIAOTONG<small>内容工作台</small></span></NuxtLink
         >
-        <VBtn
-          icon
-          variant="text"
-          :aria-label="colorMode.value === 'dark' ? '切换到浅色主题' : '切换到深色主题'"
-          @click="toggleTheme"
-          ><UIcon :name="colorMode.value === 'dark' ? 'i-lucide-moon' : 'i-lucide-sun'"
-        /></VBtn>
+        <AdminThemeToggle />
       </header>
       <div class="admin-login-layout">
         <VCard class="admin-login-card">

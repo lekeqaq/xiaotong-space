@@ -1,6 +1,11 @@
 <script setup lang="ts">
 defineOptions({ name: 'AdminMediaPage' })
-definePageMeta({ middleware: 'admin', layout: 'admin', pageTransition: false, layoutTransition: false })
+definePageMeta({
+  middleware: 'admin',
+  layout: 'admin',
+  pageTransition: { name: 'admin-page', mode: 'out-in' },
+  layoutTransition: false,
+})
 useSeoMeta({ title: '图片管理' })
 </script>
 <template>

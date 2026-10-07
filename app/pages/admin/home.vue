@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import type { ArticleRecord, HomeRecord, MediaItem } from '#shared/admin'
 defineOptions({ name: 'AdminHomePage' })
-definePageMeta({ middleware: 'admin', layout: 'admin', pageTransition: false, layoutTransition: false })
+definePageMeta({
+  middleware: 'admin',
+  layout: 'admin',
+  pageTransition: { name: 'admin-page', mode: 'out-in' },
+  layoutTransition: false,
+})
 useSeoMeta({ title: '首页管理' })
 const api = useAdminApi()
 const { confirm } = useAdminConfirm()
@@ -16,11 +21,31 @@ const { data: projects } = await useAsyncData('admin-preview-project', () =>
   queryCollection('projects').order('order', 'ASC').all(),
 )
 const busy = ref(false)
-const notice = ref('')
+const { notify } = useAdminToast()
 const pickerId = ref<string | null>(null)
 const showPreview = ref(false)
 const showHistory = ref(false)
-let drag: { kind: 'photos' | 'thoughts'; index: number } | null = null
+const drag = ref<{ kind: 'photos' | 'thoughts'; index: number } | null>(null)
+const dragTarget = ref<number | null>(null)
+function startDrag(event: DragEvent, kind: 'photos' | 'thoughts', index: number) {
+  drag.value = { kind, index }
+  dragTarget.value = index
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', `${kind}:${index}`)
+    const card = (event.currentTarget as HTMLElement).closest<HTMLElement>(
+      '.admin-home-photo, .admin-thought-card',
+    )
+    if (card) event.dataTransfer.setDragImage(card, 28, 28)
+  }
+}
+function endDrag() {
+  drag.value = null
+  dragTarget.value = null
+}
+function overDrag(kind: 'photos' | 'thoughts', index: number) {
+  if (drag.value?.kind === kind) dragTarget.value = index
+}
 function reorder<T>(values: T[], from: number, to: number) {
   if (to < 0 || to >= values.length) return
   const [item] = values.splice(from, 1)
@@ -31,8 +56,8 @@ function move(kind: 'photos' | 'thoughts', from: number, to: number) {
   else reorder(draft.value.thoughts, from, to)
 }
 function drop(kind: 'photos' | 'thoughts', index: number) {
-  if (drag?.kind === kind) move(kind, drag.index, index)
-  drag = null
+  if (drag.value?.kind === kind) move(kind, drag.value.index, index)
+  endDrag()
 }
 function addPhoto() {
   draft.value.photos.push({
@@ -51,41 +76,47 @@ function selectMedia(item: MediaItem) {
   if (photo) photo.src = item.src
   pickerId.value = null
 }
+function shortcut(event: KeyboardEvent) {
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+    event.preventDefault()
+    if (!busy.value && !saving.value) void saveManually()
+  }
+}
+onMounted(() => window.addEventListener('keydown', shortcut))
+onBeforeUnmount(() => window.removeEventListener('keydown', shortcut))
 async function saveManually() {
   try {
     await save()
-    notice.value = '首页草稿已保存'
+    notify(dirty.value ? '本次首页草稿已保存，新增修改仍待保存' : '首页草稿已保存')
   } catch {
-    /* The error is shown alongside save status. */
+    notify(error.value || '首页草稿保存失败，请重试。', 'error')
   }
 }
 async function publish() {
+  if (dirty.value) {
+    notify('请先点击「保存草稿」，再发布首页。', 'warning')
+    return
+  }
   busy.value = true
-  notice.value = ''
   try {
-    await save()
     reset(
       await api<HomeRecord>('home/publish', { method: 'POST', body: { revision: record.value.revision } }),
     )
-    notice.value = '首页已发布，照片和便签已更新'
+    notify('首页已发布，照片和便签已更新')
   } catch (e) {
     error.value = adminError(e)
+    notify(error.value, 'error')
   } finally {
     busy.value = false
   }
 }
-async function openHistory() {
-  try {
-    await save()
-    showHistory.value = true
-  } catch {
-    /* Keep unsaved edits intact. */
-  }
+function openHistory() {
+  showHistory.value = true
 }
 function restored(value: ArticleRecord | HomeRecord) {
   reset(value as HomeRecord)
   showHistory.value = false
-  notice.value = '历史版本已恢复到草稿，请预览后发布'
+  notify('历史版本已恢复到草稿，请预览后发布')
 }
 async function reload() {
   if (
@@ -102,6 +133,7 @@ async function reload() {
     reset(await api<HomeRecord>('home'))
   } catch (e) {
     error.value = adminError(e)
+    notify(error.value, 'error')
   }
 }
 </script>
@@ -128,12 +160,11 @@ async function reload() {
       >
     </AdminPageHeading>
     <VAlert type="info" class="admin-feedback"
-      >修改自动保存到草稿，发布后更新首页。拖动把手或使用上下按钮调整顺序。</VAlert
+      >修改后点击「保存草稿」，发布后更新首页。拖动把手或使用上下按钮调整顺序。</VAlert
     >
     <VAlert v-if="error" type="error" role="alert" class="admin-feedback"
       >{{ error }}<VBtn variant="text" size="small" @click="reload">重新加载</VBtn></VAlert
     >
-    <VAlert v-if="notice" type="success" role="status" class="admin-feedback">{{ notice }}</VAlert>
     <fieldset class="admin-editor-fieldset" :disabled="busy">
       <VCard class="admin-panel admin-home-section">
         <div class="admin-section-heading">
@@ -151,12 +182,16 @@ async function reload() {
             ><UIcon name="i-lucide-plus" />添加照片</VBtn
           >
         </div>
-        <div class="admin-home-photos">
+        <TransitionGroup name="admin-sort" tag="div" class="admin-home-photos">
           <article
             v-for="(photo, index) in draft.photos"
             :key="photo.id"
             class="admin-home-photo"
-            @dragover.prevent
+            :class="{
+              'is-dragging': drag?.kind === 'photos' && drag.index === index,
+              'is-drop-target': drag?.kind === 'photos' && dragTarget === index && drag.index !== index,
+            }"
+            @dragover.prevent="overDrag('photos', index)"
             @drop.prevent="drop('photos', index)"
           >
             <div class="admin-home-photo-toolbar">
@@ -165,8 +200,8 @@ async function reload() {
                 class="admin-sort-handle"
                 draggable="true"
                 :aria-label="`拖动第 ${index + 1} 张照片排序`"
-                @dragstart="drag = { kind: 'photos', index }"
-                @dragend="drag = null"
+                @dragstart="startDrag($event, 'photos', index)"
+                @dragend="endDrag"
               >
                 <UIcon name="i-lucide-grip-vertical" />
               </button>
@@ -222,13 +257,11 @@ async function reload() {
                 label="图片描述"
                 maxlength="160"
                 :aria-label="`第 ${index + 1} 张照片描述`"
-                hint="为无法看到图片的访客描述画面。"
-                persistent-hint
                 :disabled="busy"
               />
             </div>
           </article>
-        </div>
+        </TransitionGroup>
       </VCard>
       <VCard class="admin-panel admin-home-section"
         ><div class="admin-section-heading">
@@ -246,12 +279,16 @@ async function reload() {
             ><UIcon name="i-lucide-plus" />添加话术</VBtn
           >
         </div>
-        <div class="admin-thought-grid">
+        <TransitionGroup name="admin-sort" tag="div" class="admin-thought-grid">
           <VCard
             v-for="(thought, index) in draft.thoughts"
             :key="thought.id"
             class="admin-thought-card"
-            @dragover.prevent
+            :class="{
+              'is-dragging': drag?.kind === 'thoughts' && drag.index === index,
+              'is-drop-target': drag?.kind === 'thoughts' && dragTarget === index && drag.index !== index,
+            }"
+            @dragover.prevent="overDrag('thoughts', index)"
             @drop.prevent="drop('thoughts', index)"
             ><div class="admin-thought-top">
               <button
@@ -259,8 +296,8 @@ async function reload() {
                 class="admin-sort-handle"
                 draggable="true"
                 :aria-label="`拖动第 ${index + 1} 句话术排序`"
-                @dragstart="drag = { kind: 'thoughts', index }"
-                @dragend="drag = null"
+                @dragstart="startDrag($event, 'thoughts', index)"
+                @dragend="endDrag"
               >
                 <UIcon name="i-lucide-grip-vertical" /></button
               ><span>便签 {{ String(index + 1).padStart(2, '0') }}</span>
@@ -299,9 +336,11 @@ async function reload() {
               rows="3"
               maxlength="100"
               counter="100"
+              persistent-counter
+              :hide-details="false"
               :disabled="busy"
           /></VCard>
-        </div>
+        </TransitionGroup>
       </VCard>
     </fieldset>
     <VBtn variant="text" :disabled="busy || saving" @click="openHistory"

@@ -40,8 +40,8 @@ function hiddenInput(prompt) {
   })
 }
 try {
-  const password = await hiddenInput('管理员密码（至少 12 字符）：')
-  if (password.length < 12 || password.length > 200) throw new Error('密码长度需要为 12–200 个字符')
+  const password = await hiddenInput('管理员密码（至少 8 字符）：')
+  if (password.length < 8 || password.length > 12) throw new Error('密码长度需要为 8–12 个字符')
   const confirmation = await hiddenInput('再次输入密码：')
   if (password !== confirmation) throw new Error('两次输入的密码不一致')
   const salt = randomBytes(16).toString('hex')

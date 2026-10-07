@@ -96,6 +96,19 @@ export function articleAction(id: string, action: string, input: unknown) {
     return getArticle(id)
   })()
 }
+export function deleteArticle(id: string, input: unknown) {
+  assertWritable()
+  const { revision } = parseInput(revisionSchema, input)
+  const db = adminDb()
+  return db.transaction(() => {
+    const current = getArticle(id)
+    checkRevision(current.revision, revision)
+    if (!current.deletedAt) throw createError({ statusCode: 409, statusMessage: '请先将文章移入回收站' })
+    db.prepare('DELETE FROM history WHERE kind = ? AND target = ?').run('article', id)
+    db.prepare('DELETE FROM articles WHERE id = ?').run(id)
+    return { deleted: true }
+  })()
+}
 export function saveHome(input: unknown) {
   assertWritable()
   const { draft, revision } = parseInput(

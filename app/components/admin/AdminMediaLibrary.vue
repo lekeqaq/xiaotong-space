@@ -24,29 +24,26 @@ const visible = computed(
     ) || [],
 )
 const uploading = ref(false)
-const error = ref('')
-const notice = ref('')
+const { notify } = useAdminToast()
 async function upload(event: Event) {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
   if (!file) return
   if (file.size > 10 * 1024 * 1024) {
-    error.value = '图片不能超过 10 MB'
+    notify('图片不能超过 10 MB', 'error')
     input.value = ''
     return
   }
   uploading.value = true
-  error.value = ''
-  notice.value = ''
   try {
     const body = new FormData()
     body.set('file', file)
     const item = await api<MediaItem>('media', { method: 'POST', body })
     await refresh()
-    notice.value = '图片已上传'
+    notify('图片已上传')
     if (props.selectable) emit('select', item)
   } catch (e) {
-    error.value = adminError(e)
+    notify(adminError(e), 'error')
   } finally {
     uploading.value = false
     input.value = ''
@@ -63,14 +60,13 @@ async function remove(item: MediaItem) {
   )
     return
   deleting.value = item.id
-  error.value = ''
   try {
     await api(`media/${item.id}`, { method: 'DELETE' })
     await refresh()
-    notice.value = '图片已删除'
+    notify('图片已删除')
     inspected.value = null
   } catch (e) {
-    error.value = adminError(e)
+    notify(adminError(e), 'error')
   } finally {
     deleting.value = null
   }
@@ -78,9 +74,9 @@ async function remove(item: MediaItem) {
 async function copy(src: string) {
   try {
     await navigator.clipboard.writeText(src)
-    notice.value = '图片地址已复制'
+    notify('图片地址已复制')
   } catch {
-    notice.value = `图片地址：${src}`
+    notify('未能复制，请从图片详情手动复制地址。', 'warning')
   }
 }
 </script>
@@ -123,11 +119,10 @@ async function copy(src: string) {
       color="primary"
       aria-label="图片加载中"
     />
-    <VAlert v-if="error || loadError" type="error" role="alert" class="admin-feedback"
-      >{{ error || adminError(loadError)
+    <VAlert v-if="loadError" type="error" role="alert" class="admin-feedback"
+      >{{ adminError(loadError)
       }}<VBtn v-if="loadError" variant="text" size="small" @click="refresh()">重试</VBtn></VAlert
     >
-    <VAlert v-if="notice" type="success" role="status" class="admin-feedback">{{ notice }}</VAlert>
     <div class="admin-media-summary">
       <span>{{ selectable ? '点击图片即可选择，也可以上传新的图片。' : '点击图片查看原图与引用信息。' }}</span
       ><span>{{ visible.length }} 张图片</span>
@@ -202,7 +197,6 @@ async function copy(src: string) {
             <li v-for="reference in inspected.references" :key="reference">{{ reference }}</li>
           </ul>
           <p v-else class="admin-hint">这张图片暂未被内容引用。</p>
-          <VAlert v-if="notice" type="success" role="status">{{ notice }}</VAlert>
         </aside>
       </div></AdminDialog
     >

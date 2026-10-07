@@ -9,12 +9,18 @@
   --font-editorial: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
 }
 .dark {
-  --color-bg: #202321;
-  --color-surface: #272b28;
-  --color-surface-muted: #303631;
-  --color-text: #ebece5;
-  --color-text-muted: #a8afa7;
-  --color-border: #3b423b;
+  --site-bg-rgb: 32, 35, 33;
+  --color-bg: rgb(var(--site-bg-rgb));
+  --site-surface-rgb: 39, 43, 40;
+  --color-surface: rgb(var(--site-surface-rgb));
+  --site-surface-muted-rgb: 48, 54, 49;
+  --color-surface-muted: rgb(var(--site-surface-muted-rgb));
+  --site-text-rgb: 235, 236, 229;
+  --color-text: rgb(var(--site-text-rgb));
+  --site-text-muted-rgb: 168, 175, 167;
+  --color-text-muted: rgb(var(--site-text-muted-rgb));
+  --site-border-rgb: 59, 66, 59;
+  --color-border: rgb(var(--site-border-rgb));
   --color-paper: #3a392a;
   --color-paper-ink: #e0d8ad;
   --color-mint: #2c3c33;

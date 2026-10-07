@@ -10,31 +10,28 @@ export function useAdminDraft<R extends { draft: unknown; revision: number }>(in
   const error = ref('')
   const conflict = ref(false)
   const savedAt = ref('')
-  let timer: ReturnType<typeof setTimeout> | undefined
   let active: Promise<void> | undefined
   async function save() {
-    if (active) await active
+    if (active) return active
     if (!dirty.value) return
     if (conflict.value) throw new Error(error.value)
     active = (async () => {
       saving.value = true
       try {
-        while (dirty.value) {
-          const snapshot = JSON.parse(JSON.stringify(draft.value)) as T
-          const result = await api<R>(endpoint, {
-            method: 'PUT',
-            body: { draft: snapshot, revision: record.value.revision },
-          })
-          record.value = result
-          saved.value = JSON.stringify(snapshot)
-          error.value = ''
-          savedAt.value = new Intl.DateTimeFormat('zh-CN', {
-            timeZone: 'Asia/Shanghai',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          }).format(new Date())
-        }
+        const snapshot = JSON.parse(JSON.stringify(draft.value)) as T
+        const result = await api<R>(endpoint, {
+          method: 'PUT',
+          body: { draft: snapshot, revision: record.value.revision },
+        })
+        record.value = result
+        saved.value = JSON.stringify(snapshot)
+        error.value = ''
+        savedAt.value = new Intl.DateTimeFormat('zh-CN', {
+          timeZone: 'Asia/Shanghai',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        }).format(new Date())
       } catch (e) {
         error.value = adminError(e)
         conflict.value = (e as { statusCode?: number }).statusCode === 409
@@ -56,17 +53,6 @@ export function useAdminDraft<R extends { draft: unknown; revision: number }>(in
     error.value = ''
     conflict.value = false
   }
-  watch(
-    draft,
-    () => {
-      clearTimeout(timer)
-      if (!conflict.value)
-        timer = setTimeout(() => {
-          void save().catch(() => {})
-        }, 1500)
-    },
-    { deep: true },
-  )
   function beforeUnload(event: BeforeUnloadEvent) {
     if (dirty.value) {
       event.preventDefault()
@@ -75,7 +61,6 @@ export function useAdminDraft<R extends { draft: unknown; revision: number }>(in
   }
   onMounted(() => window.addEventListener('beforeunload', beforeUnload))
   onBeforeUnmount(() => {
-    clearTimeout(timer)
     window.removeEventListener('beforeunload', beforeUnload)
   })
   onBeforeRouteLeave(async () => {

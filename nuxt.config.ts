@@ -1,4 +1,5 @@
 import { siteIdentity } from './shared/site'
+import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-03',
@@ -60,6 +61,12 @@ export default defineNuxtConfig({
     public: { siteUrl: '', githubUrl: '', contactEmail: '' },
   },
   nitro: {
+    // Serve the editor's runtime assets locally, including during development.
+    publicAssets: ['js', 'css', 'images'].map((directory) => ({
+      dir: fileURLToPath(new URL(`./node_modules/vditor/dist/${directory}`, import.meta.url)),
+      baseURL: `/vendor/vditor/dist/${directory}`,
+      maxAge: 604800,
+    })),
     compressPublicAssets: true,
     prerender: {
       crawlLinks: true,

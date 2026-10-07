@@ -257,6 +257,87 @@ test('uploads are decoded and compressed, and referenced images cannot be delete
   await api('home', 'PUT', { draft: missingDraft, revision: home.revision + 1 }, 400)
 })
 
+test('permanent deletion removes only trashed articles and their history, releasing image references', async () => {
+  const before = await api('articles')
+  const db = new Database(resolve(directory, 'live', 'content.sqlite'), { readonly: true })
+  const historyCount = db.prepare('SELECT count(*) AS count FROM history').get().count
+  const image = await sharp({ create: { width: 12, height: 12, channels: 3, background: '#abcdef' } })
+    .png()
+    .toBuffer()
+  const form = new FormData()
+  form.append('file', new Blob([image], { type: 'image/png' }), 'delete-article.png')
+  const upload = await fetch(`${origin}/api/admin/media`, {
+    method: 'POST',
+    headers: { cookie, origin, 'x-admin-request': '1' },
+    body: form,
+  })
+  assert.equal(upload.status, 200)
+  const picture = await upload.json()
+  const draft = {
+    ...before[0].draft,
+    slug: 'permanent-deletion-test',
+    title: '永久删除验证',
+    description: '验证文章与历史版本的彻底删除。',
+    markdown: `## 删除正文\n\n![历史图片](${picture.src})`,
+    cover: picture.src,
+    date: '2026-01-01',
+  }
+  let record = await api('articles', 'POST', draft)
+  const endpoint = `articles/${record.id}`
+  for (const [requestHeaders, expected] of [
+    [{ origin, 'x-admin-request': '1', 'content-type': 'application/json' }, 401],
+    [{ cookie, origin, 'content-type': 'application/json' }, 403],
+    [{ ...headers(), origin: 'https://other.example' }, 403],
+  ]) {
+    const response = await fetch(`${origin}/api/admin/${endpoint}`, {
+      method: 'DELETE',
+      headers: requestHeaders,
+      body: JSON.stringify({ revision: record.revision }),
+    })
+    assert.equal(response.status, expected)
+  }
+  await api(endpoint, 'DELETE', { revision: record.revision }, 409)
+  record = await api(`${endpoint}/publish`, 'POST', { revision: record.revision })
+  record = await api(endpoint, 'PUT', {
+    draft: { ...draft, markdown: '只在旧版本中引用图片。', cover: '/images/personal/notebook.jpg' },
+    revision: record.revision,
+  })
+  record = await api(`${endpoint}/publish`, 'POST', { revision: record.revision })
+  const oldVersion = (await api(`${endpoint}/history`))[0]
+  assert.equal((await api(`${endpoint}/history`)).length, 2)
+  assert.deepEqual((await api('media')).find((item) => item.id === picture.id).references, ['发布历史'])
+  await api(`media/${picture.id}`, 'DELETE', undefined, 409)
+  record = await api(`${endpoint}/trash`, 'POST', { revision: record.revision })
+  await api(endpoint, 'DELETE', {}, 400)
+  await api(endpoint, 'DELETE', { revision: record.revision - 1 }, 409)
+  const staleRevision = record.revision
+  record = await api(`${endpoint}/restore`, 'POST', { revision: record.revision })
+  await api(endpoint, 'DELETE', { revision: staleRevision }, 409)
+  await api(endpoint, 'DELETE', { revision: record.revision }, 409)
+  assert.equal((await fetch(`${origin}/writing/${draft.slug}`)).status, 200)
+  record = await api(`${endpoint}/trash`, 'POST', { revision: record.revision })
+  assert.deepEqual(await api(endpoint, 'DELETE', { revision: record.revision }), { deleted: true })
+  await api(endpoint, 'GET', undefined, 404)
+  await api(endpoint, 'DELETE', { revision: record.revision }, 404)
+  await api(`${endpoint}/history`, 'GET', undefined, 404)
+  await api(`${endpoint}/history`, 'POST', { historyId: oldVersion.id, revision: record.revision }, 404)
+  await api(`${endpoint}/restore`, 'POST', { revision: record.revision }, 404)
+  assert.equal(db.prepare('SELECT count(*) AS count FROM articles WHERE id = ?').get(record.id).count, 0)
+  assert.equal(db.prepare('SELECT count(*) AS count FROM history WHERE target = ?').get(record.id).count, 0)
+  assert.equal(db.prepare('SELECT count(*) AS count FROM history').get().count, historyCount)
+  db.close()
+  assert.deepEqual(await api('articles'), before)
+  assert.equal((await fetch(`${origin}/writing/${draft.slug}`)).status, 404)
+  assert.doesNotMatch(await (await fetch(`${origin}/rss.xml`)).text(), /永久删除验证/)
+  assert.doesNotMatch(await (await fetch(`${origin}/sitemap.xml`)).text(), /permanent-deletion-test/)
+  assert.deepEqual((await api('media')).find((item) => item.id === picture.id).references, [])
+  assert.equal((await fetch(origin + picture.src)).status, 200)
+  await api(`media/${picture.id}`, 'DELETE')
+  const replacement = await api('articles', 'POST', { ...draft, cover: '', markdown: '' })
+  const trashed = await api(`articles/${replacement.id}/trash`, 'POST', { revision: replacement.revision })
+  await api(`articles/${replacement.id}`, 'DELETE', { revision: trashed.revision })
+})
+
 test('a backup restores SQLite and images, excludes sessions, and survives a process restart', async () => {
   const response = await fetch(`${origin}/api/admin/backup`, { headers: { cookie } })
   assert.equal(response.status, 200)

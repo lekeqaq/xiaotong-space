@@ -1,8 +1,7 @@
 <script setup lang="ts">
 const api = useAdminApi()
 const route = useRoute()
-const { colorMode, toggleTheme } = useAdminTheme()
-const error = ref('')
+const { notify } = useAdminToast()
 const drawer = ref<boolean | null>(null)
 function navigateMenu(event: MouseEvent | KeyboardEvent, navigate: (event?: MouseEvent) => unknown) {
   closeMobileNavigation()
@@ -42,7 +41,7 @@ async function logout() {
     await api('logout', { method: 'POST' })
     await navigateTo('/admin/login')
   } catch (e) {
-    error.value = adminError(e)
+    notify(adminError(e), 'error')
   }
 }
 useSeoMeta({ robots: 'noindex, nofollow' })
@@ -121,13 +120,7 @@ useSeoMeta({ robots: 'noindex, nofollow' })
             download
             ><UIcon name="i-lucide-download"
           /></VBtn>
-          <VBtn
-            icon
-            variant="text"
-            :aria-label="colorMode.value === 'dark' ? '切换到浅色主题' : '切换到深色主题'"
-            @click="toggleTheme"
-            ><UIcon :name="colorMode.value === 'dark' ? 'i-lucide-moon' : 'i-lucide-sun'"
-          /></VBtn>
+          <AdminThemeToggle />
           <span class="admin-header-divider" />
           <VBtn icon variant="text" aria-label="退出登录" @click="logout"
             ><UIcon name="i-lucide-log-out"
@@ -144,8 +137,7 @@ useSeoMeta({ robots: 'noindex, nofollow' })
     />
     <VMain tag="section"
       ><div class="admin-content">
-        <VAlert v-if="error" type="error" role="alert">{{ error }}</VAlert
-        ><slot /></div
+        <slot /></div
     ></VMain>
   </AdminProvider>
 </template>

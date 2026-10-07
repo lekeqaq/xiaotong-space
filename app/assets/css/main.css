@@ -9,15 +9,24 @@
   --color-brand-500: #8b5cf6;
 }
 :root {
-  --color-bg: #f6f5f1;
-  --color-surface: #fdfcf9;
-  --color-surface-muted: #eeede7;
-  --color-text: #292b2c;
-  --color-text-muted: #696b64;
-  --color-border: #deded5;
-  --color-accent: #7c3aed;
-  --color-accent-soft: #ede9fe;
-  --color-success: #217e5e;
+  --site-bg-rgb: 246, 245, 241;
+  --color-bg: rgb(var(--site-bg-rgb));
+  --site-surface-rgb: 253, 252, 249;
+  --color-surface: rgb(var(--site-surface-rgb));
+  --site-surface-muted-rgb: 238, 237, 231;
+  --color-surface-muted: rgb(var(--site-surface-muted-rgb));
+  --site-text-rgb: 41, 43, 44;
+  --color-text: rgb(var(--site-text-rgb));
+  --site-text-muted-rgb: 105, 107, 100;
+  --color-text-muted: rgb(var(--site-text-muted-rgb));
+  --site-border-rgb: 222, 222, 213;
+  --color-border: rgb(var(--site-border-rgb));
+  --site-accent-rgb: 124, 58, 237;
+  --color-accent: rgb(var(--site-accent-rgb));
+  --site-accent-soft-rgb: 237, 233, 254;
+  --color-accent-soft: rgb(var(--site-accent-soft-rgb));
+  --site-success-rgb: 33, 126, 94;
+  --color-success: rgb(var(--site-success-rgb));
   --radius-sm: 0.5rem;
   --radius-md: 0.85rem;
   --radius-lg: 1.15rem;
@@ -31,15 +40,24 @@
   color-scheme: light;
 }
 .dark {
-  --color-bg: #17191f;
-  --color-surface: #1d2027;
-  --color-surface-muted: #272a34;
-  --color-text: #ededf3;
-  --color-text-muted: #a0a2b3;
-  --color-border: #343743;
-  --color-accent: #c4b5fd;
-  --color-accent-soft: #33264f;
-  --color-success: #65cda8;
+  --site-bg-rgb: 23, 25, 31;
+  --color-bg: rgb(var(--site-bg-rgb));
+  --site-surface-rgb: 29, 32, 39;
+  --color-surface: rgb(var(--site-surface-rgb));
+  --site-surface-muted-rgb: 39, 42, 52;
+  --color-surface-muted: rgb(var(--site-surface-muted-rgb));
+  --site-text-rgb: 237, 237, 243;
+  --color-text: rgb(var(--site-text-rgb));
+  --site-text-muted-rgb: 160, 162, 179;
+  --color-text-muted: rgb(var(--site-text-muted-rgb));
+  --site-border-rgb: 52, 55, 67;
+  --color-border: rgb(var(--site-border-rgb));
+  --site-accent-rgb: 196, 181, 253;
+  --color-accent: rgb(var(--site-accent-rgb));
+  --site-accent-soft-rgb: 51, 38, 79;
+  --color-accent-soft: rgb(var(--site-accent-soft-rgb));
+  --site-success-rgb: 101, 205, 168;
+  --color-success: rgb(var(--site-success-rgb));
   color-scheme: dark;
 }
 * {
