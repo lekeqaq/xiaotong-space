@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import type { Locator } from '@playwright/test'
 
 const routes = [
   '/',
@@ -153,8 +154,9 @@ test('theme preference survives navigation and reload', async ({ page }, testInf
   await expect(root).not.toHaveClass(/dark/)
 })
 
-test('digital human phases support keyboard input and announce the response', async ({ page }) => {
+test('digital human phases support keyboard input and announce the response', async ({ page, isMobile }) => {
   await page.goto('/projects/digital-human')
+  if (isMobile) await page.getByRole('button', { name: '展开项目预览' }).click()
   const listening = page.getByRole('button', { name: /倾听/ })
   const thinking = page.getByRole('button', { name: /思考/ })
   const speaking = page.getByRole('button', { name: /回应/ })
@@ -195,4 +197,112 @@ test('project labels use readable type and keep controls inside the preview', as
     .locator('.project-thumbnail')
     .evaluateAll((elements) => elements.map((element) => element.scrollWidth > element.clientWidth + 1))
   expect(overflows).not.toContain(true)
+})
+
+test.describe('front-end disclosure motion', () => {
+  test.use({ reducedMotion: 'no-preference' })
+
+  async function sampleTransition(disclosure: Locator) {
+    return disclosure.evaluate(async (element) => {
+      const panel = element.querySelector<HTMLElement>('.disclosure-panel')!
+      element.querySelector<HTMLElement>('summary')!.click()
+      for (let frame = 0; frame < 10; frame++) {
+        const animation = panel.getAnimations()[0]
+        if (animation) {
+          animation.pause()
+          animation.currentTime = Number(animation.effect!.getTiming().duration) / 2
+          const sample = {
+            height: panel.getBoundingClientRect().height,
+            fullHeight: panel.firstElementChild!.getBoundingClientRect().height,
+            opacity: Number(getComputedStyle(panel).opacity),
+          }
+          animation.play()
+          return sample
+        }
+        await new Promise(requestAnimationFrame)
+      }
+      throw new Error('The disclosure changed without an animation')
+    })
+  }
+
+  test('every public disclosure expands and collapses through intermediate frames', async ({
+    page,
+    isMobile,
+  }) => {
+    const screens = [
+      {
+        path: '/projects/weekend',
+        selectors: isMobile
+          ? ['.case-scene .animated-details', '.project-mobile-toc', '.mobile-menu']
+          : ['.document-toc .animated-details'],
+      },
+      {
+        path: '/writing/building-personal-ai',
+        selectors: [isMobile ? '.article-mobile-toc' : '.document-toc .animated-details'],
+      },
+    ]
+    for (const screen of screens) {
+      await page.goto(screen.path)
+      await page.waitForLoadState('networkidle')
+      for (const selector of screen.selectors) {
+        const disclosure = page.locator(selector)
+        const initiallyOpen = (await disclosure.getAttribute('data-expanded')) === 'true'
+        for (const open of [!initiallyOpen, initiallyOpen]) {
+          const sample = await sampleTransition(disclosure)
+          expect(sample.height).toBeGreaterThan(0)
+          expect(sample.height).toBeLessThan(sample.fullHeight)
+          expect(sample.opacity).toBeGreaterThan(0)
+          expect(sample.opacity).toBeLessThan(1)
+          await expect(disclosure.locator('summary')).toHaveAttribute('aria-expanded', String(open))
+          const panel = disclosure.locator('.disclosure-panel')
+          await expect.poll(() => panel.evaluate((element) => element.style.height)).toBe('')
+          if (open) await expect(panel).toBeVisible()
+          else await expect(panel).toBeHidden()
+        }
+      }
+    }
+  })
+
+  test('rapid reversal, Escape and viewport changes leave a usable disclosure', async ({
+    page,
+    isMobile,
+  }) => {
+    await page.goto('/projects/weekend')
+    await page.waitForLoadState('networkidle')
+    const disclosure = page.locator(
+      isMobile ? '.case-scene .animated-details' : '.document-toc .animated-details',
+    )
+    await sampleTransition(disclosure)
+    await disclosure.evaluate((element) => {
+      const summary = element.querySelector<HTMLElement>('summary')!
+      for (let click = 0; click < 3; click++) summary.click()
+    })
+    const panel = disclosure.locator('.disclosure-panel')
+    await expect.poll(() => panel.evaluate((element) => element.style.height)).toBe('')
+    await expect(disclosure.locator('summary')).toHaveAttribute('aria-expanded', String(!isMobile))
+    await disclosure.locator('summary').press('Enter')
+    if (!isMobile) await disclosure.locator('summary').press('Enter')
+    await disclosure.locator('summary').press('Escape')
+    await expect(panel).toBeHidden()
+    await expect(disclosure.locator('summary')).toBeFocused()
+    if (isMobile) {
+      await sampleTransition(disclosure)
+      await page.setViewportSize({ width: 1280, height: 900 })
+      await expect(panel).toBeVisible()
+      await expect.poll(() => panel.evaluate((element) => element.style.height)).toBe('')
+      await page.setViewportSize({ width: 390, height: 844 })
+      await expect(panel).toBeHidden()
+    }
+  })
+})
+
+test('reduced motion keeps disclosure changes immediate', async ({ page, isMobile }) => {
+  await page.goto('/projects/weekend')
+  const disclosure = page.locator(isMobile ? '.project-mobile-toc' : '.document-toc .animated-details')
+  await disclosure.locator('summary').press('Enter')
+  const panel = disclosure.locator('.disclosure-panel')
+  expect(await panel.evaluate((element) => element.getAnimations().length)).toBe(0)
+  expect(await panel.evaluate((element) => element.style.height)).toBe('')
+  if (isMobile) await expect(panel).toBeVisible()
+  else await expect(panel).toBeHidden()
 })

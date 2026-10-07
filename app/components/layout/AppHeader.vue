@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { siteIdentity } from '#shared/site'
 import { navigation } from '~/utils/site'
+import AnimatedDetails from '~/components/common/AnimatedDetails.vue'
 const route = useRoute()
 const config = useRuntimeConfig()
-const menu = useTemplateRef<HTMLDetailsElement>('menu')
+const menu = useTemplateRef<InstanceType<typeof AnimatedDetails>>('menu')
 watch(
   () => route.path,
   () => {
-    if (menu.value) menu.value.open = false
+    menu.value?.setOpen(false)
   },
 )
 function isActive(to: string) {
@@ -43,8 +44,10 @@ function isActive(to: string) {
           ><UIcon name="i-simple-icons-github" aria-hidden="true"
         /></a>
         <ThemeToggle />
-        <details ref="menu" class="mobile-menu">
-          <summary role="button" aria-label="打开导航菜单"><UIcon name="i-lucide-menu" /></summary>
+        <AnimatedDetails ref="menu" class="mobile-menu" summary-label="打开导航菜单">
+          <template #summary>
+            <span class="disclosure-menu-icon" aria-hidden="true"><i /><i /><i /></span>
+          </template>
           <nav aria-label="移动端导航">
             <NuxtLink
               v-for="item in navigation"
@@ -55,7 +58,7 @@ function isActive(to: string) {
               >{{ item.label }}<UIcon name="i-lucide-arrow-up-right"
             /></NuxtLink>
           </nav>
-        </details>
+        </AnimatedDetails>
       </div>
     </div>
   </header>

@@ -17,10 +17,12 @@ defineProps<{ article: RenderedArticle }>()
             ><span v-if="article.updated">更新于 {{ formatDate(article.updated) }}</span>
             <div class="tech-tags"><TechTag v-for="tag in article.tags" :key="tag" :label="tag" /></div>
           </div>
-          <details v-if="article.body.toc?.links.length" class="article-mobile-toc">
-            <summary>文章目录 <UIcon name="i-lucide-list" /></summary>
+          <AnimatedDetails v-if="article.body.toc?.links.length" class="article-mobile-toc">
+            <template #summary
+              >文章目录 <UIcon name="i-lucide-chevron-down" class="disclosure-chevron"
+            /></template>
             <ContentToc :links="article.body.toc.links" />
-          </details>
+          </AnimatedDetails>
         </header>
       </template>
       <template #aside>

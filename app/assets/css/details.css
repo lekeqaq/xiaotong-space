@@ -1,11 +1,15 @@
-/* Project spreads and compact, reading-first article pages. */
+/* Compact project introductions and reading-first article pages. */
+
+.project-detail.inner-page {
+  padding-top: 30px;
+}
 
 .case-opening {
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(40px, 6vw, 90px);
-  align-items: center;
-  margin: 38px 0 58px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+  margin: 26px 0 30px;
 }
 .case-copy.detail-header {
   margin: 0;
@@ -19,27 +23,28 @@
   letter-spacing: 0.12em;
 }
 .case-copy h1 {
-  font-size: clamp(2.8rem, 4.5vw, 4.6rem);
+  font-size: clamp(2.2rem, 3.2vw, 3.1rem);
   line-height: 1.12;
-  margin: 28px 0 16px;
+  margin: 16px 0 10px;
   overflow-wrap: anywhere;
 }
 .case-subtitle {
   display: block;
   font-family: var(--font-editorial);
   font-style: italic;
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   color: var(--color-text-muted);
-  margin-bottom: 26px;
+  margin-bottom: 18px;
 }
 .case-copy > p {
-  font-size: 0.98rem;
-  line-height: 1.95;
-  max-width: 390px;
+  font-size: 0.94rem;
+  line-height: 1.85;
+  max-width: 520px;
+  margin-bottom: 0;
 }
 .case-copy .detail-meta {
-  gap: 18px;
-  margin-top: 26px;
+  gap: 12px;
+  margin-top: 18px;
 }
 .case-copy .tech-tags {
   width: 100%;
@@ -49,7 +54,7 @@
   align-items: center;
   gap: 24px;
   padding-block: 12px;
-  margin-top: 40px;
+  margin-top: 20px;
   border-bottom: 1px solid var(--color-border);
   font-size: 0.76rem;
 }
@@ -61,8 +66,7 @@
   min-width: 0;
   margin: 0;
 }
-.case-scene-label,
-.case-scene figcaption {
+.case-preview-caption {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -70,15 +74,72 @@
   color: var(--color-text-muted);
   font-size: var(--font-size-caption);
 }
-.case-scene-label {
-  padding: 2px 3px 13px;
-  letter-spacing: 0.13em;
+.case-preview-caption {
+  padding: 10px 2px 0;
 }
-.case-scene figcaption {
-  padding: 15px 3px 2px;
+.case-preview-toggle,
+.project-mobile-toc {
+  display: none;
 }
-.case-scene .project-scene {
-  height: 500px;
+/* Detail previews support the introduction instead of setting its height. */
+.project-detail .case-scene .project-thumbnail {
+  padding: 16px 20px 0;
+}
+.project-detail .case-scene .travel-study {
+  min-height: 0;
+  padding-block: 20px;
+  gap: 18px;
+}
+.project-detail .case-scene .study-landscape-window {
+  height: 150px;
+}
+.project-detail .case-scene .study-route {
+  margin-top: 16px;
+}
+.project-detail .case-scene .study-travel-note > small {
+  margin-top: 12px;
+}
+.project-detail .case-scene .study-postcard figcaption {
+  padding-block: 9px;
+}
+.project-detail .case-scene .study-controls {
+  padding-block: 9px;
+}
+.project-detail .case-scene .study-bottomline {
+  display: none;
+}
+.project-detail .case-scene .companion-bottomline {
+  min-height: 32px;
+}
+.project-detail .case-scene .companion-scene {
+  min-height: 0;
+  padding-block: 16px 8px;
+  gap: 20px;
+}
+.project-detail .case-scene .companion-overline,
+.project-detail .case-scene .companion-notes {
+  display: none;
+}
+.project-detail .case-scene .companion-copy > strong {
+  font-size: 1.55rem;
+  margin-top: 8px;
+}
+.project-detail .case-scene .companion-dialogue {
+  margin-top: 12px;
+  min-height: 64px;
+}
+.project-detail .case-scene .companion-photo {
+  height: 140px;
+}
+.project-detail .case-scene .voice-thread {
+  padding-bottom: 0;
+}
+.project-detail .case-scene .voice-thread svg {
+  height: 16px;
+}
+.project-detail .case-scene .companion-controls {
+  margin-top: 6px;
+  padding-block: 6px;
 }
 .detail-divider {
   display: flex;
@@ -86,11 +147,19 @@
   align-items: center;
   gap: 20px;
   border-top: 1px solid var(--color-border);
-  padding: 22px 0 30px;
+  padding: 18px 0 24px;
   font-size: var(--font-size-caption);
   letter-spacing: 0.12em;
   color: var(--color-text-muted);
   scroll-margin-top: calc(var(--header-height) + 24px);
+}
+.project-detail .document-layout {
+  justify-content: start;
+  column-gap: clamp(40px, 6vw, 88px);
+}
+.project-detail .prose-content > :first-child,
+.project-detail .prose-content > div > :first-child {
+  margin-top: 0;
 }
 .article-detail.inner-page {
   max-width: 1100px;
@@ -218,40 +287,64 @@
 @media (max-width: 1000px) {
   .case-opening {
     gap: 32px;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  }
-  .case-scene .project-scene {
-    height: 480px;
-  }
-  .case-scene .scene-topline > span:last-child {
-    display: none;
   }
   .writing-article-view .document-layout {
     grid-template-columns: minmax(0, 1fr) 190px;
     column-gap: 36px;
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 767px) {
+  .project-detail.inner-page {
+    padding-top: 22px;
+  }
   .case-opening {
     grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
-    margin: 32px 0 38px;
-    min-height: 0;
+    gap: 18px;
+    margin: 22px 0 18px;
   }
   .case-copy h1 {
-    font-size: clamp(2.5rem, 9vw, 3.5rem);
+    font-size: clamp(2rem, 8vw, 2.6rem);
   }
   .case-copy > p {
     max-width: none;
   }
   .opening-read {
-    margin-top: 20px;
+    display: none;
   }
-  .case-scene {
-    margin-right: 0;
+  .case-preview-toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    padding: 10px 0;
+    border: 0;
+    border-block: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
   }
-  .case-scene .project-scene {
-    height: 470px;
+  .case-preview-panel {
+    margin-top: 14px;
+  }
+  .project-detail .document-toc {
+    display: none;
+  }
+  .project-mobile-toc {
+    display: block;
+    margin-bottom: 18px;
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+  }
+  .project-mobile-toc summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    list-style: none;
+  }
+  .project-mobile-toc summary::-webkit-details-marker {
+    display: none;
   }
   .detail-divider {
     font-size: var(--font-size-caption);

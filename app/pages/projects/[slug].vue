@@ -43,17 +43,26 @@ useSiteSeo(
           >读读这个项目的故事 <UIcon name="i-lucide-arrow-down-right"
         /></a>
       </header>
-      <figure class="case-scene">
-        <div class="case-scene-label">
-          <span>PROJECT PREVIEW</span><span>NO. {{ String(project.order).padStart(2, '0') }}</span>
-        </div>
-        <ProjectThumbnail :kind="project.kind" :summary="project.cardSummary" interactive />
-        <figcaption>
-          <span>{{ project.previewCaption }}</span
-          ><span>主题交互示意</span>
-        </figcaption>
+      <figure class="case-scene" :aria-label="project.previewCaption">
+        <AnimatedDetails desktop-always-open summary-class="case-preview-toggle" panel-id="project-preview">
+          <template #summary="{ expanded }">
+            <span>{{ expanded ? '收起项目预览' : '展开项目预览' }}</span>
+            <UIcon name="i-lucide-chevron-down" class="disclosure-chevron" />
+          </template>
+          <div class="case-preview-panel">
+            <ProjectThumbnail :kind="project.kind" :summary="project.cardSummary" interactive />
+          </div>
+          <div class="case-preview-caption">
+            <span>{{ project.previewCaption }}</span
+            ><span>主题交互示意</span>
+          </div>
+        </AnimatedDetails>
       </figure>
     </div>
+    <AnimatedDetails v-if="project.body.toc?.links.length" class="project-mobile-toc">
+      <template #summary>项目目录 <UIcon name="i-lucide-chevron-down" class="disclosure-chevron" /></template>
+      <ContentToc :links="project.body.toc.links" />
+    </AnimatedDetails>
     <div id="project-story" class="detail-divider">
       <span>BEHIND THE BUILD</span><span>想法 / 过程 / 实践</span>
     </div>

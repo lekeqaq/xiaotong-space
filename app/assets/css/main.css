@@ -743,11 +743,13 @@ h2 {
   .mobile-menu summary::-webkit-details-marker {
     display: none;
   }
-  .mobile-menu nav {
+  .mobile-menu > .disclosure-panel {
     position: absolute;
     top: 65px;
     left: 20px;
     right: 20px;
+  }
+  .mobile-menu nav {
     padding: 14px 20px;
     border: 1px solid var(--color-border);
     border-radius: 14px;
@@ -831,10 +833,6 @@ h2 {
     padding-bottom: 0;
     border: 0;
     font-size: var(--font-size-caption);
-  }
-  .document-toc details[open] summary {
-    padding-bottom: 13px;
-    border-bottom: 1px solid var(--color-border);
   }
   .toc-links {
     columns: 2;

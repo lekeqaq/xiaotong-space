@@ -20,10 +20,12 @@ defineProps<{ document: Project | Writing }>()
     </article>
     <aside v-if="$slots.aside || document.body.toc?.links.length" class="document-toc">
       <slot name="aside" />
-      <details v-if="document.body.toc?.links.length" open>
-        <summary>ON THIS PAGE <UIcon name="i-lucide-list" /></summary>
+      <AnimatedDetails v-if="document.body.toc?.links.length" default-open>
+        <template #summary
+          >ON THIS PAGE <UIcon name="i-lucide-chevron-down" class="disclosure-chevron"
+        /></template>
         <ContentToc :links="document.body.toc.links" />
-      </details>
+      </AnimatedDetails>
     </aside>
   </div>
 </template>
