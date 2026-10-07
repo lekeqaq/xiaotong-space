@@ -6,7 +6,7 @@
 
 基于 Nuxt 4、Vue 3、TypeScript、Tailwind CSS 和 Nuxt UI，支持 Markdown 项目手记、深浅主题与内置内容管理后台。
 
-[访问网站](https://xiaotong.taozhoumo.com) · [后台指南](docs/ADMIN.md) · [部署指南](docs/DEPLOY-1PANEL.md)
+[访问网站](https://xiaotong.taozhoumo.com) · [后台指南](docs/ADMIN.zh-CN.md)
 
 ## 安装
 
@@ -44,6 +44,6 @@ pnpm build
 pnpm preview
 ```
 
-完整网站需要 Node 服务，并为 `NUXT_ADMIN_DATA_DIR` 配置持久化存储。Docker 与 1Panel 配置见[部署指南](docs/DEPLOY-1PANEL.md)。
+完整网站需要 Node 服务，并为 `NUXT_ADMIN_DATA_DIR` 配置持久化存储。
 
 图片来源见[素材记录](docs/ASSETS.md)。

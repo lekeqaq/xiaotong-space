@@ -6,7 +6,7 @@ Xiaotong's personal space for projects, technical writing, and life beyond code.
 
 Built with Nuxt 4, Vue 3, TypeScript, Tailwind CSS, and Nuxt UI. Includes Markdown project pages, light and dark themes, and a built-in content admin.
 
-[Website](https://xiaotong.taozhoumo.com) · [Admin guide](docs/ADMIN.md) · [Deployment guide](docs/DEPLOY-1PANEL.md)
+[Website](https://xiaotong.taozhoumo.com) · [Admin guide](docs/ADMIN.md)
 
 ## Setup
 
@@ -44,6 +44,6 @@ pnpm build
 pnpm preview
 ```
 
-The full site requires a Node server and persistent storage for `NUXT_ADMIN_DATA_DIR`. See the [deployment guide](docs/DEPLOY-1PANEL.md) for Docker and 1Panel setup.
+The full site requires a Node server and persistent storage for `NUXT_ADMIN_DATA_DIR`.
 
 Image sources are listed in [ASSETS.md](docs/ASSETS.md).
