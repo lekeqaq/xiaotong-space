@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../../assets/css/details.css'
 import type { RenderedArticle } from '#shared/content'
 const route = useRoute()
 const {
@@ -87,5 +88,3 @@ useHead(() => ({
     </template>
   </div>
 </template>
-
-<style src="../../assets/css/details.css"></style>

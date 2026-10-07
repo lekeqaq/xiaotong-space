@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import '../assets/css/space.css'
+import '../assets/css/home-motion.css'
 import { siteIdentity } from '#shared/site'
 import { initialHome } from '#shared/home'
 import type { HomeContent } from '#shared/content'
@@ -137,6 +139,3 @@ const { data: settings, error: settingsError, status: settingsStatus, refresh: r
     </div>
   </div>
 </template>
-
-<style src="../assets/css/space.css"></style>
-<style src="../assets/css/home-motion.css"></style>

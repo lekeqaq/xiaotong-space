@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../../assets/css/footer.css'
 import { siteIdentity } from '#shared/site'
 </script>
 
@@ -14,5 +15,3 @@ import { siteIdentity } from '#shared/site'
     <span class="footer-copyright">© {{ new Date().getFullYear() }} Xiaotong</span>
   </footer>
 </template>
-
-<style src="../../assets/css/footer.css"></style>

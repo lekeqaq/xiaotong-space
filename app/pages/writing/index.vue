@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../../assets/css/writing.css'
 useSiteSeo('Writing', '关于前端、工程化和 AI 的实践笔记。记录我学到的、踩过的坑，以及一些有意思的想法。')
 const { data: articles, error, status, refresh } = await useWritingSummaries()
 useSeoMeta({ robots: () => (error.value ? 'noindex' : undefined) })
@@ -133,5 +134,3 @@ watch([search, category], () => {
     </template>
   </div>
 </template>
-
-<style src="../../assets/css/writing.css"></style>

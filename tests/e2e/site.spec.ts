@@ -13,6 +13,21 @@ const routes = [
   '/writing/webrtc-notes',
 ]
 
+test('home layout styles survive production compilation and navigation', async ({ page, isMobile }) => {
+  const response = await page.request.get('/')
+  expect(await response.text()).not.toMatch(/\.digital-desk\[data-v-/)
+  await page.goto('/')
+  await expect(page.locator('.digital-desk')).toHaveCSS('position', 'relative')
+  await expect(page.locator('.desk-canvas')).toHaveCSS('position', 'relative')
+  await expect(page.locator('.desk-intro')).toHaveCSS('position', isMobile ? 'relative' : 'absolute')
+  await expect(page.locator('.space-columns')).toHaveCSS('display', 'grid')
+  await expect(page.locator('.project-shelf')).toHaveCSS('display', 'grid')
+  await page.goto('/about')
+  await page.locator('.app-header .wordmark').click()
+  await expect(page.locator('.digital-desk')).toHaveCSS('position', 'relative')
+  await expect(page.locator('.space-columns')).toHaveCSS('display', 'grid')
+})
+
 for (const route of routes) {
   test(`${route} stays readable within the viewport`, async ({ page }, testInfo) => {
     const errors: string[] = []

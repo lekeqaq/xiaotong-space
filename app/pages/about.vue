@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../assets/css/about.css'
 useSiteSeo('About', '我是小童，一名生活在深圳的前端开发者。记录 Web 与 AI 的项目实践，也分享生活里的小事。')
 const profile = useTemplateRef<HTMLElement>('profile')
 useScrollReveal(profile)
@@ -62,5 +63,3 @@ const interests = [
     </section>
   </div>
 </template>
-
-<style src="../assets/css/about.css"></style>

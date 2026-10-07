@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import '~/assets/css/details.css'
+import '~/assets/css/space.css'
+import '~/assets/css/home-motion.css'
 import type { HomeInput, RenderedArticle } from '#shared/admin'
 import type { ProjectSummary, WritingSummary } from '~/types/content'
 defineOptions({ name: 'AdminDraftPreviewPage' })
@@ -72,7 +75,3 @@ onBeforeUnmount(() => {
   color: var(--color-text-muted);
 }
 </style>
-
-<style src="~/assets/css/details.css"></style>
-<style src="~/assets/css/space.css"></style>
-<style src="~/assets/css/home-motion.css"></style>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import '../../assets/css/projects.css'
+import '~/assets/css/details.css'
 import type { Project } from '~/types/content'
 const route = useRoute()
 const { data: project, error } = await useAsyncData(`project-${route.path}`, () =>
@@ -71,7 +73,3 @@ useSiteSeo(
     /></NuxtLink>
   </div>
 </template>
-
-<style src="../../assets/css/projects.css"></style>
-
-<style src="~/assets/css/details.css"></style>

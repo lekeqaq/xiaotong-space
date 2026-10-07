@@ -37,7 +37,3 @@ useHead({
     <BackToTop v-if="!isAdmin" />
   </div>
 </template>
-
-<style src="./assets/css/main.css"></style>
-
-<style src="./assets/css/motion.css"></style>

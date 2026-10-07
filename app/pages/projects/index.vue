@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../../assets/css/projects.css'
 useSiteSeo('Projects', '小童的项目作品与 Case Study：逃个周末与声伴，旅行规划与实时 AI 交流。')
 const page = useTemplateRef<HTMLElement>('page')
 useScrollReveal(page)
@@ -55,4 +56,3 @@ if (error.value) throw createError({ statusCode: 503, statusMessage: '项目读�
     </p>
   </div>
 </template>
-<style src="../../assets/css/projects.css"></style>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../../assets/css/project-thumbnails.css'
 import HumanPreview from './HumanPreview.vue'
 import ProjectPreviewHeader from './ProjectPreviewHeader.vue'
 const props = withDefaults(
@@ -100,5 +101,3 @@ const loadedPlaces = computed(() => Object.entries(places).filter(([key]) => vis
     </div>
   </div>
 </template>
-
-<style src="../../assets/css/project-thumbnails.css"></style>

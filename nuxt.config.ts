@@ -5,6 +5,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-10-03',
   devtools: { enabled: false },
   modules: ['./modules/admin-vuetify', '@nuxt/ui', '@nuxt/content', '@nuxt/image', '@nuxt/eslint'],
+  // Import shared CSS directly, outside Vue's external SFC style descriptor cache.
+  css: ['~/assets/css/main.css', '~/assets/css/motion.css'],
   features: { inlineStyles: true },
   build: { transpile: ['vuetify'] },
   components: [{ path: '~/components', pathPrefix: false }],
