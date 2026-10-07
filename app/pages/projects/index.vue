@@ -2,9 +2,8 @@
 useSiteSeo('Projects', '小童的项目作品与 Case Study：逃个周末与声伴，旅行规划与实时 AI 交流。')
 const page = useTemplateRef<HTMLElement>('page')
 useScrollReveal(page)
-const { data } = await useAsyncData('project-gallery', async () => {
-  return queryCollection('projects').order('order', 'ASC').all()
-})
+const { data, error } = await useProjectSummaries()
+if (error.value) throw createError({ statusCode: 503, statusMessage: '项目读取失败，请稍后重试' })
 </script>
 <template>
   <div ref="page" class="projects-page container">

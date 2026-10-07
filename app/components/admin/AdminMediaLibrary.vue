@@ -128,14 +128,15 @@ async function copy(src: string) {
       ><span>{{ visible.length }} 张图片</span>
     </div>
     <div class="admin-media-grid">
-      <VCard v-for="item in visible" :key="item.id" class="admin-media-card">
+      <VCard v-for="(item, index) in visible" :key="item.id" class="admin-media-card">
         <button
           type="button"
           class="admin-media-image"
           :aria-label="`${selectable ? '选择图片' : '查看图片'} ${item.name}`"
           @click="selectable ? emit('select', item) : (inspected = item)"
         >
-          <img :src="item.src" :alt="item.name" loading="lazy" /><span class="admin-media-hover"
+          <AdminMediaThumbnail :src="item.src" :alt="item.name" :eager="index < 8" /><span
+            class="admin-media-hover"
             ><UIcon :name="selectable ? 'i-lucide-check' : 'i-lucide-expand'" />{{
               selectable ? '选择图片' : '查看原图'
             }}</span

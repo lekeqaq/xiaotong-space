@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { Project } from '~/types/content'
 const route = useRoute()
-const { data: project } = await useAsyncData(`project-${route.path}`, () =>
-  queryCollection('projects').path(route.path).first(),
+const { data: project, error } = await useAsyncData(`project-${route.path}`, () =>
+  $fetch<Project>(`/api/content/projects/${route.params.slug}`),
 )
+if (error.value) throw createError(error.value)
 if (!project.value) throw createError({ statusCode: 404, statusMessage: 'Project not found' })
 useSiteSeo(
   computed(() => project.value?.title || 'Project'),

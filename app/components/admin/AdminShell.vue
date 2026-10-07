@@ -3,6 +3,10 @@ const api = useAdminApi()
 const route = useRoute()
 const { notify } = useAdminToast()
 const drawer = ref<boolean | null>(null)
+const mounted = ref(false)
+onMounted(() => {
+  mounted.value = true
+})
 function navigateMenu(event: MouseEvent | KeyboardEvent, navigate: (event?: MouseEvent) => unknown) {
   closeMobileNavigation()
   if (event instanceof MouseEvent) navigate(event)
@@ -21,18 +25,6 @@ const items = [
 ]
 const current = computed(() => items.find((item) => item.to === route.path) || items[0]!)
 const isArticleEditor = computed(() => route.path.startsWith('/admin/articles/'))
-const navigating = ref(false)
-const nuxtApp = useNuxtApp()
-const removeStartHook = nuxtApp.hook('page:start', () => {
-  navigating.value = true
-})
-const removeFinishHook = nuxtApp.hook('page:finish', () => {
-  navigating.value = false
-})
-onBeforeUnmount(() => {
-  removeStartHook()
-  removeFinishHook()
-})
 function active(to: string) {
   return to === '/admin' ? route.path === to || route.path.startsWith('/admin/articles') : route.path === to
 }
@@ -47,7 +39,7 @@ async function logout() {
 useSeoMeta({ robots: 'noindex, nofollow' })
 </script>
 <template>
-  <AdminProvider>
+  <AdminProvider :class="{ 'admin-shell-booting': !mounted }">
     <VNavigationDrawer v-model="drawer" :width="236" :mobile-breakpoint="960" class="admin-sidebar">
       <NuxtLink to="/admin" class="admin-brand"
         ><span class="admin-brand-symbol">✳</span><span>XIAOTONG<small>内容工作台</small></span></NuxtLink
@@ -128,13 +120,6 @@ useSeoMeta({ robots: 'noindex, nofollow' })
         </div>
       </div>
     </VAppBar>
-    <VProgressLinear
-      v-if="navigating"
-      indeterminate
-      color="primary"
-      class="admin-navigation-progress"
-      aria-label="正在切换页面"
-    />
     <VMain tag="section"
       ><div class="admin-content">
         <slot /></div

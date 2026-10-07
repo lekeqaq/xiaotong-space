@@ -13,6 +13,77 @@ async function login(page: import('@playwright/test').Page) {
   await expect(page.getByRole('heading', { name: '文章', exact: true })).toBeVisible()
 }
 
+test('refresh masks the uninitialized shell until the workspace is ready', async ({
+  page,
+  isMobile,
+}, testInfo) => {
+  await login(page)
+  let release!: () => void
+  const pending = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  await page.route('**/_nuxt/*.js', async (route) => {
+    await pending
+    await route.continue()
+  })
+  try {
+    await page.goto('/admin/media', { waitUntil: 'commit' })
+    await expect(page.getByRole('status').filter({ hasText: '正在准备工作台' })).toBeVisible()
+    const shell = await page.locator('.admin-sidebar').evaluate((element) => ({
+      x: element.getBoundingClientRect().x,
+      width: element.getBoundingClientRect().width,
+    }))
+    if (!isMobile) {
+      expect(shell.x).toBe(0)
+      expect(shell.width).toBe(236)
+      await expect(page.locator('.v-main')).toHaveCSS('padding-left', '236px')
+      expect((await page.locator('.admin-header').boundingBox())!.x).toBe(236)
+    }
+    await page.screenshot({ path: testInfo.outputPath('refresh-loading.png') })
+  } finally {
+    release()
+  }
+  await expect(page.getByRole('status').filter({ hasText: '正在准备工作台' })).toHaveCount(0)
+  await expect(page.locator('.admin-media-card').filter({ hasText: '网站素材' })).toHaveCount(8)
+  if (isMobile) {
+    await expect(page.locator('.admin-sidebar')).not.toHaveClass(/v-navigation-drawer--active/)
+    await openNavigation(page)
+  }
+  await expect(page.getByRole('navigation', { name: '后台导航' })).toBeInViewport()
+  await page.screenshot({ path: testInfo.outputPath('refresh-ready.png') })
+})
+
+test('image thumbnails show pending and failed requests instead of blank cards', async ({ page }) => {
+  await login(page)
+  let release!: () => void
+  const pending = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  await page.route('**/images/personal/camera.jpg', async (route) => {
+    await pending
+    await route.continue()
+  })
+  await page.route('**/images/personal/coast.jpg', (route) => route.fulfill({ status: 404, body: '' }))
+  const camera = page
+    .locator('.admin-media-card')
+    .filter({ has: page.locator('strong', { hasText: 'camera.jpg' }) })
+  const coast = page
+    .locator('.admin-media-card')
+    .filter({ has: page.locator('strong', { hasText: 'coast.jpg' }) })
+    .first()
+  try {
+    await page.goto('/admin/media', { waitUntil: 'domcontentloaded' })
+    await expect(camera.getByText('图片加载中…')).toBeVisible()
+    await expect(coast.getByText('图片加载失败，点击查看详情')).toBeVisible()
+  } finally {
+    release()
+  }
+  await expect(camera.getByText('图片加载中…')).toHaveCount(0)
+  expect(
+    await camera.locator('img').evaluate((image: HTMLImageElement) => image.naturalWidth),
+  ).toBeGreaterThan(0)
+})
+
 async function pasteMarkdown(page: import('@playwright/test').Page, markdown: string) {
   const body = page.getByRole('textbox', { name: '文章正文', exact: true })
   await body.fill('')
@@ -329,6 +400,7 @@ test('dialogs lock the background, restore its position and keep nested dialogs 
   page,
 }, testInfo) => {
   await login(page)
+  await page.getByRole('tab', { name: /^已发布/ }).click()
   await page
     .locator('.admin-article-row')
     .filter({ has: page.getByText('已发布', { exact: true }) })

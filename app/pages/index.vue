@@ -7,36 +7,14 @@ useSiteSeo(
   `${siteIdentity.title} — Frontend & AI`,
   '小童的个人数字空间。探索前端开发、AI 应用与有趣的产品，分享项目实践、技术写作和生活片段。',
 )
-const { data } = await useAsyncData('home-content', async () => {
-  const [projects, writing] = await Promise.all([
-    queryCollection('projects')
-      .select(
-        'path',
-        'title',
-        'subtitle',
-        'description',
-        'cardSummary',
-        'previewCaption',
-        'showcase',
-        'workbench',
-        'year',
-        'cover',
-        'tech',
-        'featured',
-        'status',
-        'order',
-        'kind',
-      )
-      .order('order', 'ASC')
-      .all(),
-    $fetch('/api/content/articles'),
-  ])
-  return { projects, writing }
-})
+const [{ data: projects }, { data: writing }] = await Promise.all([
+  useProjectSummaries(),
+  useFetch('/api/content/articles'),
+])
 </script>
 <template>
   <div ref="home" class="home-page">
-    <HeroSection :article="data?.writing[0]" :project="data?.projects.find((project) => project.workbench)" />
+    <HeroSection :article="writing?.[0]" :project="projects?.find((project) => project.workbench)" />
     <div id="space-feed" class="space-feed container">
       <section class="work-shelf" data-reveal aria-labelledby="shelf-title">
         <div class="space-section-heading">
@@ -50,7 +28,7 @@ const { data } = await useAsyncData('home-content', async () => {
         </div>
         <div class="project-shelf">
           <NuxtLink
-            v-for="project in data?.projects"
+            v-for="project in projects"
             :key="project.path"
             :to="project.path"
             class="shelf-item"
@@ -80,7 +58,7 @@ const { data } = await useAsyncData('home-content', async () => {
             /></NuxtLink>
           </div>
           <NuxtLink
-            v-for="article in data?.writing.slice(0, 3)"
+            v-for="article in writing?.slice(0, 3)"
             :key="article.path"
             :to="article.path"
             class="notebook-entry"

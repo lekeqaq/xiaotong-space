@@ -17,9 +17,7 @@ const { record, draft, dirty, saving, error, conflict, status, save, reset } = u
   'home',
 )
 const { data: articles } = await useFetch('/api/content/articles')
-const { data: projects } = await useAsyncData('admin-preview-project', () =>
-  queryCollection('projects').order('order', 'ASC').all(),
-)
+const { data: projects } = await useProjectSummaries()
 const busy = ref(false)
 const { notify } = useAdminToast()
 const pickerId = ref<string | null>(null)

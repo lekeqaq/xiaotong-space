@@ -118,6 +118,22 @@
 .admin-sidebar {
   border-right: 1px solid var(--admin-border);
 }
+/* Vuetify measures its layout after mount. Reserve the desktop shell for SSR too. */
+@media (min-width: 960px) {
+  .admin-shell-booting .admin-sidebar {
+    width: 236px;
+    height: 100dvh;
+    transform: translateX(0) !important;
+  }
+  .admin-shell-booting .admin-header {
+    left: 236px !important;
+    width: calc(100% - 236px);
+  }
+  .admin-shell-booting .v-main {
+    --v-layout-left: 236px !important;
+    --v-layout-top: 68px !important;
+  }
+}
 .admin-sidebar .admin-brand {
   margin: 28px 22px 42px;
 }

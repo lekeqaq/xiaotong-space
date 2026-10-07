@@ -27,6 +27,7 @@ useHead({
 
 <template>
   <div class="site-app" :class="{ 'motion-paused': motionPaused }">
+    <GlobalLoading :admin="isAdmin" />
     <a class="skip-link" href="#main-content">跳转至主要内容</a>
     <AppHeader v-if="!isAdmin" />
     <main id="main-content">

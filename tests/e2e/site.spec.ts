@@ -91,6 +91,52 @@ test('navigation opens Writing and closes the mobile menu', async ({ page, isMob
   }
 })
 
+test('first Projects navigation reuses home data without a browser database', async ({ page, isMobile }) => {
+  const coldRequests: string[] = []
+  page.on('request', (request) => {
+    if (/\.wasm(?:\?|$)|sql_dump|\/api\/content\/projects(?:\?|$)/.test(request.url())) {
+      coldRequests.push(request.url())
+    }
+  })
+  await page.goto('/')
+  // A new context has no browser database, route or HTTP cache.
+  if (isMobile) await page.getByRole('button', { name: '打开导航菜单' }).click()
+  const navigation = page.getByRole('navigation', { name: isMobile ? '移动端导航' : '主要导航' })
+  await navigation.getByRole('link', { name: 'Projects', exact: true }).click()
+  await expect(page).toHaveURL('/projects')
+  await expect(page.locator('.project-showcase')).toHaveCount(2)
+  await expect(page.locator('.project-showcase').first()).toBeVisible()
+  const title = await page.locator('.project-showcase h2').first().innerText()
+  await page.locator('.showcase-link').first().click()
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(title)
+  await page.locator('.back-link').click()
+  await expect(page.locator('.project-showcase')).toHaveCount(2)
+  expect(coldRequests).toEqual([])
+})
+
+test('slow navigation gives feedback and clears it after rendering', async ({ page, isMobile }) => {
+  let release!: () => void
+  const pending = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  await page.route('**/api/content/articles', async (route) => {
+    await pending
+    await route.continue()
+  })
+  await page.goto('/about')
+  if (isMobile) await page.getByRole('button', { name: '打开导航菜单' }).click()
+  const navigation = page.getByRole('navigation', { name: isMobile ? '移动端导航' : '主要导航' })
+  try {
+    await navigation.getByRole('link', { name: 'Writing', exact: true }).click()
+    await expect(page.getByRole('status').filter({ hasText: '正在加载页面' })).toBeVisible()
+    await expect(page.locator('.nuxt-loading-indicator')).toHaveCSS('opacity', '1')
+  } finally {
+    release()
+  }
+  await expect(page.locator('.writing-entry')).toHaveCount(3)
+  await expect(page.getByRole('status').filter({ hasText: '正在加载页面' })).toHaveCount(0)
+})
+
 test('theme preference survives navigation and reload', async ({ page }, testInfo) => {
   await page.goto('/about')
   const root = page.locator('html')
