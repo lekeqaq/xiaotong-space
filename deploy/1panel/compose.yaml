@@ -1,0 +1,40 @@
+name: xiaotong-space
+
+services:
+  web:
+    image: xiaotong-space:local
+    container_name: xiaotong-space-web
+    restart: unless-stopped
+    init: true
+    env_file:
+      - /opt/xiaotong/config/.env
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: '3000'
+      NUXT_ADMIN_DATA_DIR: /app/data
+    ports:
+      - '127.0.0.1:3100:3000'
+    volumes:
+      - /opt/xiaotong/data/admin:/app/data
+    networks:
+      - xiaotong
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/admin/session').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+networks:
+  xiaotong:
+    name: xiaotong-space-net

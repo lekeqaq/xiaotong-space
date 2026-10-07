@@ -131,6 +131,8 @@ xiaotong-space/
 
 ## 构建与部署
 
+腾讯云服务器与 1Panel 的域名解析、Docker 部署、HTTPS、内容迁移和维护步骤，见 [1Panel 部署指南](docs/DEPLOY-1PANEL.md)。
+
 ### Node 服务
 
 设置正式站点地址后，在目标部署环境安装依赖并构建：

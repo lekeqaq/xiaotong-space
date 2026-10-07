@@ -20,7 +20,7 @@ pnpm admin:password
 pnpm dev
 ```
 
-`admin:password` 在终端中提示输入两次密码，不回显。密码要求为 12–200 个字符，通过 scrypt 哈希后写入 `.env`，不保存明文。默认账号为 `admin`，可修改 `NUXT_ADMIN_USERNAME`。没有配置密码时后台无法登录，没有默认密码。
+`admin:password` 在终端中提示输入两次密码，不回显。当前密码工具要求 8–12 个字符，通过 scrypt 哈希后写入 `.env`，不保存明文。默认账号为 `admin`，可修改 `NUXT_ADMIN_USERNAME`。没有配置密码时后台无法登录，没有默认密码。
 
 如由部署平台管理环境变量，在安全终端运行 `pnpm admin:password --print-hash`，将结果设置为 `NUXT_ADMIN_PASSWORD_HASH`。任何后台凭证都不要放入 `NUXT_PUBLIC_*`。环境变量变更后重启服务；修改账号或密码会使之前的登录会话失效。
 
@@ -72,6 +72,8 @@ pnpm dev
 首页、文章及 RSS、sitemap 使用运行时数据，不再构建时预渲染；项目与关于页面仍可预渲染。文章已退出 Nuxt Content 公开集合，避免旧的构建索引继续提供撤回后的文章。公开接口只返回发布版本，管理接口要求登录。后台设置 `noindex`，robots 禁止抓取后台路径。
 
 ## 生产部署
+
+使用腾讯云和 1Panel 部署的完整步骤、域名配置和 Docker 编排文件，见 [1Panel 部署指南](DEPLOY-1PANEL.md)。
 
 需要 Node.js 22+、单实例 Nuxt 服务和持久化磁盘。部署前在服务器设置：
 
